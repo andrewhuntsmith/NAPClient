@@ -1,0 +1,58 @@
+﻿<Window x:Class="NAPClient.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="NAPClient" Height="500" Width="600"
+        WindowStartupLocation="Manual"
+        Top="200" Left="1300"
+        Closing="MainWindow_Closing">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="350*" />
+            <ColumnDefinition Width="250*"/>
+        </Grid.ColumnDefinitions>
+
+        <Label>Player Times</Label>
+        <ListBox Grid.Row="1" x:Name="PlayerTimes"/>
+
+        <StackPanel Grid.Row="1" Grid.Column="1" Margin="5,0,5,0">
+            <Button x:Name="BtnAdd" Margin="0,5,0,0" Click="HookToGameButtonPressed" IsEnabled="False">Hook To Game</Button>
+            <Button x:Name="BtnResetTimes" Margin="0,5,0,0" Click="ResetMatchButtonPressed">Reset Match</Button>
+            <Button x:Name="BtnResetEpisode" Margin="0,5,0,0" Click="ResetEpisodeButtonPressed">Reset Episode</Button>
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Label HorizontalAlignment="Center" Grid.ColumnSpan="4">Player Names</Label>
+                <Label Grid.Row="1" x:Name="StartTimeLabel" Grid.ColumnSpan="3">Start Time:</Label>
+                <TextBox Grid.Row="1" Grid.Column="3" x:Name="StartTimeEntry" Grid.ColumnSpan="3" Margin="0,0,3,0"></TextBox>
+                <Label Grid.Row="2" x:Name="GoldValueLabel" Grid.ColumnSpan="3">Gold Value:</Label>
+                <TextBox Grid.Row="2" Grid.Column="3" x:Name="GoldValueEntry" Grid.ColumnSpan="3" Margin="0,0,3,0"></TextBox>
+            </Grid>
+
+            <Button x:Name="BtnUpdateValues" Margin="0,5,0,0" Click="ApplyStartTimeValueButtonPressed">Update Values</Button>
+        </StackPanel>
+    </Grid>
+</Window>
