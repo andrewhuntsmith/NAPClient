@@ -69,6 +69,15 @@ namespace NAPClient
             MS.ApplyStartTimeValue(textAsDouble);
         }
 
+        void SwapTwoLevelsButtonPressed(object sender, RoutedEventArgs e)
+        {
+            var firstLevelText = string.IsNullOrEmpty(FirstLevelEntry.Text) ? "0" : FirstLevelEntry.Text;
+            var secondLevelText = string.IsNullOrEmpty(SecondLevelEntry.Text) ? "1" : SecondLevelEntry.Text;
+            var firstTextAsInt = int.Parse(firstLevelText);
+            var secondTextAsInt = int.Parse(secondLevelText);
+            MS.SwapLevels(firstTextAsInt, secondTextAsInt);
+        }
+
         void EndMatchButtonPressed(object sender, RoutedEventArgs e)
         {
             ResetMatch();

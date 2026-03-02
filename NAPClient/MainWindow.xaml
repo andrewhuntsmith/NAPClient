@@ -53,6 +53,33 @@
             </Grid>
 
             <Button x:Name="BtnUpdateValues" Margin="0,5,0,0" Click="ApplyStartTimeValueButtonPressed">Update Values</Button>
+            <Button x:Name="BtnSwapLevels" Margin="0,5,0,0" Click="SwapTwoLevelsButtonPressed">Swap Levels</Button>
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Label HorizontalAlignment="Center" Grid.ColumnSpan="4">Levels to swap</Label>
+                <Label Grid.Row="1" x:Name="FirstLevelLabel" Grid.ColumnSpan="3">First Level:</Label>
+                <TextBox Grid.Row="1" Grid.Column="3" x:Name="FirstLevelEntry" Grid.ColumnSpan="3" Margin="0,0,3,0"></TextBox>
+                <Label Grid.Row="2" x:Name="SecondLevelLabel" Grid.ColumnSpan="3">Second Level:</Label>
+                <TextBox Grid.Row="2" Grid.Column="3" x:Name="SecondLevelEntry" Grid.ColumnSpan="3" Margin="0,0,3,0"></TextBox>
+            </Grid>
+
         </StackPanel>
     </Grid>
 </Window>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows;
 
@@ -14,6 +15,15 @@ namespace NAPClient
         // pointer offsets from timer section to timers
         public const int TimeRemainingOffset = 0xFA8;
         public const int StartTimeOffset = 0xFB0;
+
+        // level data variables
+        public const int LevelDataSize = 0x4CC; // level data is always 1228 bytes
+        public const int LevelDataOffset1 = 0xB7B178;
+        public const int LevelDataOffset2 = 0x0;
+        public const int LevelDataOffset3 = 0x330;
+        public const int LevelDataOffset4 = -0xACC;
+        public const int LevelDataOffset5 = 0x8;
+        public List<byte[]> LevelData;
 
         // calculated once the program starts running
         public static int TimerBlockOffset;
@@ -29,6 +39,7 @@ namespace NAPClient
 
         public bool EpisodeTimeValuesChanged;
         public bool PlayerActivityChanged;
+        public IntPtrAddressValue FirstLevelAddress;
 
         public DoubleAddressValue CurrentTimeRemaining;
         public DoubleAddressValue LevelStartTime;
@@ -135,6 +146,20 @@ namespace NAPClient
             // If you wanted to start one address higher, you would need to start at the NppdllBaseAddress, and add the initial offset to that. i.e. "{ NppdllBaseAddress + TimerPointerOffsets, TimeRemainingOffset }"
             CurrentTimeRemaining = new DoubleAddressValue() { Offsets = new List<int> { TimerBlockOffset + TimeRemainingOffset } };
             LevelStartTime = new DoubleAddressValue() { Offsets = new List<int> { TimerBlockOffset + StartTimeOffset } };
+            FirstLevelAddress = new IntPtrAddressValue() { Offsets = new List<int> { NppdllBaseAddress.ToInt32() + LevelDataOffset1, LevelDataOffset2, LevelDataOffset3, LevelDataOffset4 } };
+            ReadLevelData();
+        }
+
+        void ReadLevelData()
+        {
+            int bytesRead = 0;
+            LevelData = new List<byte[]> { };
+            FirstLevelAddress.UpdateValue();
+            for (int i = 0; i < 10; i++)
+            {
+                LevelData.Add(new byte[LevelDataSize]);
+                MemorySource.ReadProcessMemory((int)MemorySource.NppProcessHandle, FirstLevelAddress.AsInt() + LevelDataOffset5 + i * LevelDataSize, LevelData[i], LevelDataSize, ref bytesRead);
+            }
         }
 
         void StartNewEpisode()
@@ -152,6 +177,18 @@ namespace NAPClient
         public void ApplyStartTimeValue(double newValue)
         {
             CurrentTimeRemaining.SetValue(newValue);
+        }
+
+        public void SwapLevels(int first, int second)
+        {
+            int bytesRead = 0;
+            var firstLevelData = new byte[LevelDataSize];
+            MemorySource.ReadProcessMemory((int)MemorySource.NppProcessHandle, FirstLevelAddress.AsInt() + first * LevelDataSize, firstLevelData, LevelDataSize, ref bytesRead);
+            var secondLevelData = new byte[LevelDataSize];
+            MemorySource.ReadProcessMemory((int)MemorySource.NppProcessHandle, FirstLevelAddress.AsInt() + second * LevelDataSize, secondLevelData, LevelDataSize, ref bytesRead);
+
+            MemorySource.WriteProcessMemory((int)MemorySource.NppProcessHandle, FirstLevelAddress.AsInt() + second * LevelDataSize, firstLevelData, LevelDataSize, out var bytesWritten);
+            MemorySource.WriteProcessMemory((int)MemorySource.NppProcessHandle, FirstLevelAddress.AsInt() + first * LevelDataSize, secondLevelData, LevelDataSize, out bytesWritten);
         }
     }
 }

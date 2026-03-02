@@ -99,4 +99,22 @@ namespace NAPClient
         }
     }
 
+    public class IntPtrAddressValue : AddressValue<IntPtr>
+    {
+        protected override IntPtr ConvertToType(byte[] buffer)
+        {
+            return (IntPtr)BitConverter.ToInt32(buffer, 0);
+        }
+
+        protected override byte[] ConvertFromType(IntPtr value)
+        {
+            return BitConverter.GetBytes(value.ToInt32());
+        }
+
+        public int AsInt()
+        {
+            return Value.ToInt32();
+        }
+    }
+
 }
