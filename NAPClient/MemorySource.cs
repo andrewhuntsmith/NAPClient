@@ -27,7 +27,7 @@ namespace NAPClient
 
         // level profile data variables
         public const int LevelProfileSize = 0x30; // level profile data is always 48 bytes
-        public const int InitialLevelProfilePointer = 0x2FD0513C; // REPLACE THIS WITH STATIC POINTERS
+        public const int InitialLevelProfilePointer = 0x3034B13C; // REPLACE THIS WITH STATIC POINTERS
         public List<byte[]> LevelProfile;
 
         // calculated once the program starts running
@@ -209,6 +209,19 @@ namespace NAPClient
 
             MemorySource.WriteProcessMemory((int)MemorySource.NppProcessHandle, FirstLevelDataAddress.AsInt() + second * LevelDataSize, firstLevelData, LevelDataSize, out var bytesWritten);
             MemorySource.WriteProcessMemory((int)MemorySource.NppProcessHandle, FirstLevelDataAddress.AsInt() + first * LevelDataSize, secondLevelData, LevelDataSize, out bytesWritten);
+
+            var firstLevelProfile = new byte[LevelProfileSize];
+            MemorySource.ReadProcessMemory((int)MemorySource.NppProcessHandle, InitialLevelProfilePointer + first * LevelProfileSize, firstLevelProfile, LevelProfileSize, ref bytesRead);
+            var secondLevelProfile = new byte[LevelProfileSize];
+            MemorySource.ReadProcessMemory((int)MemorySource.NppProcessHandle, InitialLevelProfilePointer + second * LevelProfileSize, secondLevelProfile, LevelProfileSize, ref bytesRead);
+
+            MemorySource.WriteProcessMemory((int)MemorySource.NppProcessHandle, InitialLevelProfilePointer + first * LevelProfileSize, secondLevelProfile, LevelProfileSize, out bytesWritten);
+            MemorySource.WriteProcessMemory((int)MemorySource.NppProcessHandle, InitialLevelProfilePointer + second * LevelProfileSize, firstLevelProfile, LevelProfileSize, out bytesWritten);
+
+            LevelData[first] = secondLevelData;
+            LevelData[second] = firstLevelData;
+            LevelProfile[first] = secondLevelProfile;
+            LevelProfile[second] = firstLevelProfile;
         }
 
         public void UpdateLevelProfileValue(int levelIndex, int byteIndex, int value)

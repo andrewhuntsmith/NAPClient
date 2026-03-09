@@ -142,6 +142,8 @@ namespace NAPClient
             var firstTextAsInt = int.Parse(firstLevelText);
             var secondTextAsInt = int.Parse(secondLevelText);
             MS.SwapLevels(firstTextAsInt, secondTextAsInt);
+
+            RefreshLevelButtonColors();
         }
 
         void HookToGameButtonPressed(object sender, RoutedEventArgs e)
