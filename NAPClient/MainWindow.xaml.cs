@@ -168,11 +168,9 @@ namespace NAPClient
             CurrentSelectedLevelId = tag;
             var levelData = MS.LevelData[tag];
             var profileData = MS.LevelProfile[tag];
-            var nameArray = new byte[129];
-            Array.Copy(levelData, 30, nameArray, 0, nameArray.Length);
 
             LevelIDLabel.Content = profileData[0];
-            LevelNameLabel.Content = System.Text.Encoding.UTF8.GetString(nameArray);
+            LevelNameLabel.Content = levelData.GetLevelName();
             AvailableLabel.Content = profileData[20] == 0 ? "LOCKED" : "Available";
             AllGoldLabel.Content = profileData[28] == 0 ? "No" : "Yes";
         }

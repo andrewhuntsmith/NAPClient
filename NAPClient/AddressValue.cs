@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices;
+using System.Text;
 using System.Windows;
 
 namespace NAPClient
@@ -11,6 +13,7 @@ namespace NAPClient
         public T Value;
         public T PreviousValue;
         public Action<T, T> ValueUpdated;
+        protected abstract int DataSize();
 
         public void UpdateValue()
         {
@@ -20,7 +23,8 @@ namespace NAPClient
             for (i = 0; i < Offsets.Count; i++)
             {
                 int pointer = i == 0 ? 0 : BitConverter.ToInt32(bufferList[i - 1], 0);
-                bufferList.Add(new byte[8]);
+                var byteArray = i < Offsets.Count - 1 ? new byte[8] : new byte[DataSize()];
+                bufferList.Add(byteArray);
                 MemorySource.ReadProcessMemory((int)MemorySource.NppProcessHandle, pointer + Offsets[i], bufferList[i], bufferList[i].Length, ref bytesRead);
             }
 
@@ -39,7 +43,8 @@ namespace NAPClient
             for (i = 0; i < Offsets.Count - 1; i++)
             {
                 pointer = i == 0 ? 0 : BitConverter.ToInt32(bufferList[i - 1], 0);
-                bufferList.Add(new byte[8]);
+                var byteArray = i < Offsets.Count - 1 ? new byte[8] : new byte[DataSize()];
+                bufferList.Add(byteArray);
                 MemorySource.ReadProcessMemory((int)MemorySource.NppProcessHandle, pointer + Offsets[i], bufferList[i], bufferList[i].Length, ref bytesRead);
             }
 
@@ -62,6 +67,8 @@ namespace NAPClient
 
     public class DoubleAddressValue : AddressValue<double>
     {
+        protected override int DataSize() => sizeof(double);
+
         protected override double ConvertToType(byte[] buffer)
         {
             return BitConverter.ToDouble(buffer, 0);
@@ -75,6 +82,8 @@ namespace NAPClient
 
     public class IntAddressValue : AddressValue<int>
     {
+        protected override int DataSize() => sizeof(int);
+
         protected override int ConvertToType(byte[] buffer)
         {
             return BitConverter.ToInt32(buffer, 0);
@@ -88,6 +97,8 @@ namespace NAPClient
 
     public class BoolAddressValue : AddressValue<bool>
     {
+        protected override int DataSize() => sizeof(bool);
+
         protected override bool ConvertToType(byte[] buffer)
         {
             return BitConverter.ToBoolean(buffer, 0);
@@ -101,6 +112,8 @@ namespace NAPClient
 
     public class IntPtrAddressValue : AddressValue<IntPtr>
     {
+        protected override int DataSize() => sizeof(int);
+
         protected override IntPtr ConvertToType(byte[] buffer)
         {
             return (IntPtr)BitConverter.ToInt32(buffer, 0);
@@ -117,4 +130,37 @@ namespace NAPClient
         }
     }
 
+    public class StringAddressValue : AddressValue<string>
+    {
+        public int StringLength;
+        protected override int DataSize() => StringLength;
+
+        protected override byte[] ConvertFromType(string value)
+        {
+            return Encoding.UTF8.GetBytes(value);
+        }
+
+        protected override string ConvertToType(byte[] buffer)
+        {
+            var strArray = new byte[buffer.Length];
+            Array.Copy(buffer, strArray, strArray.Length);
+            return Encoding.UTF8.GetString(strArray);
+        }
+    }
+
+    public class ByteArrayAddressValue : AddressValue<byte[]>
+    {
+        public int ArraySize;
+        protected override int DataSize() => ArraySize;
+
+        protected override byte[] ConvertFromType(byte[] value)
+        {
+            return value.ToArray();
+        }
+
+        protected override byte[] ConvertToType(byte[] buffer)
+        {
+            return buffer.ToArray();
+        }
+    }
 }

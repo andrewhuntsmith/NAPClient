@@ -23,7 +23,7 @@ namespace NAPClient
         public const int LevelDataOffset3 = 0x330;
         public const int LevelDataOffset4 = -0xACC;
         public const int LevelDataOffset5 = 0x8;
-        public List<byte[]> LevelData;
+        public List<LevelDataMemoryBridge> LevelData;
 
         // level profile data variables
         public const int LevelProfileSize = 0x30; // level profile data is always 48 bytes
@@ -160,14 +160,13 @@ namespace NAPClient
 
         void ReadLevelData()
         {
-            int bytesRead = 0;
-            LevelData = new List<byte[]> { };
+            LevelData = new List<LevelDataMemoryBridge> { };
             FirstLevelDataAddress.UpdateValue();
             for (int i = 0; i < 125; i++)
             {
-                LevelData.Add(new byte[LevelDataSize]);
-                MemorySource.ReadProcessMemory((int)MemorySource.NppProcessHandle, FirstLevelDataAddress.AsInt() + i * LevelDataSize, 
-                    LevelData[i], LevelDataSize, ref bytesRead);
+                var level = new LevelDataMemoryBridge(FirstLevelDataAddress.AsInt() + i * LevelDataSize);
+                LevelData.Add(level);
+                level.UpdateValue();
             }
         }
 
@@ -204,13 +203,14 @@ namespace NAPClient
         public void SwapLevels(int first, int second)
         {
             int bytesRead = 0;
-            var firstLevelData = new byte[LevelDataSize];
-            MemorySource.ReadProcessMemory((int)MemorySource.NppProcessHandle, FirstLevelDataAddress.AsInt() + first * LevelDataSize, firstLevelData, LevelDataSize, ref bytesRead);
-            var secondLevelData = new byte[LevelDataSize];
-            MemorySource.ReadProcessMemory((int)MemorySource.NppProcessHandle, FirstLevelDataAddress.AsInt() + second * LevelDataSize, secondLevelData, LevelDataSize, ref bytesRead);
 
-            MemorySource.WriteProcessMemory((int)MemorySource.NppProcessHandle, FirstLevelDataAddress.AsInt() + second * LevelDataSize, firstLevelData, LevelDataSize, out var bytesWritten);
-            MemorySource.WriteProcessMemory((int)MemorySource.NppProcessHandle, FirstLevelDataAddress.AsInt() + first * LevelDataSize, secondLevelData, LevelDataSize, out bytesWritten);
+            var firstLevelData = new byte[LevelDataSize];
+            LevelData[first].TotalLevelData.Value.CopyTo(firstLevelData, 0);
+            var secondLevelData = new byte[LevelDataSize];
+            LevelData[second].TotalLevelData.Value.CopyTo(secondLevelData, 0);
+
+            MemorySource.WriteProcessMemory((int)MemorySource.NppProcessHandle, LevelData[second].BaseLevelPointer, firstLevelData, LevelDataSize, out var bytesWritten);
+            MemorySource.WriteProcessMemory((int)MemorySource.NppProcessHandle, LevelData[first].BaseLevelPointer, secondLevelData, LevelDataSize, out bytesWritten);
 
             var firstLevelProfile = new byte[LevelProfileSize];
             MemorySource.ReadProcessMemory((int)MemorySource.NppProcessHandle, InitialLevelProfilePointer + first * LevelProfileSize, firstLevelProfile, LevelProfileSize, ref bytesRead);
@@ -220,8 +220,8 @@ namespace NAPClient
             MemorySource.WriteProcessMemory((int)MemorySource.NppProcessHandle, InitialLevelProfilePointer + first * LevelProfileSize, secondLevelProfile, LevelProfileSize, out bytesWritten);
             MemorySource.WriteProcessMemory((int)MemorySource.NppProcessHandle, InitialLevelProfilePointer + second * LevelProfileSize, firstLevelProfile, LevelProfileSize, out bytesWritten);
 
-            LevelData[first] = secondLevelData;
-            LevelData[second] = firstLevelData;
+            LevelData[first].UpdateValue();
+            LevelData[second].UpdateValue();
             LevelProfile[first] = secondLevelProfile;
             LevelProfile[second] = firstLevelProfile;
         }
