@@ -25,6 +25,11 @@ namespace NAPClient
         public const int LevelDataOffset5 = 0x8;
         public List<byte[]> LevelData;
 
+        // level profile data variables
+        public const int LevelProfileSize = 0x30; // level profile data is always 48 bytes
+        public const int InitialLevelProfilePointer = 0x2FD0513C; // REPLACE THIS WITH STATIC POINTERS
+        public List<byte[]> LevelProfile;
+
         // calculated once the program starts running
         public static int TimerBlockOffset;
 
@@ -39,7 +44,8 @@ namespace NAPClient
 
         public bool EpisodeTimeValuesChanged;
         public bool PlayerActivityChanged;
-        public IntPtrAddressValue FirstLevelAddress;
+        public IntPtrAddressValue FirstLevelDataAddress;
+        public IntPtrAddressValue FirstLevelProfileAddress;
 
         public DoubleAddressValue CurrentTimeRemaining;
         public DoubleAddressValue LevelStartTime;
@@ -146,19 +152,33 @@ namespace NAPClient
             // If you wanted to start one address higher, you would need to start at the NppdllBaseAddress, and add the initial offset to that. i.e. "{ NppdllBaseAddress + TimerPointerOffsets, TimeRemainingOffset }"
             CurrentTimeRemaining = new DoubleAddressValue() { Offsets = new List<int> { TimerBlockOffset + TimeRemainingOffset } };
             LevelStartTime = new DoubleAddressValue() { Offsets = new List<int> { TimerBlockOffset + StartTimeOffset } };
-            FirstLevelAddress = new IntPtrAddressValue() { Offsets = new List<int> { NppdllBaseAddress.ToInt32() + LevelDataOffset1, LevelDataOffset2, LevelDataOffset3, LevelDataOffset4 } };
+            FirstLevelDataAddress = new IntPtrAddressValue() { Offsets = new List<int> { NppdllBaseAddress.ToInt32() + LevelDataOffset1, LevelDataOffset2, LevelDataOffset3, LevelDataOffset4 } };
+            // FirstLevelProfileAddress = new IntPtrAddressValue() { Offsets = new List<int> { GET STATIC POINTERS } };
             ReadLevelData();
+            ReadLevelProfile();
         }
 
         void ReadLevelData()
         {
             int bytesRead = 0;
             LevelData = new List<byte[]> { };
-            FirstLevelAddress.UpdateValue();
-            for (int i = 0; i < 10; i++)
+            FirstLevelDataAddress.UpdateValue();
+            for (int i = 0; i < 125; i++)
             {
                 LevelData.Add(new byte[LevelDataSize]);
-                MemorySource.ReadProcessMemory((int)MemorySource.NppProcessHandle, FirstLevelAddress.AsInt() + LevelDataOffset5 + i * LevelDataSize, LevelData[i], LevelDataSize, ref bytesRead);
+                MemorySource.ReadProcessMemory((int)MemorySource.NppProcessHandle, FirstLevelDataAddress.AsInt() + LevelDataOffset5 + i * LevelDataSize, LevelData[i], LevelDataSize, ref bytesRead);
+            }
+        }
+
+        void ReadLevelProfile()
+        {
+            int bytesRead = 0;
+            LevelProfile = new List<byte[]> { };
+            // FirstLevelProfileAddress.UpdateValue();
+            for (int i = 0; i < 125; i++)
+            {
+                LevelProfile.Add(new byte[LevelProfileSize]);
+                MemorySource.ReadProcessMemory((int)MemorySource.NppProcessHandle, InitialLevelProfilePointer + i * LevelProfileSize, LevelProfile[i], LevelProfileSize, ref bytesRead);
             }
         }
 
@@ -183,12 +203,12 @@ namespace NAPClient
         {
             int bytesRead = 0;
             var firstLevelData = new byte[LevelDataSize];
-            MemorySource.ReadProcessMemory((int)MemorySource.NppProcessHandle, FirstLevelAddress.AsInt() + first * LevelDataSize, firstLevelData, LevelDataSize, ref bytesRead);
+            MemorySource.ReadProcessMemory((int)MemorySource.NppProcessHandle, FirstLevelDataAddress.AsInt() + first * LevelDataSize, firstLevelData, LevelDataSize, ref bytesRead);
             var secondLevelData = new byte[LevelDataSize];
-            MemorySource.ReadProcessMemory((int)MemorySource.NppProcessHandle, FirstLevelAddress.AsInt() + second * LevelDataSize, secondLevelData, LevelDataSize, ref bytesRead);
+            MemorySource.ReadProcessMemory((int)MemorySource.NppProcessHandle, FirstLevelDataAddress.AsInt() + second * LevelDataSize, secondLevelData, LevelDataSize, ref bytesRead);
 
-            MemorySource.WriteProcessMemory((int)MemorySource.NppProcessHandle, FirstLevelAddress.AsInt() + second * LevelDataSize, firstLevelData, LevelDataSize, out var bytesWritten);
-            MemorySource.WriteProcessMemory((int)MemorySource.NppProcessHandle, FirstLevelAddress.AsInt() + first * LevelDataSize, secondLevelData, LevelDataSize, out bytesWritten);
+            MemorySource.WriteProcessMemory((int)MemorySource.NppProcessHandle, FirstLevelDataAddress.AsInt() + second * LevelDataSize, firstLevelData, LevelDataSize, out var bytesWritten);
+            MemorySource.WriteProcessMemory((int)MemorySource.NppProcessHandle, FirstLevelDataAddress.AsInt() + first * LevelDataSize, secondLevelData, LevelDataSize, out bytesWritten);
         }
     }
 }

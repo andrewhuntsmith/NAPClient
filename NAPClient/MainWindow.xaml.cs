@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Threading;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
+using System.Windows.Shapes;
 
 namespace NAPClient
 {
@@ -17,49 +18,112 @@ namespace NAPClient
         public static MemorySource MS = new MemorySource();
         LogWriter Log = new LogWriter();
 
-        public string SlotName = "P1";
+        SolidColorBrush InaccessibleColor = Brushes.Black;
+        SolidColorBrush AccessibleColor = Brushes.LightGray;
+        SolidColorBrush BeatenColor = Brushes.DarkGray;
+        SolidColorBrush AllGoldColor = Brushes.Gold;
+
+        SolidColorBrush RectangleBackground = Brushes.DarkGray;
+        SolidColorBrush RectangleOutline = Brushes.Black;
+
+        List<Button> LevelButtonList = new List<Button>();
+        List<Button> EpisodeButtonList = new List<Button>();
 
         public MainWindow()
         {
             InitializeComponent();
             MS.HookMemory();
-            MS.PlayerFinished += UpdatePlayersFinished;
-            MS.LevelFinished += FinishCurrentLevel;
-            MS.StartNewLevel += StartNewLevel;
-            MS.EpisodeStarted += StartNewEpisode;
-            UpdateTimeDisplay();
-            Thread t = new Thread(UpdateThread);
-            t.Start();
+
+            GenerateButtonGrid();
+            SetLevelButtonColors();
         }
 
-        void UpdateThread()
+        void GenerateButtonGrid()
         {
-            
+            for (var i = 0; i < 25; i++)
+            {
+                var newRect = new Rectangle()
+                {
+                    StrokeThickness = 1,
+                    Stroke = RectangleOutline,
+                    Fill = RectangleBackground
+                };
+                Grid.SetRow(newRect, i % 5);
+                Grid.SetColumn(newRect, i / 5);
+                LevelGrid.Children.Add(newRect);
+
+                var levelColumnDef1 = new ColumnDefinition() { Width = new GridLength(20, GridUnitType.Pixel) };
+                var levelColumnDef2 = new ColumnDefinition() { Width = new GridLength(20, GridUnitType.Pixel) };
+                var levelColumnDef3 = new ColumnDefinition() { Width = new GridLength(20, GridUnitType.Pixel) };
+                var levelRowDef1 = new RowDefinition() { Height = new GridLength(20, GridUnitType.Pixel) };
+                var levelRowDef2 = new RowDefinition() { Height = new GridLength(20, GridUnitType.Pixel) };
+                var levelRowDef3 = new RowDefinition() { Height = new GridLength(20, GridUnitType.Pixel) };
+
+                var episodeGrid = new Grid();
+                episodeGrid.ColumnDefinitions.Add(levelColumnDef1);
+                episodeGrid.ColumnDefinitions.Add(levelColumnDef2);
+                episodeGrid.ColumnDefinitions.Add(levelColumnDef3);
+                episodeGrid.RowDefinitions.Add(levelRowDef1);
+                episodeGrid.RowDefinitions.Add(levelRowDef2);
+                episodeGrid.RowDefinitions.Add(levelRowDef3);
+                Grid.SetRow(episodeGrid, i % 5);
+                Grid.SetColumn(episodeGrid, i / 5);
+                LevelGrid.Children.Add(episodeGrid);
+
+                for (var j = 0; j < 5; j++)
+                {
+                    var levelButton = new Button()
+                    {
+                        Margin = new Thickness(2),
+                        Name = "LevelButton" + (i * 5 + j).ToString(),
+                        IsEnabled = true,
+                        Tag = i * 5 + j
+                    };
+
+                    levelButton.Click += LevelButtonPressed;
+                    Grid.SetRow(levelButton, j / 3);
+                    Grid.SetColumn(levelButton, j % 3);
+                    episodeGrid.Children.Add(levelButton);
+                    LevelButtonList.Add(levelButton);
+                }
+
+                var episodeButton = new Button()
+                {
+                    Height = 20,
+                    Margin = new Thickness(2),
+                    HorizontalContentAlignment = HorizontalAlignment.Center,
+                    VerticalAlignment = VerticalAlignment.Top,
+                    FontSize = 12,
+                    Name = "EpisodeButton" + i.ToString(),
+                    Tag = i,
+                    Content = GenerateEpisodeName(i)
+                };
+                episodeButton.Click += EpisodeButtonPressed;
+                Grid.SetRow(episodeButton, 2);
+                Grid.SetColumnSpan(episodeButton, 3);
+                episodeGrid.Children.Add(episodeButton);
+                EpisodeButtonList.Add(episodeButton);
+            }
         }
 
-        void UpdateTimeDisplay()
+        void SetLevelButtonColors()
         {
-            MS.CurrentTimeRemaining.UpdateValue();
-            StartTimeEntry.Text = MS.CurrentTimeRemaining.Value.ToString();
-            PlayerTimes.Items.Clear();
-            var names = new List<string>();
-            var scores = new List<string>();
+            foreach (var button in LevelButtonList)
+            {
+                var tag = -1;
+                int.TryParse(button.Tag.ToString(), out tag);
+                if (tag == -1)
+                {
+                    LevelIDLabel.Content = "Error getting level ID";
+                    return;
+                }
 
-            names.Add(SlotName);
-            
-            Log.UpdateNamesFile(names);
-            Log.UpdateScoresFile(scores);
-        }
-
-        void ResetMatchButtonPressed(object sender, RoutedEventArgs e)
-        {
-            ResetMatch();
-        }
-
-        void ResetEpisodeButtonPressed(object sender, RoutedEventArgs e)
-        {
-            MS.ResetValues();
-            UpdateTimeDisplay();
+                var profileData = MS.LevelProfile[tag];
+                button.Background = profileData[28] != 0 ? AllGoldColor :
+                    profileData[20] == 0 ? InaccessibleColor :
+                    profileData[20] == 1 ? AccessibleColor :
+                    BeatenColor;
+            }
         }
 
         void ApplyStartTimeValueButtonPressed(object sender, RoutedEventArgs e)
@@ -78,22 +142,6 @@ namespace NAPClient
             MS.SwapLevels(firstTextAsInt, secondTextAsInt);
         }
 
-        void EndMatchButtonPressed(object sender, RoutedEventArgs e)
-        {
-            ResetMatch();
-        }
-
-        void ResetMatch()
-        {
-            MS.ResetValues();
-            UpdateTimeDisplay();
-        }
-
-        void UpdateNamesButtonPressed(object sender, RoutedEventArgs e)
-        {
-            
-        }
-
         void HookToGameButtonPressed(object sender, RoutedEventArgs e)
         {
 
@@ -103,24 +151,38 @@ namespace NAPClient
         {
         }
 
-        void FinishCurrentLevel()
+        private void LevelButtonPressed(object sender, RoutedEventArgs e) 
         {
-            
+            var tag = -1;
+            int.TryParse((sender as Button).Tag.ToString(), out tag);
+            if (tag == -1)
+            {
+                LevelIDLabel.Content = "Error getting level ID";
+                return;
+            }
+
+            var levelData = MS.LevelData[tag];
+            var profileData = MS.LevelProfile[tag];
+            var nameArray = new byte[129];
+            Array.Copy(levelData, nameArray, nameArray.Length);
+
+            LevelIDLabel.Content = profileData[0];
+            LevelNameLabel.Content = System.Text.Encoding.UTF8.GetString(nameArray);
+            AvailableLabel.Content = profileData[20] == 0 ? "LOCKED" : "Available";
+            AllGoldLabel.Content = profileData[28] == 0 ? "No" : "Yes";
         }
 
-        void StartNewEpisode()
+        private void EpisodeButtonPressed(object sender, RoutedEventArgs e) 
         {
-            
+            LevelNameLabel.Content = "Episode functionality not yet hooked up";
         }
 
-        void StartNewLevel()
+        string GenerateEpisodeName(int index)
         {
-            
-        }
-
-        void UpdatePlayersFinished(int playerIndex, int frameCount, double bonus, int goldCollected)
-        {
-            
+            var letters = "ABCDE";
+            var letter = letters[index % 5];
+            var number = index / 5;
+            return "SI-" + letter + "-" + number.ToString();
         }
     }
 }

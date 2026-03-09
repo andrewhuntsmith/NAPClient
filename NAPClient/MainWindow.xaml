@@ -12,6 +12,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
@@ -19,13 +20,49 @@
             <ColumnDefinition Width="250*"/>
         </Grid.ColumnDefinitions>
 
-        <Label>Player Times</Label>
-        <ListBox Grid.Row="1" x:Name="PlayerTimes"/>
-
+        
+        <Label>Level Grid</Label>
+        <Grid Grid.Row="1" x:Name="LevelGrid">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="72"/>
+                <RowDefinition Height="72"/>
+                <RowDefinition Height="72"/>
+                <RowDefinition Height="72"/>
+                <RowDefinition Height="72"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="68"/>
+                <ColumnDefinition Width="68"/>
+                <ColumnDefinition Width="68"/>
+                <ColumnDefinition Width="68"/>
+                <ColumnDefinition Width="68"/>
+            </Grid.ColumnDefinitions>
+        </Grid>
+        <Grid Grid.Row="2" Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            
+            <Label Grid.Row="0" Grid.Column="0">Level Name: </Label>
+            <Label Grid.Row="1" Grid.Column="0">Level ID:</Label>
+            <Label Grid.Row="2" Grid.Column="0">Available? </Label>
+            <Label Grid.Row="3" Grid.Column="0">G++? </Label>
+            <Label Grid.Row="0" Grid.Column="1" x:Name="LevelNameLabel">flateau</Label>
+            <Label Grid.Row="1" Grid.Column="1" x:Name="LevelIDLabel">S-A-00-00</Label>
+            <Label Grid.Row="2" Grid.Column="1" x:Name="AvailableLabel">--</Label>
+            <Label Grid.Row="3" Grid.Column="1" x:Name="AllGoldLabel">--</Label>
+        </Grid>
+        
         <StackPanel Grid.Row="1" Grid.Column="1" Margin="5,0,5,0">
             <Button x:Name="BtnAdd" Margin="0,5,0,0" Click="HookToGameButtonPressed" IsEnabled="False">Hook To Game</Button>
-            <Button x:Name="BtnResetTimes" Margin="0,5,0,0" Click="ResetMatchButtonPressed">Reset Match</Button>
-            <Button x:Name="BtnResetEpisode" Margin="0,5,0,0" Click="ResetEpisodeButtonPressed">Reset Episode</Button>
+            <Button x:Name="BtnUpdateValues" Click="ApplyStartTimeValueButtonPressed" Content="Update Values"/>
 
             <Grid>
                 <Grid.RowDefinitions>
@@ -44,15 +81,11 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-
-                <Label HorizontalAlignment="Center" Grid.ColumnSpan="4">Player Names</Label>
                 <Label Grid.Row="1" x:Name="StartTimeLabel" Grid.ColumnSpan="3">Start Time:</Label>
                 <TextBox Grid.Row="1" Grid.Column="3" x:Name="StartTimeEntry" Grid.ColumnSpan="3" Margin="0,0,3,0"></TextBox>
                 <Label Grid.Row="2" x:Name="GoldValueLabel" Grid.ColumnSpan="3">Gold Value:</Label>
                 <TextBox Grid.Row="2" Grid.Column="3" x:Name="GoldValueEntry" Grid.ColumnSpan="3" Margin="0,0,3,0"></TextBox>
             </Grid>
-
-            <Button x:Name="BtnUpdateValues" Margin="0,5,0,0" Click="ApplyStartTimeValueButtonPressed">Update Values</Button>
             <Button x:Name="BtnSwapLevels" Margin="0,5,0,0" Click="SwapTwoLevelsButtonPressed">Swap Levels</Button>
 
             <Grid>
