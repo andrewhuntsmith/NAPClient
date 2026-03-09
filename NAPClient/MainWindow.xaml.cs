@@ -169,7 +169,7 @@ namespace NAPClient
             var levelData = MS.LevelData[tag];
             var profileData = MS.LevelProfile[tag];
             var nameArray = new byte[129];
-            Array.Copy(levelData, nameArray, nameArray.Length);
+            Array.Copy(levelData, 30, nameArray, 0, nameArray.Length);
 
             LevelIDLabel.Content = profileData[0];
             LevelNameLabel.Content = System.Text.Encoding.UTF8.GetString(nameArray);

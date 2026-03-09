@@ -166,7 +166,8 @@ namespace NAPClient
             for (int i = 0; i < 125; i++)
             {
                 LevelData.Add(new byte[LevelDataSize]);
-                MemorySource.ReadProcessMemory((int)MemorySource.NppProcessHandle, FirstLevelDataAddress.AsInt() + LevelDataOffset5 + i * LevelDataSize, LevelData[i], LevelDataSize, ref bytesRead);
+                MemorySource.ReadProcessMemory((int)MemorySource.NppProcessHandle, FirstLevelDataAddress.AsInt() + i * LevelDataSize, 
+                    LevelData[i], LevelDataSize, ref bytesRead);
             }
         }
 
@@ -178,7 +179,8 @@ namespace NAPClient
             for (int i = 0; i < 125; i++)
             {
                 LevelProfile.Add(new byte[LevelProfileSize]);
-                MemorySource.ReadProcessMemory((int)MemorySource.NppProcessHandle, InitialLevelProfilePointer + i * LevelProfileSize, LevelProfile[i], LevelProfileSize, ref bytesRead);
+                MemorySource.ReadProcessMemory((int)MemorySource.NppProcessHandle, InitialLevelProfilePointer + i * LevelProfileSize, 
+                    LevelProfile[i], LevelProfileSize, ref bytesRead);
             }
         }
 
