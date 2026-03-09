@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="NAPClient" Height="500" Width="600"
+        Title="NAPClient" Height="600" Width="640"
         WindowStartupLocation="Manual"
         Top="200" Left="1300"
         Closing="MainWindow_Closing">
@@ -16,8 +16,8 @@
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="350*" />
-            <ColumnDefinition Width="250*"/>
+            <ColumnDefinition Width="400*" />
+            <ColumnDefinition Width="240*"/>
         </Grid.ColumnDefinitions>
 
         
@@ -31,11 +31,11 @@
                 <RowDefinition Height="72"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="68"/>
-                <ColumnDefinition Width="68"/>
-                <ColumnDefinition Width="68"/>
-                <ColumnDefinition Width="68"/>
-                <ColumnDefinition Width="68"/>
+                <ColumnDefinition Width="72"/>
+                <ColumnDefinition Width="72"/>
+                <ColumnDefinition Width="72"/>
+                <ColumnDefinition Width="72"/>
+                <ColumnDefinition Width="72"/>
             </Grid.ColumnDefinitions>
         </Grid>
         <Grid Grid.Row="2" Grid.Column="0">
@@ -54,8 +54,8 @@
             <Label Grid.Row="1" Grid.Column="0">Level ID:</Label>
             <Label Grid.Row="2" Grid.Column="0">Available? </Label>
             <Label Grid.Row="3" Grid.Column="0">G++? </Label>
-            <Label Grid.Row="0" Grid.Column="1" x:Name="LevelNameLabel">flateau</Label>
-            <Label Grid.Row="1" Grid.Column="1" x:Name="LevelIDLabel">S-A-00-00</Label>
+            <Label Grid.Row="0" Grid.Column="1" x:Name="LevelNameLabel">--</Label>
+            <Label Grid.Row="1" Grid.Column="1" x:Name="LevelIDLabel">--</Label>
             <Label Grid.Row="2" Grid.Column="1" x:Name="AvailableLabel">--</Label>
             <Label Grid.Row="3" Grid.Column="1" x:Name="AllGoldLabel">--</Label>
         </Grid>
@@ -112,6 +112,7 @@
                 <Label Grid.Row="2" x:Name="SecondLevelLabel" Grid.ColumnSpan="3">Second Level:</Label>
                 <TextBox Grid.Row="2" Grid.Column="3" x:Name="SecondLevelEntry" Grid.ColumnSpan="3" Margin="0,0,3,0"></TextBox>
             </Grid>
+            <Button x:Name="BtnCycleLevelStatus" Margin="0,5,0,0" Click="CycleLevelStatusPressed">Cycle Level Status</Button>
 
         </StackPanel>
     </Grid>

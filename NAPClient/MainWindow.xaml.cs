@@ -29,13 +29,15 @@ namespace NAPClient
         List<Button> LevelButtonList = new List<Button>();
         List<Button> EpisodeButtonList = new List<Button>();
 
+        int CurrentSelectedLevelId = -1;
+
         public MainWindow()
         {
             InitializeComponent();
             MS.HookMemory();
 
             GenerateButtonGrid();
-            SetLevelButtonColors();
+            RefreshLevelButtonColors();
         }
 
         void GenerateButtonGrid()
@@ -52,12 +54,12 @@ namespace NAPClient
                 Grid.SetColumn(newRect, i / 5);
                 LevelGrid.Children.Add(newRect);
 
-                var levelColumnDef1 = new ColumnDefinition() { Width = new GridLength(20, GridUnitType.Pixel) };
-                var levelColumnDef2 = new ColumnDefinition() { Width = new GridLength(20, GridUnitType.Pixel) };
-                var levelColumnDef3 = new ColumnDefinition() { Width = new GridLength(20, GridUnitType.Pixel) };
-                var levelRowDef1 = new RowDefinition() { Height = new GridLength(20, GridUnitType.Pixel) };
-                var levelRowDef2 = new RowDefinition() { Height = new GridLength(20, GridUnitType.Pixel) };
-                var levelRowDef3 = new RowDefinition() { Height = new GridLength(20, GridUnitType.Pixel) };
+                var levelColumnDef1 = new ColumnDefinition() { Width = new GridLength(24, GridUnitType.Pixel) };
+                var levelColumnDef2 = new ColumnDefinition() { Width = new GridLength(24, GridUnitType.Pixel) };
+                var levelColumnDef3 = new ColumnDefinition() { Width = new GridLength(24, GridUnitType.Pixel) };
+                var levelRowDef1 = new RowDefinition() { Height = new GridLength(24, GridUnitType.Pixel) };
+                var levelRowDef2 = new RowDefinition() { Height = new GridLength(24, GridUnitType.Pixel) };
+                var levelRowDef3 = new RowDefinition() { Height = new GridLength(24, GridUnitType.Pixel) };
 
                 var episodeGrid = new Grid();
                 episodeGrid.ColumnDefinitions.Add(levelColumnDef1);
@@ -75,7 +77,7 @@ namespace NAPClient
                     var levelButton = new Button()
                     {
                         Margin = new Thickness(2),
-                        Name = "LevelButton" + (i * 5 + j).ToString(),
+                        Name = "BtnLevel" + (i * 5 + j).ToString(),
                         IsEnabled = true,
                         Tag = i * 5 + j
                     };
@@ -94,7 +96,7 @@ namespace NAPClient
                     HorizontalContentAlignment = HorizontalAlignment.Center,
                     VerticalAlignment = VerticalAlignment.Top,
                     FontSize = 12,
-                    Name = "EpisodeButton" + i.ToString(),
+                    Name = "BtnEpisode" + i.ToString(),
                     Tag = i,
                     Content = GenerateEpisodeName(i)
                 };
@@ -106,7 +108,7 @@ namespace NAPClient
             }
         }
 
-        void SetLevelButtonColors()
+        void RefreshLevelButtonColors()
         {
             foreach (var button in LevelButtonList)
             {
@@ -161,6 +163,7 @@ namespace NAPClient
                 return;
             }
 
+            CurrentSelectedLevelId = tag;
             var levelData = MS.LevelData[tag];
             var profileData = MS.LevelProfile[tag];
             var nameArray = new byte[129];
@@ -177,12 +180,58 @@ namespace NAPClient
             LevelNameLabel.Content = "Episode functionality not yet hooked up";
         }
 
+        private void CycleLevelStatusPressed(object sender, RoutedEventArgs e)
+        {
+            CycleLevelStatus();
+        }
+
         string GenerateEpisodeName(int index)
         {
             var letters = "ABCDE";
             var letter = letters[index % 5];
             var number = index / 5;
             return "SI-" + letter + "-" + number.ToString();
+        }
+
+        void CycleLevelStatus()
+        {
+            if (CurrentSelectedLevelId == -1)
+            {
+                LevelIDLabel.Content = "Error getting level ID";
+                return;
+            }
+
+            var profileData = MS.LevelProfile[CurrentSelectedLevelId];
+            if (profileData[20] == 0) // level is locked, set it to available
+            {
+                MS.UpdateLevelProfileValue(CurrentSelectedLevelId, 20, 1);
+                profileData[20] = 1;
+                RefreshLevelButtonColors();
+                return;
+            }
+            else if (profileData[20] == 1) // level is available, set it to beaten
+            {
+                MS.UpdateLevelProfileValue(CurrentSelectedLevelId, 20, 2);
+                profileData[20] = 2;
+                RefreshLevelButtonColors();
+                return;
+            }
+            else if (profileData[28] == 0)
+            {
+                MS.UpdateLevelProfileValue(CurrentSelectedLevelId, 28, 1);
+                profileData[28] = 1;
+                RefreshLevelButtonColors();
+                return;
+            }
+            else
+            {
+                MS.UpdateLevelProfileValue(CurrentSelectedLevelId, 20, 0);
+                MS.UpdateLevelProfileValue(CurrentSelectedLevelId, 28, 0);
+                profileData[20] = 0;
+                profileData[28] = 0;
+                RefreshLevelButtonColors();
+                return;
+            }
         }
     }
 }

@@ -210,5 +210,10 @@ namespace NAPClient
             MemorySource.WriteProcessMemory((int)MemorySource.NppProcessHandle, FirstLevelDataAddress.AsInt() + second * LevelDataSize, firstLevelData, LevelDataSize, out var bytesWritten);
             MemorySource.WriteProcessMemory((int)MemorySource.NppProcessHandle, FirstLevelDataAddress.AsInt() + first * LevelDataSize, secondLevelData, LevelDataSize, out bytesWritten);
         }
+
+        public void UpdateLevelProfileValue(int levelIndex, int byteIndex, int value)
+        {
+            MemorySource.WriteProcessMemory((int)MemorySource.NppProcessHandle, InitialLevelProfilePointer + levelIndex * LevelProfileSize + byteIndex, BitConverter.GetBytes(value), sizeof(int), out var bytesWritten);
+        }
     }
 }
