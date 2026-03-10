@@ -18,6 +18,8 @@ namespace NAPClient
         public static MemorySource MS = new MemorySource();
         LogWriter Log = new LogWriter();
 
+        Dictionary<LevelCompleteState, SolidColorBrush> LevelStateColorPalette = new Dictionary<LevelCompleteState, SolidColorBrush>();
+
         SolidColorBrush InaccessibleColor = Brushes.Black;
         SolidColorBrush AccessibleColor = Brushes.LightGray;
         SolidColorBrush BeatenColor = Brushes.DarkGray;
@@ -36,6 +38,7 @@ namespace NAPClient
             InitializeComponent();
             MS.HookMemory();
 
+            InitializeColorDictionary();
             GenerateButtonGrid();
             RefreshLevelButtonColors();
         }
@@ -108,6 +111,15 @@ namespace NAPClient
             }
         }
 
+        void InitializeColorDictionary()
+        {
+            LevelStateColorPalette = new Dictionary<LevelCompleteState, SolidColorBrush>();
+            LevelStateColorPalette[LevelCompleteState.LOCKED] = InaccessibleColor;
+            LevelStateColorPalette[LevelCompleteState.AVAILABLE] = AccessibleColor;
+            LevelStateColorPalette[LevelCompleteState.COMPLETED] = BeatenColor;
+            LevelStateColorPalette[LevelCompleteState.ALLGOLD] = AllGoldColor;
+        }
+
         void RefreshLevelButtonColors()
         {
             foreach (var button in LevelButtonList)
@@ -121,10 +133,7 @@ namespace NAPClient
                 }
 
                 var profileData = MS.LevelProfile[tag];
-                button.Background = profileData[28] != 0 ? AllGoldColor :
-                    profileData[20] == 0 ? InaccessibleColor :
-                    profileData[20] == 1 ? AccessibleColor :
-                    BeatenColor;
+                button.Background = LevelStateColorPalette[profileData.GetLevelCompleteState()];
             }
         }
 
@@ -169,10 +178,10 @@ namespace NAPClient
             var levelData = MS.LevelData[tag];
             var profileData = MS.LevelProfile[tag];
 
-            LevelIDLabel.Content = profileData[0];
+            LevelIDLabel.Content = profileData.GetLevelId();
             LevelNameLabel.Content = levelData.GetLevelName();
-            AvailableLabel.Content = profileData[20] == 0 ? "LOCKED" : "Available";
-            AllGoldLabel.Content = profileData[28] == 0 ? "No" : "Yes";
+            AvailableLabel.Content = profileData.GetLevelCompleteState() == LevelCompleteState.LOCKED ? "LOCKED" : "Available";
+            AllGoldLabel.Content = profileData.GetLevelCompleteState() != LevelCompleteState.ALLGOLD ? "No" : "Yes";
         }
 
         private void EpisodeButtonPressed(object sender, RoutedEventArgs e) 
@@ -202,36 +211,27 @@ namespace NAPClient
             }
 
             var profileData = MS.LevelProfile[CurrentSelectedLevelId];
-            if (profileData[20] == 0) // level is locked, set it to available
+            if (profileData.GetLevelCompleteState() == LevelCompleteState.LOCKED)
             {
-                MS.UpdateLevelProfileValue(CurrentSelectedLevelId, 20, 1);
-                profileData[20] = 1;
-                RefreshLevelButtonColors();
-                return;
+                profileData.UnlockLevel();
             }
-            else if (profileData[20] == 1) // level is available, set it to beaten
+            else if (profileData.GetLevelCompleteState() == LevelCompleteState.AVAILABLE)
             {
-                MS.UpdateLevelProfileValue(CurrentSelectedLevelId, 20, 2);
-                profileData[20] = 2;
-                RefreshLevelButtonColors();
-                return;
+                profileData.SetLevelBeaten();
             }
-            else if (profileData[28] == 0)
+            else if (profileData.GetLevelCompleteState() == LevelCompleteState.COMPLETED)
             {
-                MS.UpdateLevelProfileValue(CurrentSelectedLevelId, 28, 1);
-                profileData[28] = 1;
-                RefreshLevelButtonColors();
-                return;
+                profileData.SetAllGold();
             }
             else
             {
-                MS.UpdateLevelProfileValue(CurrentSelectedLevelId, 20, 0);
-                MS.UpdateLevelProfileValue(CurrentSelectedLevelId, 28, 0);
-                profileData[20] = 0;
-                profileData[28] = 0;
-                RefreshLevelButtonColors();
-                return;
+                profileData.LockLevel();
+                profileData.RevokeAllGold();
             }
+
+            profileData.UpdateValue();
+            RefreshLevelButtonColors();
+            return;
         }
     }
 }
