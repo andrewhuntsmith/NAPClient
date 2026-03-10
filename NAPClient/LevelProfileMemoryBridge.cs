@@ -33,11 +33,13 @@ namespace NAPClient
             EpisodeSuccessAddressValue = new IntAddressValue() { Offsets = new List<int> { BaseLevelPointer + 16 } };
             LevelLockedAddressValue = new IntAddressValue() { Offsets = new List<int> { BaseLevelPointer + 20 } };
             AllGoldAddressValue = new IntAddressValue() { Offsets = new List<int> { BaseLevelPointer + 28 } };
+
+            LevelLockedAddressValue.ValueUpdated += InternalValueUpdated;
+            AllGoldAddressValue.ValueUpdated += InternalValueUpdated;
         }
 
         public void UpdateValue()
         {
-            RefreshLevelFlag = false;
             TotalLevelProfile.UpdateValue();
             IdAddressValue.UpdateValue();
             AttemptCountAddressValue.UpdateValue();
@@ -49,10 +51,11 @@ namespace NAPClient
             if (RefreshLevelFlag)
             {
                 // do refresh logic
+                RefreshLevelFlag = false;
             }
         }
 
-        void InternalValueUpdated(string _, string __)
+        void InternalValueUpdated(int _, int __)
         {
             RefreshLevelFlag = true;
         }

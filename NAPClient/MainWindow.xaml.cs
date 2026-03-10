@@ -174,14 +174,7 @@ namespace NAPClient
                 return;
             }
 
-            CurrentSelectedLevelId = tag;
-            var levelData = MS.LevelData[tag];
-            var profileData = MS.LevelProfile[tag];
-
-            LevelIDLabel.Content = profileData.GetLevelId();
-            LevelNameLabel.Content = levelData.GetLevelName();
-            AvailableLabel.Content = profileData.GetLevelCompleteState() == LevelCompleteState.LOCKED ? "LOCKED" : "Available";
-            AllGoldLabel.Content = profileData.GetLevelCompleteState() != LevelCompleteState.ALLGOLD ? "No" : "Yes";
+            UpdateLevelText(tag);
         }
 
         private void EpisodeButtonPressed(object sender, RoutedEventArgs e) 
@@ -192,6 +185,29 @@ namespace NAPClient
         private void CycleLevelStatusPressed(object sender, RoutedEventArgs e)
         {
             CycleLevelStatus();
+        }
+
+        private void UpdateLevelStatusPressed(object sender, RoutedEventArgs e)
+        {
+            foreach (var levelProfile in MS.LevelProfile)
+            {
+                levelProfile.UpdateValue();
+            }
+
+            UpdateLevelText(CurrentSelectedLevelId);
+            RefreshLevelButtonColors();
+        }
+
+        void UpdateLevelText(int levelId)
+        {
+            CurrentSelectedLevelId = levelId;
+            var levelData = MS.LevelData[levelId];
+            var profileData = MS.LevelProfile[levelId];
+
+            LevelIDLabel.Content = profileData.GetLevelId();
+            LevelNameLabel.Content = levelData.GetLevelName();
+            AvailableLabel.Content = profileData.GetLevelCompleteState() == LevelCompleteState.LOCKED ? "LOCKED" : "Available";
+            AllGoldLabel.Content = profileData.GetLevelCompleteState() != LevelCompleteState.ALLGOLD ? "No" : "Yes";
         }
 
         string GenerateEpisodeName(int index)
@@ -230,6 +246,7 @@ namespace NAPClient
             }
 
             profileData.UpdateValue();
+            UpdateLevelText(CurrentSelectedLevelId);
             RefreshLevelButtonColors();
             return;
         }

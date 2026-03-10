@@ -113,7 +113,8 @@
                 <TextBox Grid.Row="2" Grid.Column="3" x:Name="SecondLevelEntry" Grid.ColumnSpan="3" Margin="0,0,3,0"></TextBox>
             </Grid>
             <Button x:Name="BtnCycleLevelStatus" Margin="0,5,0,0" Click="CycleLevelStatusPressed">Cycle Level Status</Button>
-
+            <Button x:Name="BtnUpdateLevelStatus" Margin="0,5,0,0" Click="UpdateLevelStatusPressed">Update Level Completion</Button>
+            
         </StackPanel>
     </Grid>
 </Window>
