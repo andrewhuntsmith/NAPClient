@@ -43,7 +43,7 @@ namespace NAPClient
             for (i = 0; i < Offsets.Count - 1; i++)
             {
                 pointer = i == 0 ? 0 : BitConverter.ToInt32(bufferList[i - 1], 0);
-                var byteArray = i < Offsets.Count - 2 ? new byte[8] : new byte[DataSize()];
+                var byteArray = new byte[8];
                 bufferList.Add(byteArray);
                 MemorySource.ReadProcessMemory((int)MemorySource.NppProcessHandle, pointer + Offsets[i], bufferList[i], bufferList[i].Length, ref bytesRead);
             }
