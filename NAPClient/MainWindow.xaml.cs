@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -16,7 +17,6 @@ namespace NAPClient
         public static List<string> PlayerNames;
 
         public static MemorySource MS = new MemorySource();
-        LogWriter Log = new LogWriter();
 
         Dictionary<LevelCompleteState, SolidColorBrush> LevelStateColorPalette = new Dictionary<LevelCompleteState, SolidColorBrush>();
 
@@ -46,6 +46,25 @@ namespace NAPClient
             InitializeColorDictionary();
             GenerateButtonGrid();
             RefreshLevelButtonColors();
+            Thread passiveMemoryCheckingThread = new Thread(UpdateThread);
+            passiveMemoryCheckingThread.Start();
+        }
+
+        bool Loop;
+        void UpdateThread()
+        {
+            Loop = true;
+            while (Loop)
+            {
+                // just run forever lmao
+                MS.ExitsEntered.UpdateValue();
+                if (MS.ExitsEntered.PreviousValue != MS.ExitsEntered.Value)
+                {
+                    // this loop does not own the UI, because it is a different thread
+                    // therefore we need to call methods through dispatchers like this
+                    LevelGrid.Dispatcher.Invoke(() => UpdateLevelStatus());
+                }
+            }
         }
 
         void AttachLevelProfileEvents()
@@ -214,6 +233,7 @@ namespace NAPClient
 
         void MainWindow_Closing(object sender, CancelEventArgs e)
         {
+            Loop = false;
         }
 
         private void LevelButtonPressed(object sender, RoutedEventArgs e) 
@@ -241,6 +261,11 @@ namespace NAPClient
         }
 
         private void UpdateLevelStatusPressed(object sender, RoutedEventArgs e)
+        {
+            UpdateLevelStatus();
+        }
+
+        void UpdateLevelStatus()
         {
             foreach (var levelProfile in MS.LevelProfile)
             {
@@ -384,7 +409,6 @@ namespace NAPClient
                     }
                 }
             }
-
         }
     }
 }

@@ -27,8 +27,13 @@ namespace NAPClient
 
         // level profile data variables
         public const int LevelProfileSize = 0x30; // level profile data is always 48 bytes
-        public const int InitialLevelProfilePointer = 0x303B513C; // REPLACE THIS WITH STATIC POINTERS
+        public const int InitialLevelProfilePointer = 0x3033F13C; // REPLACE THIS WITH STATIC POINTERS
         public List<LevelProfileMemoryBridge> LevelProfile;
+
+        // point offsets for exits entered variable
+        public const int ExitsEnteredOffset1 = 0xB7B178;
+        public const int ExitsEnteredOffset2 = 0x810;
+        public const int ExitsEnteredOffset3 = 0x100;
 
         // calculated once the program starts running
         public static int TimerBlockOffset;
@@ -49,6 +54,7 @@ namespace NAPClient
 
         public DoubleAddressValue CurrentTimeRemaining;
         public DoubleAddressValue LevelStartTime;
+        public IntAddressValue ExitsEntered;
 
         [DllImport("kernel32.dll", SetLastError = true)]
         public static extern IntPtr OpenProcess(int dwDesiredAccess, bool bInheritHandle, int dwProcessId);
@@ -154,6 +160,7 @@ namespace NAPClient
             LevelStartTime = new DoubleAddressValue() { Offsets = new List<int> { TimerBlockOffset + StartTimeOffset } };
             FirstLevelDataAddress = new IntPtrAddressValue() { Offsets = new List<int> { NppdllBaseAddress.ToInt32() + LevelDataOffset1, LevelDataOffset2, LevelDataOffset3, LevelDataOffset4 } };
             // FirstLevelProfileAddress = new IntPtrAddressValue() { Offsets = new List<int> { GET STATIC POINTERS } };
+            ExitsEntered = new IntAddressValue() { Offsets = new List<int> { NppdllBaseAddress.ToInt32() + ExitsEnteredOffset1, ExitsEnteredOffset2, ExitsEnteredOffset3 } };
             ReadLevelData();
             ReadLevelProfile();
         }
