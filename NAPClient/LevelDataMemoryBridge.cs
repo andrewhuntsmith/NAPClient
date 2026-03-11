@@ -5,7 +5,7 @@ namespace NAPClient
 {
     public class LevelDataMemoryBridge
     {
-        public Action ValueUpdated;
+        public Action<LevelDataMemoryBridge> ValueUpdated;
         public int BaseLevelPointer;
 
         public ByteArrayAddressValue TotalLevelData = new ByteArrayAddressValue();
@@ -57,15 +57,16 @@ namespace NAPClient
 
         public void UpdateValue()
         {
-            RefreshLevelFlag = false;
             TotalLevelData.UpdateValue();
+            PreNameBytes.UpdateValue();
             LevelName.UpdateValue();
             AuthorName.UpdateValue();
             TileSet.UpdateValue();
             ItemSet.UpdateValue();
             if (RefreshLevelFlag)
             {
-                // do refresh logic
+                ValueUpdated?.Invoke(this);
+                RefreshLevelFlag = false;
             }
         }
 

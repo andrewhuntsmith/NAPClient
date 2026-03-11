@@ -5,7 +5,7 @@ namespace NAPClient
 {
     public class LevelProfileMemoryBridge
     {
-        public Action ValueUpdated;
+        public Action<LevelProfileMemoryBridge> ValueUpdated;
         public int BaseLevelPointer;
 
         public ByteArrayAddressValue TotalLevelProfile = new ByteArrayAddressValue();
@@ -14,8 +14,8 @@ namespace NAPClient
         IntAddressValue AttemptCountAddressValue = new IntAddressValue();
         IntAddressValue LevelSuccessAddressValue = new IntAddressValue();
         IntAddressValue EpisodeSuccessAddressValue = new IntAddressValue();
-        IntAddressValue LevelLockedAddressValue = new IntAddressValue();
-        IntAddressValue AllGoldAddressValue = new IntAddressValue();
+        ByteArrayAddressValue LevelLockedAddressValue = new ByteArrayAddressValue();
+        ByteArrayAddressValue AllGoldAddressValue = new ByteArrayAddressValue();
         bool RefreshLevelFlag;
 
         public LevelProfileMemoryBridge(int basePointer)
@@ -31,8 +31,8 @@ namespace NAPClient
             AttemptCountAddressValue = new IntAddressValue() { Offsets = new List<int> { BaseLevelPointer + 4 } };
             LevelSuccessAddressValue = new IntAddressValue() { Offsets = new List<int> { BaseLevelPointer + 12 } };
             EpisodeSuccessAddressValue = new IntAddressValue() { Offsets = new List<int> { BaseLevelPointer + 16 } };
-            LevelLockedAddressValue = new IntAddressValue() { Offsets = new List<int> { BaseLevelPointer + 20 } };
-            AllGoldAddressValue = new IntAddressValue() { Offsets = new List<int> { BaseLevelPointer + 28 } };
+            LevelLockedAddressValue = new ByteArrayAddressValue() { Offsets = new List<int> { BaseLevelPointer + 20 }, ArraySize = 1 };
+            AllGoldAddressValue = new ByteArrayAddressValue() { Offsets = new List<int> { BaseLevelPointer + 28 }, ArraySize = 1 };
 
             LevelLockedAddressValue.ValueUpdated += InternalValueUpdated;
             AllGoldAddressValue.ValueUpdated += InternalValueUpdated;
@@ -50,12 +50,12 @@ namespace NAPClient
 
             if (RefreshLevelFlag)
             {
-                // do refresh logic
+                ValueUpdated?.Invoke(this);
                 RefreshLevelFlag = false;
             }
         }
 
-        void InternalValueUpdated(int _, int __)
+        void InternalValueUpdated(byte[] _, byte[] __)
         {
             RefreshLevelFlag = true;
         }
@@ -67,35 +67,35 @@ namespace NAPClient
 
         public LevelCompleteState GetLevelCompleteState()
         {
-            return LevelLockedAddressValue.Value == 0 ? LevelCompleteState.LOCKED :
-                LevelLockedAddressValue.Value == 1 ? LevelCompleteState.AVAILABLE :
-                AllGoldAddressValue.Value == 0 ? LevelCompleteState.COMPLETED :
+            return LevelLockedAddressValue.Value[0] == 0 ? LevelCompleteState.LOCKED :
+                LevelLockedAddressValue.Value[0] == 1 ? LevelCompleteState.AVAILABLE :
+                AllGoldAddressValue.Value[0] == 0 ? LevelCompleteState.COMPLETED :
                 LevelCompleteState.ALLGOLD;
         }
 
         public void LockLevel()
         {
-            LevelLockedAddressValue.SetValue(0);
+            LevelLockedAddressValue.SetValue(new byte[] { 0 });
         }
 
         public void UnlockLevel()
         {
-            LevelLockedAddressValue.SetValue(1);
+            LevelLockedAddressValue.SetValue(new byte[] { 1 });
         }
 
         public void SetLevelBeaten()
         {
-            LevelLockedAddressValue.SetValue(2);
+            LevelLockedAddressValue.SetValue(new byte[] { 2 });
         }
 
         public void RevokeAllGold()
         {
-            AllGoldAddressValue.SetValue(0);
+            AllGoldAddressValue.SetValue(new byte[] { 0 });
         }
 
         public void SetAllGold()
         {
-            AllGoldAddressValue.SetValue(1);
+            AllGoldAddressValue.SetValue(new byte[] { 1 });
         }
     }
 

@@ -114,7 +114,8 @@
             </Grid>
             <Button x:Name="BtnCycleLevelStatus" Margin="0,5,0,0" Click="CycleLevelStatusPressed">Cycle Level Status</Button>
             <Button x:Name="BtnUpdateLevelStatus" Margin="0,5,0,0" Click="UpdateLevelStatusPressed">Update Level Completion</Button>
-            
+            <Button x:Name="BtnRandomize" Margin="0,5,0,0" Click="RandomizePressed">Randomize Levels</Button>
+
         </StackPanel>
     </Grid>
 </Window>

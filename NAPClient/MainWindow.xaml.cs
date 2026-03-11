@@ -20,7 +20,7 @@ namespace NAPClient
 
         Dictionary<LevelCompleteState, SolidColorBrush> LevelStateColorPalette = new Dictionary<LevelCompleteState, SolidColorBrush>();
 
-        SolidColorBrush InaccessibleColor = Brushes.Black;
+        SolidColorBrush InaccessibleColor = Brushes.Red;
         SolidColorBrush AccessibleColor = Brushes.LightGray;
         SolidColorBrush BeatenColor = Brushes.DarkGray;
         SolidColorBrush AllGoldColor = Brushes.Gold;
@@ -32,15 +32,62 @@ namespace NAPClient
         List<Button> EpisodeButtonList = new List<Button>();
 
         int CurrentSelectedLevelId = -1;
+        int CurrentSelectedButtonId = -1;
+
+        RandomizationData CurrentRando = new RandomizationData();
 
         public MainWindow()
         {
             InitializeComponent();
             MS.HookMemory();
+            AttachLevelProfileEvents();
 
+            DEBUG_InitializeRandomData();
             InitializeColorDictionary();
             GenerateButtonGrid();
             RefreshLevelButtonColors();
+        }
+
+        void AttachLevelProfileEvents()
+        {
+            foreach (var levelProfile in MS.LevelProfile)
+                levelProfile.ValueUpdated += OnProfileUpdate;
+        }
+
+        // This method only currently exists to have some data to test with
+        // In the future this should be generated somewhere else
+        void DEBUG_InitializeRandomData()
+        {
+            CurrentRando.LevelOrder = new List<int>{ 
+                10, 76, 105, 71, 82, 84, 97, 87, 63, 116,
+                66, 62, 13, 96, 102, 57, 46, 58, 18, 19,
+                22, 92, 5, 112, 8, 89, 103, 93, 41, 83,
+                33, 40, 23, 88, 4, 31, 80, 55, 48, 85,
+                106, 124, 14, 1, 121, 25, 61, 117, 20, 43,
+                56, 67, 90, 65, 45, 122, 29, 53, 38, 95,
+                123, 81, 0, 28, 42, 36, 69, 94, 64, 98,
+                101, 104, 6, 37, 115, 35, 75, 109, 17, 11,
+                60, 72, 24, 114, 34, 70, 9, 86, 68, 47,
+                7, 16, 51, 77, 107, 59, 26, 32, 54, 99,
+                44, 110, 15, 2, 79, 118, 52, 3, 113, 119,
+                27, 74, 73, 108, 100, 50, 30, 12, 111, 78,
+                120, 49, 21, 91, 39 };
+
+            CurrentRando.InitialLevels = new List<int> { 22, 16, 92 };
+
+            var cond1 = new RandomizationData.CompletionCondition() { Id = 22, State = LevelCompleteState.COMPLETED };
+            var cond2 = new RandomizationData.CompletionCondition() { Id = 22, State = LevelCompleteState.ALLGOLD };
+            var cond3 = new RandomizationData.CompletionCondition() { Id = 16, State = LevelCompleteState.COMPLETED };
+            var cond4 = new RandomizationData.CompletionCondition() { Id = 16, State = LevelCompleteState.ALLGOLD };
+            var cond5 = new RandomizationData.CompletionCondition() { Id = 92, State = LevelCompleteState.COMPLETED };
+            var cond6 = new RandomizationData.CompletionCondition() { Id = 92, State = LevelCompleteState.ALLGOLD };
+
+            CurrentRando.UnlockConditions[cond1] = 69;
+            CurrentRando.UnlockConditions[cond2] = 76;
+            CurrentRando.UnlockConditions[cond3] = 122;
+            CurrentRando.UnlockConditions[cond4] = 79;
+            CurrentRando.UnlockConditions[cond5] = 58;
+            CurrentRando.UnlockConditions[cond6] = 102;
         }
 
         void GenerateButtonGrid()
@@ -132,9 +179,14 @@ namespace NAPClient
                     return;
                 }
 
-                var profileData = MS.LevelProfile[tag];
+                var profileData = MS.LevelProfile[GetLevelIdFromButtonTag(tag)];
                 button.Background = LevelStateColorPalette[profileData.GetLevelCompleteState()];
             }
+        }
+
+        int GetLevelIdFromButtonTag(int tag)
+        {
+            return MS.LevelData[tag].GetLevelId();
         }
 
         void ApplyStartTimeValueButtonPressed(object sender, RoutedEventArgs e)
@@ -174,7 +226,8 @@ namespace NAPClient
                 return;
             }
 
-            UpdateLevelText(tag);
+            CurrentSelectedButtonId = tag;
+            UpdateLevelText(MS.LevelData[tag].GetLevelId());
         }
 
         private void EpisodeButtonPressed(object sender, RoutedEventArgs e) 
@@ -194,14 +247,47 @@ namespace NAPClient
                 levelProfile.UpdateValue();
             }
 
-            UpdateLevelText(CurrentSelectedLevelId);
+            if (CurrentSelectedLevelId != -1)
+                UpdateLevelText(CurrentSelectedLevelId);
+            RefreshLevelButtonColors();
+        }
+
+        private void RandomizePressed(object sender, RoutedEventArgs e)
+        {
+            for (var id = 0; id < CurrentRando.LevelOrder.Count; id++)
+            {
+                for (var jd = id; jd < MS.LevelProfile.Count; jd++)
+                {
+                    if (id != jd && MS.LevelData[jd].GetLevelId() == CurrentRando.LevelOrder[id])
+                    {
+                        MS.SwapLevels(id, jd);
+                    }
+                }
+            }
+
+            foreach (var levelProfile in MS.LevelProfile)
+            {
+                levelProfile.RevokeAllGold();
+                if (CurrentRando.InitialLevels.Contains(levelProfile.GetLevelId()))
+                    levelProfile.UnlockLevel();
+                else
+                    levelProfile.LockLevel();
+                levelProfile.UpdateValue();
+            }
+
             RefreshLevelButtonColors();
         }
 
         void UpdateLevelText(int levelId)
         {
+            if (levelId == -1)
+            {
+                LevelIDLabel.Content = "Error getting level ID";
+                return;
+            }
+
             CurrentSelectedLevelId = levelId;
-            var levelData = MS.LevelData[levelId];
+            var levelData = MS.LevelData[CurrentSelectedButtonId];
             var profileData = MS.LevelProfile[levelId];
 
             LevelIDLabel.Content = profileData.GetLevelId();
@@ -249,6 +335,56 @@ namespace NAPClient
             UpdateLevelText(CurrentSelectedLevelId);
             RefreshLevelButtonColors();
             return;
+        }
+
+        void OnProfileUpdate(LevelProfileMemoryBridge updatedLevel)
+        {
+            // check for completion
+            if (updatedLevel.GetLevelCompleteState() >= LevelCompleteState.COMPLETED)
+            {
+                var completionCondition = new RandomizationData.CompletionCondition()
+                {
+                    Id = updatedLevel.GetLevelId(),
+                    State = LevelCompleteState.COMPLETED
+                };
+                
+                if (CurrentRando.UnlockConditions.ContainsKey(completionCondition))
+                {
+                    var unlockLevelId = CurrentRando.UnlockConditions[completionCondition];
+                    foreach (var levelProfile in MS.LevelProfile)
+                    {
+                        if (levelProfile.GetLevelId() == unlockLevelId)
+                        {
+                            levelProfile.UnlockLevel();
+                            break;
+                        }
+                    }
+                }
+            }
+
+            // check for all gold
+            if (updatedLevel.GetLevelCompleteState() == LevelCompleteState.ALLGOLD)
+            {
+                var completionCondition = new RandomizationData.CompletionCondition()
+                {
+                    Id = updatedLevel.GetLevelId(),
+                    State = LevelCompleteState.ALLGOLD
+                };
+
+                if (CurrentRando.UnlockConditions.ContainsKey(completionCondition))
+                {
+                    var unlockLevelId = CurrentRando.UnlockConditions[completionCondition];
+                    foreach (var levelProfile in MS.LevelProfile)
+                    {
+                        if (levelProfile.GetLevelId() == unlockLevelId)
+                        {
+                            levelProfile.UnlockLevel();
+                            break;
+                        }
+                    }
+                }
+            }
+
         }
     }
 }
