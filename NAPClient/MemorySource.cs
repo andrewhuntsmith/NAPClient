@@ -27,7 +27,9 @@ namespace NAPClient
 
         // level profile data variables
         public const int LevelProfileSize = 0x30; // level profile data is always 48 bytes
-        public const int InitialLevelProfilePointer = 0x3033F13C; // REPLACE THIS WITH STATIC POINTERS
+        public const int LevelProfileOffset1 = 0xB7B178;
+        public const int LevelProfileOffset2 = 0x810;
+        public const int LevelProfileOffset3 = 0x80C11C;
         public List<LevelProfileMemoryBridge> LevelProfile;
 
         // point offsets for exits entered variable
@@ -159,7 +161,7 @@ namespace NAPClient
             CurrentTimeRemaining = new DoubleAddressValue() { Offsets = new List<int> { TimerBlockOffset + TimeRemainingOffset } };
             LevelStartTime = new DoubleAddressValue() { Offsets = new List<int> { TimerBlockOffset + StartTimeOffset } };
             FirstLevelDataAddress = new IntPtrAddressValue() { Offsets = new List<int> { NppdllBaseAddress.ToInt32() + LevelDataOffset1, LevelDataOffset2, LevelDataOffset3, LevelDataOffset4 } };
-            // FirstLevelProfileAddress = new IntPtrAddressValue() { Offsets = new List<int> { GET STATIC POINTERS } };
+            FirstLevelProfileAddress = new IntPtrAddressValue() { Offsets = new List<int> { NppdllBaseAddress.ToInt32() + LevelProfileOffset1, LevelProfileOffset2 } };
             ExitsEntered = new IntAddressValue() { Offsets = new List<int> { NppdllBaseAddress.ToInt32() + ExitsEnteredOffset1, ExitsEnteredOffset2, ExitsEnteredOffset3 } };
             ReadLevelData();
             ReadLevelProfile();
@@ -180,10 +182,10 @@ namespace NAPClient
         void ReadLevelProfile()
         {
             LevelProfile = new List<LevelProfileMemoryBridge>();
-            // FirstLevelProfileAddress.UpdateValue();
+            FirstLevelProfileAddress.UpdateValue();
             for (int i = 0; i < 125; i++)
             {
-                var level = new LevelProfileMemoryBridge(InitialLevelProfilePointer + i * LevelProfileSize);
+                var level = new LevelProfileMemoryBridge(FirstLevelProfileAddress.AsInt() + LevelProfileOffset3 + i * LevelProfileSize);
                 LevelProfile.Add(level);
                 level.UpdateValue();
             }
@@ -222,7 +224,7 @@ namespace NAPClient
 
         public void UpdateLevelProfileValue(int levelIndex, int byteIndex, int value)
         {
-            MemorySource.WriteProcessMemory((int)MemorySource.NppProcessHandle, InitialLevelProfilePointer + levelIndex * LevelProfileSize + byteIndex, BitConverter.GetBytes(value), sizeof(int), out var bytesWritten);
+            MemorySource.WriteProcessMemory((int)MemorySource.NppProcessHandle, FirstLevelProfileAddress.AsInt() + LevelProfileOffset3 + levelIndex * LevelProfileSize + byteIndex, BitConverter.GetBytes(value), sizeof(int), out var bytesWritten);
         }
     }
 }
