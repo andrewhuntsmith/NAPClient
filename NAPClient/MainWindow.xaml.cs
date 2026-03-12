@@ -380,7 +380,8 @@ namespace NAPClient
                     {
                         if (levelProfile.GetLevelId() == unlockLevelId)
                         {
-                            levelProfile.UnlockLevel();
+                            if (levelProfile.GetLevelCompleteState() == LevelCompleteState.LOCKED)
+                                levelProfile.UnlockLevel();
                             break;
                         }
                     }
@@ -403,7 +404,8 @@ namespace NAPClient
                     {
                         if (levelProfile.GetLevelId() == unlockLevelId)
                         {
-                            levelProfile.UnlockLevel();
+                            if (levelProfile.GetLevelCompleteState() == LevelCompleteState.LOCKED)
+                                levelProfile.UnlockLevel();
                             break;
                         }
                     }
