@@ -13,6 +13,8 @@ namespace NAPClient
         public T Value;
         public T PreviousValue;
         public Action<T, T> ValueUpdated;
+        public Action ValueChanged;
+
         protected abstract int DataSize();
 
         public void UpdateValue()
@@ -32,6 +34,8 @@ namespace NAPClient
             PreviousValue = Value;
             Value = value;
             ValueUpdated?.Invoke(Value, PreviousValue);
+            if (!Value.Equals(PreviousValue))
+                ValueChanged?.Invoke();
         }
 
         public void SetValue(T input)

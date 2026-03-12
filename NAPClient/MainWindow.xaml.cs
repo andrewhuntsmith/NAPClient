@@ -47,27 +47,33 @@ namespace NAPClient
             InitializeColorDictionary();
             GenerateButtonGrid();
             RefreshLevelButtonColors();
-            Thread passiveMemoryCheckingThread = new Thread(UpdateThread);
-            passiveMemoryCheckingThread.Start();
 
             ItemManager = new ItemManager(MS);
+            MS.ExitsEntered.UpdateValue();
+            ItemManager.Initializing = false;
+
+            Thread passiveMemoryCheckingThread = new Thread(UpdateThread);
+            passiveMemoryCheckingThread.Start();
         }
 
         bool Loop;
         void UpdateThread()
         {
             Loop = true;
+            MS.ExitsEntered.ValueChanged += OnExitsChanged;
+            // just run forever lmao
             while (Loop)
             {
-                // just run forever lmao
+                Thread.Sleep(1000);
                 MS.ExitsEntered.UpdateValue();
-                if (MS.ExitsEntered.PreviousValue != MS.ExitsEntered.Value)
-                {
-                    // this loop does not own the UI, because it is a different thread
-                    // therefore we need to call methods through dispatchers like this
-                    LevelGrid.Dispatcher.Invoke(() => UpdateLevelStatus());
-                }
             }
+        }
+
+        void OnExitsChanged()
+        {
+            // the caller of this function does not own the UI, because it is a different thread
+            // therefore we need to call methods through dispatchers like this
+            LevelGrid.Dispatcher.Invoke(() => UpdateLevelStatus());
         }
 
         void AttachLevelProfileEvents()

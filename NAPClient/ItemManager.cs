@@ -3,10 +3,12 @@
     public class ItemManager
     {
         public static MemorySource MS;
+        public bool Initializing;
 
         public ItemManager(MemorySource ms) 
         { 
             MS = ms;
+            Initializing = true;
         }
 
         public void HandleCondition(ItemData item)
@@ -37,6 +39,9 @@
 
         void PaletteSwap(int paletteId)
         {
+            if (Initializing)
+                return;
+
             MS.PaletteIndex.UpdateValue();
             MS.PaletteIndex.SetValue(paletteId);
         }
