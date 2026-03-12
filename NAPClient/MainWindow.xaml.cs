@@ -17,6 +17,7 @@ namespace NAPClient
         public static List<string> PlayerNames;
 
         public static MemorySource MS = new MemorySource();
+        ItemManager ItemManager;
 
         Dictionary<LevelCompleteState, SolidColorBrush> LevelStateColorPalette = new Dictionary<LevelCompleteState, SolidColorBrush>();
 
@@ -48,6 +49,8 @@ namespace NAPClient
             RefreshLevelButtonColors();
             Thread passiveMemoryCheckingThread = new Thread(UpdateThread);
             passiveMemoryCheckingThread.Start();
+
+            ItemManager = new ItemManager(MS);
         }
 
         bool Loop;
@@ -100,13 +103,15 @@ namespace NAPClient
             var cond4 = new RandomizationData.CompletionCondition() { Id = 16, State = LevelCompleteState.ALLGOLD };
             var cond5 = new RandomizationData.CompletionCondition() { Id = 92, State = LevelCompleteState.COMPLETED };
             var cond6 = new RandomizationData.CompletionCondition() { Id = 92, State = LevelCompleteState.ALLGOLD };
+            var cond7 = new RandomizationData.CompletionCondition() { Id = 58, State = LevelCompleteState.COMPLETED };
 
-            CurrentRando.UnlockConditions[cond1] = 69;
-            CurrentRando.UnlockConditions[cond2] = 76;
-            CurrentRando.UnlockConditions[cond3] = 122;
-            CurrentRando.UnlockConditions[cond4] = 79;
-            CurrentRando.UnlockConditions[cond5] = 58;
-            CurrentRando.UnlockConditions[cond6] = 102;
+            CurrentRando.UnlockConditions[cond1] = new ItemData() { Value = 69, Type = ItemType.LevelUnlock };
+            CurrentRando.UnlockConditions[cond2] = new ItemData() { Value = 76, Type = ItemType.LevelUnlock };
+            CurrentRando.UnlockConditions[cond3] = new ItemData() { Value = 122, Type = ItemType.LevelUnlock };
+            CurrentRando.UnlockConditions[cond4] = new ItemData() { Value = 79, Type = ItemType.LevelUnlock };
+            CurrentRando.UnlockConditions[cond5] = new ItemData() { Value = 58, Type = ItemType.LevelUnlock };
+            CurrentRando.UnlockConditions[cond6] = new ItemData() { Value = 102, Type = ItemType.LevelUnlock };
+            CurrentRando.UnlockConditions[cond7] = new ItemData() { Value = 21, Type = ItemType.ChangeColorPalette };
         }
 
         void GenerateButtonGrid()
@@ -375,16 +380,7 @@ namespace NAPClient
                 
                 if (CurrentRando.UnlockConditions.ContainsKey(completionCondition))
                 {
-                    var unlockLevelId = CurrentRando.UnlockConditions[completionCondition];
-                    foreach (var levelProfile in MS.LevelProfile)
-                    {
-                        if (levelProfile.GetLevelId() == unlockLevelId)
-                        {
-                            if (levelProfile.GetLevelCompleteState() == LevelCompleteState.LOCKED)
-                                levelProfile.UnlockLevel();
-                            break;
-                        }
-                    }
+                    ItemManager.HandleCondition(CurrentRando.UnlockConditions[completionCondition]);
                 }
             }
 
@@ -399,16 +395,7 @@ namespace NAPClient
 
                 if (CurrentRando.UnlockConditions.ContainsKey(completionCondition))
                 {
-                    var unlockLevelId = CurrentRando.UnlockConditions[completionCondition];
-                    foreach (var levelProfile in MS.LevelProfile)
-                    {
-                        if (levelProfile.GetLevelId() == unlockLevelId)
-                        {
-                            if (levelProfile.GetLevelCompleteState() == LevelCompleteState.LOCKED)
-                                levelProfile.UnlockLevel();
-                            break;
-                        }
-                    }
+                    ItemManager.HandleCondition(CurrentRando.UnlockConditions[completionCondition]);
                 }
             }
         }

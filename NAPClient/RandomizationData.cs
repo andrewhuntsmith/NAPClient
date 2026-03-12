@@ -28,6 +28,6 @@ namespace NAPClient
 
         public List<int> LevelOrder = new List<int>();
         public List<int> InitialLevels = new List<int>();
-        public Dictionary<CompletionCondition, int> UnlockConditions = new Dictionary<CompletionCondition, int>();
+        public Dictionary<CompletionCondition, ItemData> UnlockConditions = new Dictionary<CompletionCondition, ItemData>();
     }
 }

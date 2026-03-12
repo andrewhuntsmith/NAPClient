@@ -12,13 +12,16 @@ namespace NAPClient
         // pointer offset from npp.dll to get to timer section
         public const int TimerPointerOffsets = 0x179F24;
 
+        // This first pointer offset seems to be commonly used
+        public const int CommonPointerOffset = 0xB7B178;
+
         // pointer offsets from timer section to timers
         public const int TimeRemainingOffset = 0xFA8;
         public const int StartTimeOffset = 0xFB0;
 
         // level data variables
         public const int LevelDataSize = 0x4CC; // level data is always 1228 bytes
-        public const int LevelDataOffset1 = 0xB7B178;
+        public const int LevelDataOffset1 = CommonPointerOffset;
         public const int LevelDataOffset2 = 0x0;
         public const int LevelDataOffset3 = 0x330;
         public const int LevelDataOffset4 = -0xACC;
@@ -27,15 +30,20 @@ namespace NAPClient
 
         // level profile data variables
         public const int LevelProfileSize = 0x30; // level profile data is always 48 bytes
-        public const int LevelProfileOffset1 = 0xB7B178;
+        public const int LevelProfileOffset1 = CommonPointerOffset;
         public const int LevelProfileOffset2 = 0x810;
         public const int LevelProfileOffset3 = 0x80C11C;
         public List<LevelProfileMemoryBridge> LevelProfile;
 
-        // point offsets for exits entered variable
-        public const int ExitsEnteredOffset1 = 0xB7B178;
+        // pointer offsets for exits entered variable
+        public const int ExitsEnteredOffset1 = CommonPointerOffset;
         public const int ExitsEnteredOffset2 = 0x810;
         public const int ExitsEnteredOffset3 = 0x100;
+
+        // pointer offsets for palette index
+        public const int PaletteIndexOffset1 = 0xB7A7B4;
+        public const int PaletteIndexOffset2 = 0x0;
+        public const int PaletteIndexOffset3 = 0x142C4;
 
         // calculated once the program starts running
         public static int TimerBlockOffset;
@@ -49,14 +57,13 @@ namespace NAPClient
 
         const int PROCESS_VM_ALL = 0x001F0FFF;
 
-        public bool EpisodeTimeValuesChanged;
-        public bool PlayerActivityChanged;
         public IntPtrAddressValue FirstLevelDataAddress;
         public IntPtrAddressValue FirstLevelProfileAddress;
 
         public DoubleAddressValue CurrentTimeRemaining;
         public DoubleAddressValue LevelStartTime;
         public IntAddressValue ExitsEntered;
+        public IntAddressValue PaletteIndex;
 
         [DllImport("kernel32.dll", SetLastError = true)]
         public static extern IntPtr OpenProcess(int dwDesiredAccess, bool bInheritHandle, int dwProcessId);
@@ -66,15 +73,6 @@ namespace NAPClient
 
         [DllImport("kernel32.dll", SetLastError = true)]
         public static extern bool WriteProcessMemory(int hProcess, int lpBaseAddress, byte[] lpBuffer, int nSize, out int lpNumberOfBytesWritten);
-
-        //first parameter player number, second parameter is current frame count, third parameter is player bonus time, fourth is gold collected
-        public Action<int, int, double, int> PlayerFinished;
-        public Action LevelFinished;
-        public Action StartNewLevel;
-        public Action EpisodeStarted;
-        public Action EpisodeFinished;
-        public bool LevelInProgress;
-        public bool MaxedOutEpisode;
 
         public void HookMemory()
         {
@@ -163,6 +161,7 @@ namespace NAPClient
             FirstLevelDataAddress = new IntPtrAddressValue() { Offsets = new List<int> { NppdllBaseAddress.ToInt32() + LevelDataOffset1, LevelDataOffset2, LevelDataOffset3, LevelDataOffset4 } };
             FirstLevelProfileAddress = new IntPtrAddressValue() { Offsets = new List<int> { NppdllBaseAddress.ToInt32() + LevelProfileOffset1, LevelProfileOffset2 } };
             ExitsEntered = new IntAddressValue() { Offsets = new List<int> { NppdllBaseAddress.ToInt32() + ExitsEnteredOffset1, ExitsEnteredOffset2, ExitsEnteredOffset3 } };
+            PaletteIndex = new IntAddressValue() { Offsets = new List<int> { NppdllBaseAddress.ToInt32() + PaletteIndexOffset1, PaletteIndexOffset2, PaletteIndexOffset3 } };
             ReadLevelData();
             ReadLevelProfile();
         }
@@ -189,18 +188,6 @@ namespace NAPClient
                 LevelProfile.Add(level);
                 level.UpdateValue();
             }
-        }
-
-        void StartNewEpisode()
-        {
-            MaxedOutEpisode = false;
-            EpisodeStarted();
-        }
-
-        public void ResetValues()
-        {
-            MaxedOutEpisode = false;
-            LevelInProgress = false;
         }
 
         public void ApplyStartTimeValue(double newValue)
