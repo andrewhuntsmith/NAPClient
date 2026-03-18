@@ -63,6 +63,9 @@ namespace NAPClient
                 string errorMessage = "Error number: " + error.ToString();
                 MessageBox.Show(errorMessage, caption);
             }
+
+            PreviousValue = Value;
+            Value = input;
         }
 
         protected abstract T ConvertToType(byte[] buffer);

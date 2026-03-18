@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace NAPClient
 {
@@ -11,7 +7,7 @@ namespace NAPClient
         public class CompletionCondition
         {
             public int Id;
-            public LevelCompleteState State;
+            public ProgressState State;
 
             public override bool Equals(object o)
             {
@@ -26,8 +22,21 @@ namespace NAPClient
             }
         }
 
+
+        // IMPORTANT
+        // The numbers used in LevelOrder refer to the original level IDs
+        // The numbers used in InitialLevels and CompletionConditions refer to the new level IDs
+        // If the first number in LevelOrder is 10, the completion conditions attached to that level will still be 0
         public List<int> LevelOrder = new List<int>();
         public List<int> InitialLevels = new List<int>();
         public Dictionary<CompletionCondition, ItemData> UnlockConditions = new Dictionary<CompletionCondition, ItemData>();
+    }
+
+    public enum ProgressState
+    {
+        LEVELCOMPLETE,
+        LEVELALLGOLD,
+        EPISODECOMPLETE,
+        EPISODEALLGOLD
     }
 }

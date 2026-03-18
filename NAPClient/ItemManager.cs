@@ -3,38 +3,70 @@
     public class ItemManager
     {
         public static MemorySource MS;
+        public LevelUnlockManager LevelUnlockManager;
         public bool Initializing;
 
         public ItemManager(MemorySource ms) 
         { 
             MS = ms;
+            LevelUnlockManager = new LevelUnlockManager();
             Initializing = true;
         }
 
         public void HandleCondition(ItemData item)
         {
-            if (item.Type == ItemType.LevelUnlock)
-                UnlockLevelFromRandomizer(item.Value);
-            if (item.Type == ItemType.ChangeColorPalette)
-                PaletteSwap(item.Value);
+            switch (item.Type)
+            {
+                case ItemType.LevelUnlock:
+                    UnlockLevelFromRandomizer(item.Value);
+                    return;
+                case ItemType.EpisodeUnlock:
+                    UnlockEpisodeFromRandomizer(item.Value);
+                    return;
+                case ItemType.ProgressiveEpisodeUnlock:
+                    ProgressiveEpisodeUnlock(item.Value);
+                    return;
+                case ItemType.ChangeColorPalette:
+                    PaletteSwap(item.Value);
+                    return;
+            }
         }
 
         void UnlockLevelFromRandomizer(int levelId)
         {
-            foreach (var levelProfile in MS.LevelProfile)
+            var levelProfile = MS.LevelProfile[levelId];
+
+            if (levelProfile.GetLevelCompleteState() == LevelCompleteState.LOCKED)
             {
-                if (levelProfile.GetLevelId() == levelId)
-                {
-                    if (levelProfile.GetLevelCompleteState() == LevelCompleteState.LOCKED)
-                        levelProfile.UnlockLevel();
-                    break;
-                }
+                LevelUnlockManager.AddLevelToUnlocks(levelId);
+                levelProfile.UnlockLevel();
             }
         }
 
-        void ProgressiveEpisodeUnlock()
+        void UnlockEpisodeFromRandomizer(int episodeId)
         {
+            var episodeProfile = MS.EpisodeProfile[episodeId];
 
+            if (episodeProfile.GetEpisodeCompleteState() == EpisodeCompleteState.LOCKED)
+            {
+                LevelUnlockManager.AddLevelToUnlocks(episodeId);
+                episodeProfile.UnlockEpisode();
+            }
+        }
+
+        void ProgressiveEpisodeUnlock(int episodeId)
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                var state = MS.LevelProfile[episodeId * 5 + i].GetLevelCompleteState();
+                if (state == LevelCompleteState.LOCKED)
+                {
+                    UnlockLevelFromRandomizer(episodeId * 5 + i);
+                    return;
+                }
+            }
+
+            UnlockEpisodeFromRandomizer(episodeId);
         }
 
         void PaletteSwap(int paletteId)

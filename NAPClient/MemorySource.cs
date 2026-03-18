@@ -28,6 +28,11 @@ namespace NAPClient
         public const int LevelDataOffset5 = 0x8;
         public List<LevelDataMemoryBridge> LevelData;
 
+        // we need to track the original level order after we've shuffled the IDs
+        public Dictionary<int, string> OriginalLevelMapping = new Dictionary<int, string>();
+        // after levels have been shuffled, we'll want to easily get their new ID from their name
+        public Dictionary<string, int> NewLevelMapping = new Dictionary<string, int>();
+
         // level profile data variables
         public const int LevelProfileSize = 0x30; // level profile data is always 48 bytes
         public const int LevelProfileOffset1 = CommonPointerOffset;
@@ -35,10 +40,14 @@ namespace NAPClient
         public const int LevelProfileOffset3 = 0x80C11C;
         public List<LevelProfileMemoryBridge> LevelProfile;
 
+        public const int EpisodeProfileOffset3 = LevelProfileOffset3 + 0x4E20 * 0x30;
+        public List<EpisodeProfileMemoryBridge> EpisodeProfile;
+
         // pointer offsets for exits entered variable
-        public const int ExitsEnteredOffset1 = CommonPointerOffset;
-        public const int ExitsEnteredOffset2 = 0x810;
-        public const int ExitsEnteredOffset3 = 0x100;
+        public const int VictoriesOffset1 = CommonPointerOffset;
+        public const int VictoriesOffset2 = 0x810;
+        public const int LevelVictoriesOffset3 = 0x100;
+        public const int EpisodeVictoriesOffset3 = 0x110;
 
         // pointer offsets for palette index
         public const int PaletteIndexOffset1 = 0xB7A7B4;
@@ -62,7 +71,8 @@ namespace NAPClient
 
         public DoubleAddressValue CurrentTimeRemaining;
         public DoubleAddressValue LevelStartTime;
-        public IntAddressValue ExitsEntered;
+        public IntAddressValue LevelVictories;
+        public IntAddressValue EpisodeVictories;
         public IntAddressValue PaletteIndex;
 
         [DllImport("kernel32.dll", SetLastError = true)]
@@ -74,12 +84,12 @@ namespace NAPClient
         [DllImport("kernel32.dll", SetLastError = true)]
         public static extern bool WriteProcessMemory(int hProcess, int lpBaseAddress, byte[] lpBuffer, int nSize, out int lpNumberOfBytesWritten);
 
-        public void HookMemory()
+        public bool HookMemory()
         {
             int bytesRead = 0;
             byte[] offsetPointer = new byte[8];
 
-            if (!FindProcessNPP()) { return; }
+            if (!FindProcessNPP()) { return false; }
 
             NppProcessHandle = OpenProcess(PROCESS_VM_ALL, false, NppProcess.Id);
             // if OpenProcess failed
@@ -88,16 +98,17 @@ namespace NAPClient
                 string errorMessage = "Cannot access N++ process!";
                 string caption = "Error in accessing application";
                 MessageBox.Show(errorMessage, caption);
-                return;
+                return false;
             }
 
-            if (!FindnppModule()) { return; }
+            if (!FindnppModule()) { return false; }
 
             // combines the nppdll address with the timer block offset, sets the value in offsetPointer
             ReadProcessMemory((int)NppProcessHandle, (int)(NppdllBaseAddress + TimerPointerOffsets), offsetPointer, offsetPointer.Length, ref bytesRead);
             // saves offsetPointer into TimerBlockOffset
             TimerBlockOffset = BitConverter.ToInt32(offsetPointer, 0);
             InitializeAllValues();
+            return true;
         }
 
         // finds the N++ process
@@ -160,10 +171,12 @@ namespace NAPClient
             LevelStartTime = new DoubleAddressValue() { Offsets = new List<int> { TimerBlockOffset + StartTimeOffset } };
             FirstLevelDataAddress = new IntPtrAddressValue() { Offsets = new List<int> { NppdllBaseAddress.ToInt32() + LevelDataOffset1, LevelDataOffset2, LevelDataOffset3, LevelDataOffset4 } };
             FirstLevelProfileAddress = new IntPtrAddressValue() { Offsets = new List<int> { NppdllBaseAddress.ToInt32() + LevelProfileOffset1, LevelProfileOffset2 } };
-            ExitsEntered = new IntAddressValue() { Offsets = new List<int> { NppdllBaseAddress.ToInt32() + ExitsEnteredOffset1, ExitsEnteredOffset2, ExitsEnteredOffset3 } };
+            LevelVictories = new IntAddressValue() { Offsets = new List<int> { NppdllBaseAddress.ToInt32() + VictoriesOffset1, VictoriesOffset2, LevelVictoriesOffset3 } };
+            EpisodeVictories = new IntAddressValue() { Offsets = new List<int> { NppdllBaseAddress.ToInt32() + VictoriesOffset1, VictoriesOffset2, EpisodeVictoriesOffset3 } };
             PaletteIndex = new IntAddressValue() { Offsets = new List<int> { NppdllBaseAddress.ToInt32() + PaletteIndexOffset1, PaletteIndexOffset2, PaletteIndexOffset3 } };
             ReadLevelData();
             ReadLevelProfile();
+            ReadEpisodeProfile();
         }
 
         void ReadLevelData()
@@ -175,6 +188,8 @@ namespace NAPClient
                 var level = new LevelDataMemoryBridge(FirstLevelDataAddress.AsInt() + i * LevelDataSize);
                 LevelData.Add(level);
                 level.UpdateValue();
+                OriginalLevelMapping[level.GetLevelId()] = level.GetLevelName();
+                NewLevelMapping[level.GetLevelName()] = level.GetLevelId();
             }
         }
 
@@ -190,6 +205,17 @@ namespace NAPClient
             }
         }
 
+        void ReadEpisodeProfile()
+        {
+            EpisodeProfile = new List<EpisodeProfileMemoryBridge>();
+            for (int i = 0; i < 25; i++)
+            {
+                var episode = new EpisodeProfileMemoryBridge(FirstLevelProfileAddress.AsInt() + EpisodeProfileOffset3 + i * LevelProfileSize);
+                EpisodeProfile.Add(episode);
+                episode.UpdateValue();
+            }
+        }
+
         public void ApplyStartTimeValue(double newValue)
         {
             CurrentTimeRemaining.SetValue(newValue);
@@ -197,6 +223,9 @@ namespace NAPClient
 
         public void SwapLevels(int first, int second)
         {
+            if (first == second) 
+                return;
+
             var firstLevelData = new byte[LevelDataSize];
             LevelData[first].TotalLevelData.Value.CopyTo(firstLevelData, 0);
             var secondLevelData = new byte[LevelDataSize];
@@ -207,6 +236,17 @@ namespace NAPClient
 
             LevelData[first].UpdateValue();
             LevelData[second].UpdateValue();
+
+            var firstId = LevelData[first].GetLevelId();
+            var secondId = LevelData[second].GetLevelId();
+            LevelData[first].SetLevelId(secondId);
+            LevelData[second].SetLevelId(firstId);
+
+            LevelData[first].UpdateValue();
+            LevelData[second].UpdateValue();
+
+            NewLevelMapping[LevelData[first].GetLevelName()] = LevelData[first].GetLevelId();
+            NewLevelMapping[LevelData[second].GetLevelName()] = LevelData[second].GetLevelId();
         }
 
         public void UpdateLevelProfileValue(int levelIndex, int byteIndex, int value)

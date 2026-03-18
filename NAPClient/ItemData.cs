@@ -9,6 +9,7 @@
     public enum ItemType
     {
         LevelUnlock,
+        EpisodeUnlock,
         ProgressiveEpisodeUnlock,
         IncreaseStartTime,
         IncreaseGoldValue,

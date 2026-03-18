@@ -11,6 +11,7 @@ namespace NAPClient
         public ByteArrayAddressValue TotalLevelData = new ByteArrayAddressValue();
 
         ByteArrayAddressValue PreNameBytes = new ByteArrayAddressValue();
+        IntAddressValue LevelId = new IntAddressValue();
         StringAddressValue LevelName = new StringAddressValue();
         StringAddressValue AuthorName = new StringAddressValue();
         ByteArrayAddressValue TileSet = new ByteArrayAddressValue();
@@ -30,6 +31,10 @@ namespace NAPClient
             {
                 Offsets = new List<int> { BaseLevelPointer },
                 ArraySize = 30
+            };
+            LevelId = new IntAddressValue()
+            {
+                Offsets = new List<int> { BaseLevelPointer }
             };
             LevelName = new StringAddressValue()
             {
@@ -59,6 +64,7 @@ namespace NAPClient
         {
             TotalLevelData.UpdateValue();
             PreNameBytes.UpdateValue();
+            LevelId.UpdateValue();
             LevelName.UpdateValue();
             AuthorName.UpdateValue();
             TileSet.UpdateValue();
@@ -82,7 +88,12 @@ namespace NAPClient
 
         public int GetLevelId()
         {
-            return BitConverter.ToInt32(PreNameBytes.Value, 0);
+            return LevelId.Value;
+        }
+
+        public void SetLevelId(int id)
+        {
+            LevelId.SetValue(id);
         }
     }
 }

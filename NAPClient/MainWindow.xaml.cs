@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Archipelago.MultiClient.Net;
+using Archipelago.MultiClient.Net.Enums;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading;
@@ -18,8 +20,10 @@ namespace NAPClient
 
         public static MemorySource MS = new MemorySource();
         ItemManager ItemManager;
+        ArchipelagoManager ApManager;
 
         Dictionary<LevelCompleteState, SolidColorBrush> LevelStateColorPalette = new Dictionary<LevelCompleteState, SolidColorBrush>();
+        Dictionary<EpisodeCompleteState, SolidColorBrush> EpisodeStateColorPalette = new Dictionary<EpisodeCompleteState, SolidColorBrush>();
 
         SolidColorBrush InaccessibleColor = Brushes.Red;
         SolidColorBrush AccessibleColor = Brushes.LightGray;
@@ -40,7 +44,11 @@ namespace NAPClient
         public MainWindow()
         {
             InitializeComponent();
-            MS.HookMemory();
+            if (MS.HookMemory() == false)
+            {
+                Close();
+                return;
+            }
             AttachLevelProfileEvents();
 
             DEBUG_InitializeRandomData();
@@ -49,23 +57,28 @@ namespace NAPClient
             RefreshLevelButtonColors();
 
             ItemManager = new ItemManager(MS);
-            MS.ExitsEntered.UpdateValue();
+            ApManager = new ArchipelagoManager(MS);
+            MS.LevelVictories.UpdateValue();
+            MS.EpisodeVictories.UpdateValue();
             ItemManager.Initializing = false;
 
             Thread passiveMemoryCheckingThread = new Thread(UpdateThread);
             passiveMemoryCheckingThread.Start();
+
         }
 
         bool Loop;
         void UpdateThread()
         {
             Loop = true;
-            MS.ExitsEntered.ValueChanged += OnExitsChanged;
+            MS.LevelVictories.ValueChanged += OnExitsChanged;
+            MS.EpisodeVictories.ValueChanged += OnExitsChanged;
             // just run forever lmao
             while (Loop)
             {
                 Thread.Sleep(1000);
-                MS.ExitsEntered.UpdateValue();
+                MS.LevelVictories.UpdateValue();
+                MS.EpisodeVictories.UpdateValue();
             }
         }
 
@@ -79,7 +92,9 @@ namespace NAPClient
         void AttachLevelProfileEvents()
         {
             foreach (var levelProfile in MS.LevelProfile)
-                levelProfile.ValueUpdated += OnProfileUpdate;
+                levelProfile.ValueUpdated += OnLevelProfileUpdate;
+            foreach (var episodeProfile in MS.EpisodeProfile)
+                episodeProfile.ValueUpdated += OnEpisodeProfileUpdate;
         }
 
         // This method only currently exists to have some data to test with
@@ -103,13 +118,18 @@ namespace NAPClient
 
             CurrentRando.InitialLevels = new List<int> { 22, 16, 92 };
 
-            var cond1 = new RandomizationData.CompletionCondition() { Id = 22, State = LevelCompleteState.COMPLETED };
-            var cond2 = new RandomizationData.CompletionCondition() { Id = 22, State = LevelCompleteState.ALLGOLD };
-            var cond3 = new RandomizationData.CompletionCondition() { Id = 16, State = LevelCompleteState.COMPLETED };
-            var cond4 = new RandomizationData.CompletionCondition() { Id = 16, State = LevelCompleteState.ALLGOLD };
-            var cond5 = new RandomizationData.CompletionCondition() { Id = 92, State = LevelCompleteState.COMPLETED };
-            var cond6 = new RandomizationData.CompletionCondition() { Id = 92, State = LevelCompleteState.ALLGOLD };
-            var cond7 = new RandomizationData.CompletionCondition() { Id = 58, State = LevelCompleteState.COMPLETED };
+            var cond1 = new RandomizationData.CompletionCondition() { Id = 22, State = ProgressState.LEVELCOMPLETE };
+            var cond2 = new RandomizationData.CompletionCondition() { Id = 22, State = ProgressState.LEVELALLGOLD };
+            var cond3 = new RandomizationData.CompletionCondition() { Id = 16, State = ProgressState.LEVELCOMPLETE };
+            var cond4 = new RandomizationData.CompletionCondition() { Id = 16, State = ProgressState.LEVELALLGOLD };
+            var cond5 = new RandomizationData.CompletionCondition() { Id = 92, State = ProgressState.LEVELCOMPLETE };
+            var cond6 = new RandomizationData.CompletionCondition() { Id = 92, State = ProgressState.LEVELALLGOLD };
+            var cond7 = new RandomizationData.CompletionCondition() { Id = 58, State = ProgressState.LEVELCOMPLETE };
+            var cond8 = new RandomizationData.CompletionCondition() { Id = 69, State = ProgressState.LEVELCOMPLETE };
+            var cond9 = new RandomizationData.CompletionCondition() { Id = 76, State = ProgressState.LEVELCOMPLETE };
+            var cond10 = new RandomizationData.CompletionCondition() { Id = 122, State = ProgressState.LEVELCOMPLETE };
+            var cond11 = new RandomizationData.CompletionCondition() { Id = 79, State = ProgressState.LEVELCOMPLETE };
+            var cond12 = new RandomizationData.CompletionCondition() { Id = 102, State = ProgressState.LEVELCOMPLETE };
 
             CurrentRando.UnlockConditions[cond1] = new ItemData() { Value = 69, Type = ItemType.LevelUnlock };
             CurrentRando.UnlockConditions[cond2] = new ItemData() { Value = 76, Type = ItemType.LevelUnlock };
@@ -117,7 +137,12 @@ namespace NAPClient
             CurrentRando.UnlockConditions[cond4] = new ItemData() { Value = 79, Type = ItemType.LevelUnlock };
             CurrentRando.UnlockConditions[cond5] = new ItemData() { Value = 58, Type = ItemType.LevelUnlock };
             CurrentRando.UnlockConditions[cond6] = new ItemData() { Value = 102, Type = ItemType.LevelUnlock };
-            CurrentRando.UnlockConditions[cond7] = new ItemData() { Value = 21, Type = ItemType.ChangeColorPalette };
+            CurrentRando.UnlockConditions[cond7] = new ItemData() { Value = 0, Type = ItemType.ProgressiveEpisodeUnlock };
+            CurrentRando.UnlockConditions[cond8] = new ItemData() { Value = 0, Type = ItemType.ProgressiveEpisodeUnlock };
+            CurrentRando.UnlockConditions[cond9] = new ItemData() { Value = 0, Type = ItemType.ProgressiveEpisodeUnlock };
+            CurrentRando.UnlockConditions[cond10] = new ItemData() { Value = 0, Type = ItemType.ProgressiveEpisodeUnlock };
+            CurrentRando.UnlockConditions[cond11] = new ItemData() { Value = 0, Type = ItemType.ProgressiveEpisodeUnlock };
+            CurrentRando.UnlockConditions[cond12] = new ItemData() { Value = 0, Type = ItemType.ProgressiveEpisodeUnlock };
         }
 
         void GenerateButtonGrid()
@@ -195,6 +220,11 @@ namespace NAPClient
             LevelStateColorPalette[LevelCompleteState.AVAILABLE] = AccessibleColor;
             LevelStateColorPalette[LevelCompleteState.COMPLETED] = BeatenColor;
             LevelStateColorPalette[LevelCompleteState.ALLGOLD] = AllGoldColor;
+
+            EpisodeStateColorPalette = new Dictionary<EpisodeCompleteState, SolidColorBrush>();
+            EpisodeStateColorPalette[EpisodeCompleteState.LOCKED] = InaccessibleColor;
+            EpisodeStateColorPalette[EpisodeCompleteState.AVAILABLE] = AccessibleColor;
+            EpisodeStateColorPalette[EpisodeCompleteState.COMPLETED] = BeatenColor;
         }
 
         void RefreshLevelButtonColors()
@@ -211,6 +241,20 @@ namespace NAPClient
 
                 var profileData = MS.LevelProfile[GetLevelIdFromButtonTag(tag)];
                 button.Background = LevelStateColorPalette[profileData.GetLevelCompleteState()];
+            }
+
+            foreach (var button in EpisodeButtonList)
+            {
+                var tag = -1;
+                int.TryParse(button.Tag.ToString(), out tag);
+                if (tag == -1)
+                {
+                    LevelIDLabel.Content = "Error getting episode ID";
+                    return;
+                }
+
+                var profileData = MS.EpisodeProfile[tag];
+                button.Background = EpisodeStateColorPalette[profileData.GetEpisodeCompleteState()];
             }
         }
 
@@ -245,6 +289,13 @@ namespace NAPClient
         void MainWindow_Closing(object sender, CancelEventArgs e)
         {
             Loop = false;
+
+            // TODO put levels back in the right order
+            // alternately, just force quit the game? that should fix everything that needs to be fixed
+            foreach (var level in MS.OriginalLevelMapping)
+            {
+                MS.SwapLevels(level.Key, MS.NewLevelMapping[MS.OriginalLevelMapping[level.Key]]);
+            }
         }
 
         private void LevelButtonPressed(object sender, RoutedEventArgs e) 
@@ -283,6 +334,11 @@ namespace NAPClient
                 levelProfile.UpdateValue();
             }
 
+            foreach (var episodeProfile in MS.EpisodeProfile)
+            {
+                episodeProfile.UpdateValue();
+            }
+
             if (CurrentSelectedLevelId != -1)
                 UpdateLevelText(CurrentSelectedLevelId);
             RefreshLevelButtonColors();
@@ -292,23 +348,28 @@ namespace NAPClient
         {
             for (var id = 0; id < CurrentRando.LevelOrder.Count; id++)
             {
-                for (var jd = id; jd < MS.LevelProfile.Count; jd++)
-                {
-                    if (id != jd && MS.LevelData[jd].GetLevelId() == CurrentRando.LevelOrder[id])
-                    {
-                        MS.SwapLevels(id, jd);
-                    }
-                }
+                MS.SwapLevels(id, MS.NewLevelMapping[MS.OriginalLevelMapping[CurrentRando.LevelOrder[id]]]);
             }
 
             foreach (var levelProfile in MS.LevelProfile)
             {
                 levelProfile.RevokeAllGold();
                 if (CurrentRando.InitialLevels.Contains(levelProfile.GetLevelId()))
+                {
+                    ItemManager.LevelUnlockManager.AddLevelToUnlocks(levelProfile.GetLevelId());
                     levelProfile.UnlockLevel();
+                }
                 else
+                {
+                    ItemManager.LevelUnlockManager.RemoveLevelFromUnlocks(levelProfile.GetLevelId());
                     levelProfile.LockLevel();
+                }
                 levelProfile.UpdateValue();
+            }
+
+            foreach (var episodeProfile in MS.EpisodeProfile)
+            {
+                episodeProfile.LockEpisode();
             }
 
             RefreshLevelButtonColors();
@@ -373,20 +434,26 @@ namespace NAPClient
             return;
         }
 
-        void OnProfileUpdate(LevelProfileMemoryBridge updatedLevel)
+        void OnLevelProfileUpdate(LevelProfileMemoryBridge updatedLevel)
         {
+            // check for level becoming unlocked when it shouldn't be
+            if (updatedLevel.GetLevelCompleteState() >= LevelCompleteState.AVAILABLE)
+                if (!ItemManager.LevelUnlockManager.ShouldLevelUnlock(updatedLevel))
+                    return;
+
             // check for completion
             if (updatedLevel.GetLevelCompleteState() >= LevelCompleteState.COMPLETED)
             {
                 var completionCondition = new RandomizationData.CompletionCondition()
                 {
                     Id = updatedLevel.GetLevelId(),
-                    State = LevelCompleteState.COMPLETED
+                    State = ProgressState.LEVELCOMPLETE
                 };
                 
                 if (CurrentRando.UnlockConditions.ContainsKey(completionCondition))
                 {
                     ItemManager.HandleCondition(CurrentRando.UnlockConditions[completionCondition]);
+                    CurrentRando.UnlockConditions.Remove(completionCondition);
                 }
             }
 
@@ -396,14 +463,46 @@ namespace NAPClient
                 var completionCondition = new RandomizationData.CompletionCondition()
                 {
                     Id = updatedLevel.GetLevelId(),
-                    State = LevelCompleteState.ALLGOLD
+                    State = ProgressState.LEVELALLGOLD
                 };
 
                 if (CurrentRando.UnlockConditions.ContainsKey(completionCondition))
                 {
                     ItemManager.HandleCondition(CurrentRando.UnlockConditions[completionCondition]);
+                    CurrentRando.UnlockConditions.Remove(completionCondition);
                 }
             }
+        }
+
+        void OnEpisodeProfileUpdate(EpisodeProfileMemoryBridge updatedEpisode)
+        {
+            // check for level becoming unlocked when it shouldn't be
+            if (updatedEpisode.GetEpisodeCompleteState() >= EpisodeCompleteState.AVAILABLE)
+                if (!ItemManager.LevelUnlockManager.ShouldEpisodeUnlock(updatedEpisode))
+                    return;
+
+            // check for completion
+            if (updatedEpisode.GetEpisodeCompleteState() >= EpisodeCompleteState.COMPLETED)
+            {
+                var completionCondition = new RandomizationData.CompletionCondition()
+                {
+                    Id = updatedEpisode.GetEpisodeId(),
+                    State = ProgressState.EPISODECOMPLETE
+                };
+
+                if (CurrentRando.UnlockConditions.ContainsKey(completionCondition))
+                {
+                    ItemManager.HandleCondition(CurrentRando.UnlockConditions[completionCondition]);
+                    CurrentRando.UnlockConditions.Remove(completionCondition);
+                }
+            }
+        }
+
+        private void ConnectToServerPressed(object sender, RoutedEventArgs e)
+        {
+            if (UrlEntry.Text.Length == 0 || SlotNameEntry.Text.Length == 0)
+                return;
+            ApManager.TryConnect(UrlEntry.Text, SlotNameEntry.Text, PasswordEntry.Password);
         }
     }
 }

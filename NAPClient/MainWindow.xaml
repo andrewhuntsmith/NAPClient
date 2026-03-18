@@ -11,7 +11,8 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
@@ -20,9 +21,32 @@
             <ColumnDefinition Width="240*"/>
         </Grid.ColumnDefinitions>
 
+        <Grid Grid.Row="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Label Grid.Row="0">URL:</Label>
+            <Label Grid.Row="1">Slot Name:</Label>
+            <Label Grid.Row="2">Password:</Label>
+
+            <TextBox Grid.Row="0" Grid.Column="1" x:Name="UrlEntry"></TextBox>
+            <TextBox Grid.Row="1" Grid.Column="1" x:Name="SlotNameEntry"></TextBox>
+            <PasswordBox Grid.Row="2" Grid.Column="1" x:Name="PasswordEntry"></PasswordBox>
+
+            <Button Grid.Row="3" Grid.ColumnSpan="2" Click="ConnectToServerPressed">Connect</Button>
+        </Grid>
         
-        <Label>Level Grid</Label>
-        <Grid Grid.Row="1" x:Name="LevelGrid">
+        <Label Grid.Row="1">Level Grid</Label>
+        <Grid Grid.Row="2" x:Name="LevelGrid">
             <Grid.RowDefinitions>
                 <RowDefinition Height="72"/>
                 <RowDefinition Height="72"/>
@@ -38,7 +62,7 @@
                 <ColumnDefinition Width="72"/>
             </Grid.ColumnDefinitions>
         </Grid>
-        <Grid Grid.Row="2" Grid.Column="0">
+        <Grid Grid.Row="3" Grid.Column="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
@@ -60,7 +84,7 @@
             <Label Grid.Row="3" Grid.Column="1" x:Name="AllGoldLabel">--</Label>
         </Grid>
         
-        <StackPanel Grid.Row="1" Grid.Column="1" Margin="5,0,5,0">
+        <StackPanel Grid.Row="2" Grid.Column="1" Margin="5,0,5,0">
             <Button x:Name="BtnAdd" Margin="0,5,0,0" Click="HookToGameButtonPressed" IsEnabled="False">Hook To Game</Button>
             <Button x:Name="BtnUpdateValues" Click="ApplyStartTimeValueButtonPressed" Content="Update Values"/>
 
