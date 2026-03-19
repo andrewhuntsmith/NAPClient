@@ -74,8 +74,8 @@ namespace NAPClient
         public IntPtrAddressValue FirstLevelProfileAddress;
 
         public DoubleAddressValue CurrentTimeRemaining;
-        public DoubleAddressValue LevelStartTime;
-        public DoubleAddressValue TimeGrantedByGold;
+        public FloatAddressValue LevelStartTime;
+        public FloatAddressValue TimeGrantedByGold;
         public IntAddressValue LevelVictories;
         public IntAddressValue EpisodeVictories;
         public IntAddressValue PaletteIndex;
@@ -173,8 +173,8 @@ namespace NAPClient
             // From there, you are adding the specific pointer offset. For example, for CurrentRemainingTime, FA8.
             // If you wanted to start one address higher, you would need to start at the NppdllBaseAddress, and add the initial offset to that. i.e. "{ NppdllBaseAddress + TimerPointerOffsets, TimeRemainingOffset }"
             CurrentTimeRemaining = new DoubleAddressValue() { Offsets = new List<int> { TimerBlockOffset + TimeRemainingOffset } };
-            LevelStartTime = new DoubleAddressValue() { Offsets = new List<int> { TimerBlockOffset + StartTimeOffset1, StartTimeOffset2 } };
-            TimeGrantedByGold = new DoubleAddressValue() { Offsets = new List<int> { TimerBlockOffset + TimeGrantedByGoldOffset1, TimeGrantedByGoldOffset2 } };
+            LevelStartTime = new FloatAddressValue() { Offsets = new List<int> { TimerBlockOffset + StartTimeOffset1, StartTimeOffset2 } };
+            TimeGrantedByGold = new FloatAddressValue() { Offsets = new List<int> { TimerBlockOffset + TimeGrantedByGoldOffset1, TimeGrantedByGoldOffset2 } };
             FirstLevelDataAddress = new IntPtrAddressValue() { Offsets = new List<int> { NppdllBaseAddress.ToInt32() + LevelDataOffset1, LevelDataOffset2, LevelDataOffset3, LevelDataOffset4 } };
             FirstLevelProfileAddress = new IntPtrAddressValue() { Offsets = new List<int> { NppdllBaseAddress.ToInt32() + LevelProfileOffset1, LevelProfileOffset2 } };
             LevelVictories = new IntAddressValue() { Offsets = new List<int> { NppdllBaseAddress.ToInt32() + VictoriesOffset1, VictoriesOffset2, LevelVictoriesOffset3 } };

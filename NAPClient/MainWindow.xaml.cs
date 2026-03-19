@@ -1,7 +1,4 @@
-﻿using Archipelago.MultiClient.Net;
-using Archipelago.MultiClient.Net.Enums;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading;
 using System.Windows;
@@ -117,6 +114,8 @@ namespace NAPClient
                 120, 49, 21, 91, 39 };
 
             CurrentRando.InitialLevels = new List<int> { 22, 16, 92 };
+            CurrentRando.StartingLevelTime = 10.0f;
+            CurrentRando.StartingGoldValue = 0.1f;
 
             var cond1 = new RandomizationData.CompletionCondition() { Id = 22, State = ProgressState.LEVELCOMPLETE };
             var cond2 = new RandomizationData.CompletionCondition() { Id = 22, State = ProgressState.LEVELALLGOLD };
@@ -130,6 +129,8 @@ namespace NAPClient
             var cond10 = new RandomizationData.CompletionCondition() { Id = 122, State = ProgressState.LEVELCOMPLETE };
             var cond11 = new RandomizationData.CompletionCondition() { Id = 79, State = ProgressState.LEVELCOMPLETE };
             var cond12 = new RandomizationData.CompletionCondition() { Id = 102, State = ProgressState.LEVELCOMPLETE };
+            var cond13 = new RandomizationData.CompletionCondition() { Id = 0, State = ProgressState.LEVELCOMPLETE };
+            var cond14 = new RandomizationData.CompletionCondition() { Id = 0, State = ProgressState.LEVELALLGOLD };
 
             CurrentRando.UnlockConditions[cond1] = new ItemData() { Value = 69, Type = ItemType.LevelUnlock };
             CurrentRando.UnlockConditions[cond2] = new ItemData() { Value = 76, Type = ItemType.LevelUnlock };
@@ -143,6 +144,8 @@ namespace NAPClient
             CurrentRando.UnlockConditions[cond10] = new ItemData() { Value = 0, Type = ItemType.ProgressiveEpisodeUnlock };
             CurrentRando.UnlockConditions[cond11] = new ItemData() { Value = 0, Type = ItemType.ProgressiveEpisodeUnlock };
             CurrentRando.UnlockConditions[cond12] = new ItemData() { Value = 0, Type = ItemType.ProgressiveEpisodeUnlock };
+            CurrentRando.UnlockConditions[cond13] = new ItemData() { Value = 5, Type = ItemType.IncreaseStartTime };
+            CurrentRando.UnlockConditions[cond14] = new ItemData() { Value = 1, Type = ItemType.IncreaseGoldValue };
         }
 
         void GenerateButtonGrid()
@@ -296,6 +299,9 @@ namespace NAPClient
             {
                 MS.SwapLevels(level.Key, MS.NewLevelMapping[MS.OriginalLevelMapping[level.Key]]);
             }
+
+            MS.LevelStartTime.SetValue(90f);
+            MS.TimeGrantedByGold.SetValue(2f);
         }
 
         private void LevelButtonPressed(object sender, RoutedEventArgs e) 
@@ -346,6 +352,9 @@ namespace NAPClient
 
         private void RandomizePressed(object sender, RoutedEventArgs e)
         {
+            MS.LevelStartTime.SetValue(CurrentRando.StartingLevelTime);
+            MS.TimeGrantedByGold.SetValue(CurrentRando.StartingGoldValue);
+
             for (var id = 0; id < CurrentRando.LevelOrder.Count; id++)
             {
                 MS.SwapLevels(id, MS.NewLevelMapping[MS.OriginalLevelMapping[CurrentRando.LevelOrder[id]]]);

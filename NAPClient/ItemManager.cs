@@ -29,6 +29,12 @@
                 case ItemType.ChangeColorPalette:
                     PaletteSwap(item.Value);
                     return;
+                case ItemType.IncreaseStartTime:
+                    IncreaseStartTime(item.Value);
+                    return;
+                case ItemType.IncreaseGoldValue:
+                    IncreaseGoldTime(item.Value);
+                    return;
             }
         }
 
@@ -76,6 +82,17 @@
 
             MS.PaletteIndex.UpdateValue();
             MS.PaletteIndex.SetValue(paletteId);
+        }
+
+        void IncreaseStartTime(int time)
+        {
+            MS.LevelStartTime.SetValue(MS.LevelStartTime.Value + time);
+        }
+
+        void IncreaseGoldTime(int time)
+        {
+            var adjustTime = time / 10.0f;
+            MS.TimeGrantedByGold.SetValue(MS.TimeGrantedByGold.Value + adjustTime);
         }
     }
 }

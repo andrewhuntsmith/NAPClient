@@ -87,6 +87,21 @@ namespace NAPClient
         }
     }
 
+    public class FloatAddressValue : AddressValue<float>
+    {
+        protected override int DataSize() => sizeof(float);
+
+        protected override float ConvertToType(byte[] buffer)
+        {
+            return BitConverter.ToSingle(buffer, 0);
+        }
+
+        protected override byte[] ConvertFromType(float value)
+        {
+            return BitConverter.GetBytes(value);
+        }
+    }
+
     public class IntAddressValue : AddressValue<int>
     {
         protected override int DataSize() => sizeof(int);
