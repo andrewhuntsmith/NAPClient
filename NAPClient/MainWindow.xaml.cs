@@ -131,6 +131,7 @@ namespace NAPClient
             var cond12 = new RandomizationData.CompletionCondition() { Id = 102, State = ProgressState.LEVELCOMPLETE };
             var cond13 = new RandomizationData.CompletionCondition() { Id = 0, State = ProgressState.LEVELCOMPLETE };
             var cond14 = new RandomizationData.CompletionCondition() { Id = 0, State = ProgressState.LEVELALLGOLD };
+            var cond15 = new RandomizationData.CompletionCondition() { Id = 1, State = ProgressState.LEVELALLGOLD };
 
             CurrentRando.UnlockConditions[cond1] = new ItemData() { Value = 69, Type = ItemType.LevelUnlock };
             CurrentRando.UnlockConditions[cond2] = new ItemData() { Value = 76, Type = ItemType.LevelUnlock };
@@ -146,6 +147,7 @@ namespace NAPClient
             CurrentRando.UnlockConditions[cond12] = new ItemData() { Value = 0, Type = ItemType.ProgressiveEpisodeUnlock };
             CurrentRando.UnlockConditions[cond13] = new ItemData() { Value = 5, Type = ItemType.IncreaseStartTime };
             CurrentRando.UnlockConditions[cond14] = new ItemData() { Value = 1, Type = ItemType.IncreaseGoldValue };
+            CurrentRando.UnlockConditions[cond15] = new ItemData() { Value = 21, Type = ItemType.ChangeColorPalette };
         }
 
         void GenerateButtonGrid()
