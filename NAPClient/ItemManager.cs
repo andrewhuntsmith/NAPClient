@@ -55,7 +55,7 @@
 
             if (episodeProfile.GetEpisodeCompleteState() == EpisodeCompleteState.LOCKED)
             {
-                LevelUnlockManager.AddLevelToUnlocks(episodeId);
+                LevelUnlockManager.AddEpisodeToUnlocks(episodeId);
                 episodeProfile.UnlockEpisode();
             }
         }
