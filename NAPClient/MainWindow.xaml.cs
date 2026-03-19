@@ -304,6 +304,7 @@ namespace NAPClient
 
             MS.LevelStartTime.SetValue(90f);
             MS.TimeGrantedByGold.SetValue(2f);
+            MS.ReenableScoreSubmission();
         }
 
         private void LevelButtonPressed(object sender, RoutedEventArgs e) 

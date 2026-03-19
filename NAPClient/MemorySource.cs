@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows;
 
@@ -58,6 +57,11 @@ namespace NAPClient
         public const int PaletteIndexOffset2 = TimerPointerOffset2;
         public const int PaletteIndexOffset3 = 0x2B4;
 
+        // pointer offsets and values for disabling score submission
+        public const int ScoreSubmitMethodPointer = 0x4DA4B0;
+        public byte[] ReturnBytes = new byte[] { 0xC3 };
+        public byte[] PushEbpBytes = new byte[] { 0x55 };
+
         // calculated once the program starts running
         public static int TimerBlockOffset;
 
@@ -112,6 +116,7 @@ namespace NAPClient
             ReadProcessMemory((int)NppProcessHandle, (int)(NppdllBaseAddress + TimerPointerOffset1), offsetPointer, offsetPointer.Length, ref bytesRead);
             // saves offsetPointer into TimerBlockOffset
             TimerBlockOffset = BitConverter.ToInt32(offsetPointer, 0);
+            DisableScoreSubmission();
             InitializeAllValues();
             return true;
         }
@@ -165,6 +170,16 @@ namespace NAPClient
                 return false;
             }
             return true;
+        }
+
+        void DisableScoreSubmission()
+        {
+            WriteProcessMemory((int)MemorySource.NppProcessHandle, NppdllBaseAddress.ToInt32() + ScoreSubmitMethodPointer, ReturnBytes, sizeof(byte), out var bytesWritten);
+        }
+
+        public void ReenableScoreSubmission()
+        {
+            WriteProcessMemory((int)MemorySource.NppProcessHandle, NppdllBaseAddress.ToInt32() + ScoreSubmitMethodPointer, PushEbpBytes, sizeof(byte), out var bytesWritten);
         }
 
         void InitializeAllValues()
