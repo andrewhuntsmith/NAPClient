@@ -31,6 +31,7 @@ namespace NAPClient
         public List<int> InitialLevels = new List<int>();
         public float StartingLevelTime;
         public float StartingGoldValue;
+        public double InitialMaxTime;
         public Dictionary<CompletionCondition, ItemData> UnlockConditions = new Dictionary<CompletionCondition, ItemData>();
     }
 

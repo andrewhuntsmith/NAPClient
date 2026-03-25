@@ -13,6 +13,7 @@
         ProgressiveEpisodeUnlock,
         IncreaseStartTime,
         IncreaseGoldValue,
+        IncreaseMaxTime,
         ChangeColorPalette,
     }
 }

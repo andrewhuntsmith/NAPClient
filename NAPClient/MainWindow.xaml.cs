@@ -73,9 +73,9 @@ namespace NAPClient
             // just run forever lmao
             while (Loop)
             {
-                Thread.Sleep(1000);
                 MS.LevelVictories.UpdateValue();
                 MS.EpisodeVictories.UpdateValue();
+                MS.GoldCollectedInCurrentLevel.UpdateValue();
             }
         }
 
@@ -114,8 +114,9 @@ namespace NAPClient
                 120, 49, 21, 91, 39 };
 
             CurrentRando.InitialLevels = new List<int> { 22, 16, 92 };
-            CurrentRando.StartingLevelTime = 10.0f;
-            CurrentRando.StartingGoldValue = 0.1f;
+            CurrentRando.StartingLevelTime = 5.0f;
+            CurrentRando.StartingGoldValue = 1.0f;
+            CurrentRando.InitialMaxTime = 5.0d;
 
             var cond1 = new RandomizationData.CompletionCondition() { Id = 22, State = ProgressState.LEVELCOMPLETE };
             var cond2 = new RandomizationData.CompletionCondition() { Id = 22, State = ProgressState.LEVELALLGOLD };
@@ -357,6 +358,7 @@ namespace NAPClient
         {
             MS.LevelStartTime.SetValue(CurrentRando.StartingLevelTime);
             MS.TimeGrantedByGold.SetValue(CurrentRando.StartingGoldValue);
+            ItemManager.SetMaxTime(CurrentRando.InitialMaxTime);
 
             for (var id = 0; id < CurrentRando.LevelOrder.Count; id++)
             {

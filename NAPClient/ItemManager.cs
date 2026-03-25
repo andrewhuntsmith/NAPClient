@@ -8,11 +8,15 @@ namespace NAPClient
         public LevelUnlockManager LevelUnlockManager;
         public bool Initializing;
 
+        double MaxTime = double.MaxValue;
+
         public ItemManager(MemorySource ms) 
         { 
             MS = ms;
             LevelUnlockManager = new LevelUnlockManager();
             Initializing = true;
+
+            MS.GoldCollectedInCurrentLevel.ValueChanged += AdjustToMaxTime;
         }
 
         public void HandleCondition(ItemData item)
@@ -36,6 +40,9 @@ namespace NAPClient
                     return;
                 case ItemType.IncreaseGoldValue:
                     IncreaseGoldTime(item.Value);
+                    return;
+                case ItemType.IncreaseMaxTime:
+                    IncreaseMaxTime(item.Value);
                     return;
             }
         }
@@ -97,6 +104,23 @@ namespace NAPClient
             MS.TimeGrantedByGold.SetValue(MS.TimeGrantedByGold.Value + adjustTime);
         }
 
+        public void SetMaxTime(double time)
+        {
+            MaxTime = time;
+        }
+
+        void IncreaseMaxTime(int time)
+        {
+            MaxTime += time;
+        }
+
+        void AdjustToMaxTime()
+        {
+            MS.CurrentTimeRemaining.UpdateValue();
+            if (MS.CurrentTimeRemaining.Value > MaxTime)
+                MS.CurrentTimeRemaining.SetValue(MaxTime);
+        }
+
         public static ItemData ConvertStringToItem(string itemName)
         {
             var newItem = new ItemData();
@@ -134,13 +158,10 @@ namespace NAPClient
             }
             else if (itemName.Contains("max"))
             {
-                throw new NotImplementedException();
+                newItem.Type = ItemType.IncreaseMaxTime;
 
-                // this will be the code, but we haven't yet implemented max time
-                //newItem.Type = ItemType.IncreaseMaxTime;
-
-                //int.TryParse(itemName.Split('_')[2], out var valueNumber);
-                //newItem.Value = valueNumber;
+                int.TryParse(itemName.Split('_')[2], out var valueNumber);
+                newItem.Value = valueNumber;
             }
 
             return newItem;

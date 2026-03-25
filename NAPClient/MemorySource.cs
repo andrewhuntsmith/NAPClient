@@ -16,7 +16,8 @@ namespace NAPClient
         public const int CommonPointerOffset = 0xB7B178;
 
         // pointer offsets from timer section to timers
-        public const int TimeRemainingOffset = 0xFA8;
+        public const int TimeRemainingOffset = 0x8528;
+        public const int GoldCollectedInCurrentLevelOffset = 0x854C;
         public const int StartTimeOffset1 = TimerPointerOffset2;
         public const int StartTimeOffset2 = 0x1AC;
         public const int TimeGrantedByGoldOffset1 = TimerPointerOffset2;
@@ -78,6 +79,7 @@ namespace NAPClient
         public IntPtrAddressValue FirstLevelProfileAddress;
 
         public DoubleAddressValue CurrentTimeRemaining;
+        public IntAddressValue GoldCollectedInCurrentLevel;
         public FloatAddressValue LevelStartTime;
         public FloatAddressValue TimeGrantedByGold;
         public IntAddressValue LevelVictories;
@@ -187,7 +189,8 @@ namespace NAPClient
             // Some of these values start one pointer deep already. If you are looking at cheat engine, "npp.dll+179F24" (or whatever value) is already done in TimerBlockOffset.
             // From there, you are adding the specific pointer offset. For example, for CurrentRemainingTime, FA8.
             // If you wanted to start one address higher, you would need to start at the NppdllBaseAddress, and add the initial offset to that. i.e. "{ NppdllBaseAddress + TimerPointerOffsets, TimeRemainingOffset }"
-            CurrentTimeRemaining = new DoubleAddressValue() { Offsets = new List<int> { TimerBlockOffset + TimeRemainingOffset } };
+            CurrentTimeRemaining = new DoubleAddressValue() { Offsets = new List<int> { NppdllBaseAddress.ToInt32() + CommonPointerOffset, TimeRemainingOffset } };
+            GoldCollectedInCurrentLevel = new IntAddressValue() { Offsets = new List<int> { NppdllBaseAddress.ToInt32() + CommonPointerOffset, GoldCollectedInCurrentLevelOffset } };
             LevelStartTime = new FloatAddressValue() { Offsets = new List<int> { TimerBlockOffset + StartTimeOffset1, StartTimeOffset2 } };
             TimeGrantedByGold = new FloatAddressValue() { Offsets = new List<int> { TimerBlockOffset + TimeGrantedByGoldOffset1, TimeGrantedByGoldOffset2 } };
             FirstLevelDataAddress = new IntPtrAddressValue() { Offsets = new List<int> { NppdllBaseAddress.ToInt32() + LevelDataOffset1, LevelDataOffset2, LevelDataOffset3, LevelDataOffset4 } };
