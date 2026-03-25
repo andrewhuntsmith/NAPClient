@@ -54,7 +54,7 @@ namespace NAPClient
             RefreshLevelButtonColors();
 
             ItemManager = new ItemManager(MS);
-            ApManager = new ArchipelagoManager(MS);
+            ApManager = new ArchipelagoManager(MS, ItemManager);
             MS.LevelVictories.UpdateValue();
             MS.EpisodeVictories.UpdateValue();
             ItemManager.Initializing = false;

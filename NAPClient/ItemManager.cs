@@ -1,4 +1,6 @@
-﻿namespace NAPClient
+﻿using System;
+
+namespace NAPClient
 {
     public class ItemManager
     {
@@ -93,6 +95,55 @@
         {
             var adjustTime = time / 10.0f;
             MS.TimeGrantedByGold.SetValue(MS.TimeGrantedByGold.Value + adjustTime);
+        }
+
+        public static ItemData ConvertStringToItem(string itemName)
+        {
+            var newItem = new ItemData();
+
+            if (itemName.Contains("prog"))
+            {
+                newItem.Type = ItemType.ProgressiveEpisodeUnlock;
+
+                var idArray = itemName.Split('_')[0];
+                var rowNumber = "abcde".IndexOf(idArray[0]);
+                int.TryParse(idArray.Substring(1), out var colNumber);
+                newItem.Value = (rowNumber * 5) + colNumber;
+            }
+            else if (itemName.Contains("Level Unlock"))
+            {
+                throw new NotImplementedException();
+            }
+            else if (itemName.Contains("Episode Unlock"))
+            {
+                throw new NotImplementedException();
+            }
+            else if (itemName.Contains("gold"))
+            {
+                newItem.Type = ItemType.IncreaseGoldValue;
+
+                int.TryParse(itemName.Split('_')[2], out var valueNumber);
+                newItem.Value = valueNumber;
+            }
+            else if (itemName.Contains("start"))
+            {
+                newItem.Type = ItemType.IncreaseStartTime;
+
+                int.TryParse(itemName.Split('_')[2], out var valueNumber);
+                newItem.Value = valueNumber;
+            }
+            else if (itemName.Contains("max"))
+            {
+                throw new NotImplementedException();
+
+                // this will be the code, but we haven't yet implemented max time
+                //newItem.Type = ItemType.IncreaseMaxTime;
+
+                //int.TryParse(itemName.Split('_')[2], out var valueNumber);
+                //newItem.Value = valueNumber;
+            }
+
+            return newItem;
         }
     }
 }
