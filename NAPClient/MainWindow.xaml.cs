@@ -55,6 +55,8 @@ namespace NAPClient
 
             ItemManager = new ItemManager(MS);
             ApManager = new ArchipelagoManager(MS, ItemManager);
+            ApManager.APConnectionEstablished += OnAPConnectionEstablished;
+
             MS.LevelVictories.UpdateValue();
             MS.EpisodeVictories.UpdateValue();
             ItemManager.Initializing = false;
@@ -356,6 +358,17 @@ namespace NAPClient
 
         private void RandomizePressed(object sender, RoutedEventArgs e)
         {
+            RandomizeLevels();
+        }
+
+        void OnAPConnectionEstablished(List<int> levelOrder)
+        {
+            CurrentRando.LevelOrder = levelOrder;
+            RandomizeLevels();
+        }
+
+        void RandomizeLevels()
+        {
             MS.LevelStartTime.SetValue(CurrentRando.StartingLevelTime);
             MS.TimeGrantedByGold.SetValue(CurrentRando.StartingGoldValue);
             ItemManager.SetMaxTime(CurrentRando.InitialMaxTime);
@@ -514,9 +527,20 @@ namespace NAPClient
 
         private void ConnectToServerPressed(object sender, RoutedEventArgs e)
         {
-            if (UrlEntry.Text.Length == 0 || SlotNameEntry.Text.Length == 0)
-                return;
-            ApManager.TryConnect(UrlEntry.Text, SlotNameEntry.Text, PasswordEntry.Password);
+            if (((Button)sender).Tag.ToString() == "Connect")
+            {
+                if (UrlEntry.Text.Length == 0 || SlotNameEntry.Text.Length == 0)
+                    return;
+                if (!ApManager.TryConnect(UrlEntry.Text, SlotNameEntry.Text, PasswordEntry.Password))
+                    return;
+                ((Button)sender).Content = "Disconnect";
+                ((Button)sender).Tag = "Disconnect";
+            }
+            else
+            {
+                ((Button)sender).Content = "Connect";
+                ((Button)sender).Tag = "Connect";
+            }
         }
     }
 }

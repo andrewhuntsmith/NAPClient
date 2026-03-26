@@ -42,7 +42,7 @@
             <TextBox Grid.Row="1" Grid.Column="1" x:Name="SlotNameEntry"></TextBox>
             <PasswordBox Grid.Row="2" Grid.Column="1" x:Name="PasswordEntry"></PasswordBox>
 
-            <Button Grid.Row="3" Grid.ColumnSpan="2" Click="ConnectToServerPressed">Connect</Button>
+            <Button Grid.Row="3" Grid.ColumnSpan="2" Click="ConnectToServerPressed" Tag="Connect">Connect</Button>
         </Grid>
         
         <Label Grid.Row="1">Level Grid</Label>

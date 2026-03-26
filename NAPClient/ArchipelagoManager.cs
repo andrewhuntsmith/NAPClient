@@ -4,15 +4,18 @@ using System;
 using Archipelago.MultiClient.Net.Helpers;
 using System.Collections.ObjectModel;
 using Archipelago.MultiClient.Net.MessageLog.Messages;
+using System.Collections.Generic;
 
 namespace NAPClient
 {
     internal class ArchipelagoManager
     {
         public static MemorySource MS;
-        ArchipelagoSession ApSession;
+        static ArchipelagoSession ApSession;
         ItemManager ItemManager;
         int CurrentItemIndex = 0;
+
+        public Action<List<int>> APConnectionEstablished;
 
         public ArchipelagoManager(MemorySource ms, ItemManager im)
         {
@@ -20,11 +23,16 @@ namespace NAPClient
             ItemManager = im;
         }
 
-        public void TryConnect(string url, string slotName, string password)
+        public bool TryConnect(string url, string slotName, string password)
         {
             CreateAPSession(url);
             RegisterEvents();
-            ConnectToAP(url, slotName, password);
+            return ConnectToAP(url, slotName, password);
+        }
+
+        public void Disconnect()
+        {
+            Reset();
         }
 
         void CreateAPSession(string url)
@@ -45,13 +53,13 @@ namespace NAPClient
         }
 
         // this method pulled almost verbatim from https://archipelagomw.github.io/Archipelago.MultiClient.Net/docs/quick-start.html
-        void ConnectToAP(string server, string slotName, string password)
+        bool ConnectToAP(string server, string slotName, string password)
         {
             LoginResult result;
 
             try
             {
-                result = ApSession.TryConnectAndLogin("N++", slotName, ItemsHandlingFlags.AllItems);
+                result = ApSession.TryConnectAndLogin("N++", slotName, ItemsHandlingFlags.AllItems, null, null, null, password);
             }
             catch (Exception e)
             {
@@ -71,35 +79,50 @@ namespace NAPClient
                     errorMessage += $"\n  {error}";
                 }
 
-                return;
+                return false;
             }
 
             var loginSuccess = (LoginSuccessful)result;
+            return true;
+        }
+
+        private static void Reset()
+        {
+            ApSession = null;
+        }
+
+        void RandomizeLevels(LoginSuccessful loginSuccessful)
+        {
+            var levelOrder = (List<int>)loginSuccessful.SlotData["LevelOrder"];
+            APConnectionEstablished.Invoke(levelOrder);
         }
 
         void OnErrorReceived(Exception e, string message)
         {
-            throw new NotImplementedException();
+            Reset();
         }
 
         void OnPacketReceived(ArchipelagoPacketBase packet)
         {
-            throw new NotImplementedException();
+            // TODO: Check received packet for information
+            return;
         }
 
         void OnPacketsSent(ArchipelagoPacketBase[] packets)
         {
-            throw new NotImplementedException();
+            // Do I need to do anything here?
+            return;
         }
 
         void OnSocketClosed(string reason)
         {
-            throw new NotImplementedException();
+            Reset();
         }
 
         void OnSocketOpened()
         {
-            throw new NotImplementedException();
+            // TODO: Log that connection opened
+            return;
         }
 
         void OnItemReceived(ReceivedItemsHelper helper)
@@ -120,7 +143,8 @@ namespace NAPClient
 
         void OnMessageReceived(LogMessage message)
         {
-            throw new NotImplementedException();
+            // TODO: Display incoming messages
+            return;
         }
     }
 }

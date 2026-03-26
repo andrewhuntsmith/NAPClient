@@ -44,6 +44,10 @@ namespace NAPClient
                 case ItemType.IncreaseMaxTime:
                     IncreaseMaxTime(item.Value);
                     return;
+                default:
+                    // TODO: Hook this up to a logger, or throw some error
+                    // not throwing an error right now while I do tests with AP data pretending to be other games
+                    return;
             }
         }
 
