@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using System.Text;
 using System.Windows;
 
 namespace NAPClient
@@ -58,6 +59,11 @@ namespace NAPClient
         public const int PaletteIndexOffset2 = TimerPointerOffset2;
         public const int PaletteIndexOffset3 = 0x2B4;
 
+        // string offsets
+        public const int ProfileNameOffset = 0x587790;
+        public const string OriginalProfileName = "nprofile.gz";
+        public const string ReplacementProfileName = "NAPfile.gz ";
+
         // pointer offsets and values for disabling score submission
         public const int ScoreSubmitMethodPointer = 0x4DA4B0;
         public byte[] ReturnBytes = new byte[] { 0xC3 };
@@ -74,6 +80,7 @@ namespace NAPClient
         public static IntPtr NppdllBaseAddress;
 
         const int PROCESS_VM_ALL = 0x001F0FFF;
+        const int PAGE_READWRITE = 0x04;
 
         public IntPtrAddressValue FirstLevelDataAddress;
         public IntPtrAddressValue FirstLevelProfileAddress;
@@ -94,6 +101,9 @@ namespace NAPClient
 
         [DllImport("kernel32.dll", SetLastError = true)]
         public static extern bool WriteProcessMemory(int hProcess, int lpBaseAddress, byte[] lpBuffer, int nSize, out int lpNumberOfBytesWritten);
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        public static extern bool VirtualProtectEx(int hProcess, int lpBaseAddress, int dwSize, int flNewProtect, out int lpflOldProtect);
 
         public bool HookMemory()
         {
@@ -119,6 +129,7 @@ namespace NAPClient
             // saves offsetPointer into TimerBlockOffset
             TimerBlockOffset = BitConverter.ToInt32(offsetPointer, 0);
             DisableScoreSubmission();
+            DisableProfileWriting();
             InitializeAllValues();
             return true;
         }
@@ -182,6 +193,22 @@ namespace NAPClient
         public void ReenableScoreSubmission()
         {
             WriteProcessMemory((int)MemorySource.NppProcessHandle, NppdllBaseAddress.ToInt32() + ScoreSubmitMethodPointer, PushEbpBytes, sizeof(byte), out var bytesWritten);
+        }
+
+        void DisableProfileWriting()
+        {
+            VirtualProtectEx((int)MemorySource.NppProcessHandle, NppdllBaseAddress.ToInt32() + ProfileNameOffset, 11, PAGE_READWRITE, out var oldProtections);
+            var written = WriteProcessMemory((int)MemorySource.NppProcessHandle, NppdllBaseAddress.ToInt32() + ProfileNameOffset, Encoding.UTF8.GetBytes(ReplacementProfileName), 11, out var bytesWritten);
+            VirtualProtectEx((int)MemorySource.NppProcessHandle, NppdllBaseAddress.ToInt32() + ProfileNameOffset, 11, oldProtections, out var _);
+
+            int error = Marshal.GetLastWin32Error();
+            if (!written)
+            {
+                string caption = "Error disabling profile!";
+                string errorMessage = "Error number: " + error.ToString() +
+                    "\nFailed to disable writing to your profile!\nClose NAP and N++, and contact the developers\nContinuing to use the program could damage your regular N++ profile";
+                MessageBox.Show(errorMessage, caption);
+            }
         }
 
         void InitializeAllValues()
