@@ -21,7 +21,7 @@
             <ColumnDefinition Width="240*"/>
         </Grid.ColumnDefinitions>
 
-        <Grid Grid.Row="0">
+        <Grid x:Name="APConnection" Grid.Row="0" Visibility="Collapsed">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
@@ -43,6 +43,25 @@
             <PasswordBox Grid.Row="2" Grid.Column="1" x:Name="PasswordEntry"></PasswordBox>
 
             <Button Grid.Row="3" Grid.ColumnSpan="2" Click="ConnectToServerPressed" Tag="Connect">Connect</Button>
+        </Grid>
+
+        <Grid x:Name="LocalRando" Grid.Row="0" Visibility="Visible">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Label Grid.Row="0">File Path:</Label>
+            <Button Grid.Row="0" Grid.Column="1" Click="BrowseLocalFiles">Browse</Button>
+            <TextBox Grid.Row="0" Grid.Column="2" x:Name="FilePath"></TextBox>
+            
+            <Button Grid.Row="1" Grid.ColumnSpan="3" Click="LoadLocalRandoFile">Load File</Button>
         </Grid>
         
         <Label Grid.Row="1">Level Grid</Label>
@@ -138,7 +157,6 @@
             </Grid>
             <Button x:Name="BtnCycleLevelStatus" Margin="0,5,0,0" Click="CycleLevelStatusPressed">Cycle Level Status</Button>
             <Button x:Name="BtnUpdateLevelStatus" Margin="0,5,0,0" Click="UpdateLevelStatusPressed">Update Level Completion</Button>
-            <Button x:Name="BtnRandomize" Margin="0,5,0,0" Click="RandomizePressed">Randomize Levels</Button>
 
         </StackPanel>
     </Grid>

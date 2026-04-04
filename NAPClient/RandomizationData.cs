@@ -37,9 +37,9 @@ namespace NAPClient
 
     public enum ProgressState
     {
-        LEVELCOMPLETE,
-        LEVELALLGOLD,
-        EPISODECOMPLETE,
-        EPISODEALLGOLD
+        LevelComplete,
+        LevelAllGold,
+        EpisodeComplete,
+        EpisodeAllGold
     }
 }

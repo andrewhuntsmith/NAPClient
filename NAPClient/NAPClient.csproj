@@ -74,6 +74,7 @@
     <Compile Include="ItemManager.cs" />
     <Compile Include="LevelUnlockManager.cs" />
     <Compile Include="RandomizationData.cs" />
+    <Compile Include="RandomizationDataConverter.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

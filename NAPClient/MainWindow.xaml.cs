@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.Win32;
+using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
@@ -48,7 +51,6 @@ namespace NAPClient
             }
             AttachLevelProfileEvents();
 
-            DEBUG_InitializeRandomData();
             InitializeColorDictionary();
             GenerateButtonGrid();
             RefreshLevelButtonColors();
@@ -94,63 +96,6 @@ namespace NAPClient
                 levelProfile.ValueUpdated += OnLevelProfileUpdate;
             foreach (var episodeProfile in MS.EpisodeProfile)
                 episodeProfile.ValueUpdated += OnEpisodeProfileUpdate;
-        }
-
-        // This method only currently exists to have some data to test with
-        // In the future this should be generated somewhere else
-        void DEBUG_InitializeRandomData()
-        {
-            CurrentRando.LevelOrder = new List<int>{ 
-                10, 76, 105, 71, 82, 84, 97, 87, 63, 116,
-                66, 62, 13, 96, 102, 57, 46, 58, 18, 19,
-                22, 92, 5, 112, 8, 89, 103, 93, 41, 83,
-                33, 40, 23, 88, 4, 31, 80, 55, 48, 85,
-                106, 124, 14, 1, 121, 25, 61, 117, 20, 43,
-                56, 67, 90, 65, 45, 122, 29, 53, 38, 95,
-                123, 81, 0, 28, 42, 36, 69, 94, 64, 98,
-                101, 104, 6, 37, 115, 35, 75, 109, 17, 11,
-                60, 72, 24, 114, 34, 70, 9, 86, 68, 47,
-                7, 16, 51, 77, 107, 59, 26, 32, 54, 99,
-                44, 110, 15, 2, 79, 118, 52, 3, 113, 119,
-                27, 74, 73, 108, 100, 50, 30, 12, 111, 78,
-                120, 49, 21, 91, 39 };
-
-            CurrentRando.InitialLevels = new List<int> { 22, 16, 92 };
-            CurrentRando.StartingLevelTime = 5.0f;
-            CurrentRando.StartingGoldValue = 1.0f;
-            CurrentRando.InitialMaxTime = 5.0d;
-
-            var cond1 = new RandomizationData.CompletionCondition() { Id = 22, State = ProgressState.LEVELCOMPLETE };
-            var cond2 = new RandomizationData.CompletionCondition() { Id = 22, State = ProgressState.LEVELALLGOLD };
-            var cond3 = new RandomizationData.CompletionCondition() { Id = 16, State = ProgressState.LEVELCOMPLETE };
-            var cond4 = new RandomizationData.CompletionCondition() { Id = 16, State = ProgressState.LEVELALLGOLD };
-            var cond5 = new RandomizationData.CompletionCondition() { Id = 92, State = ProgressState.LEVELCOMPLETE };
-            var cond6 = new RandomizationData.CompletionCondition() { Id = 92, State = ProgressState.LEVELALLGOLD };
-            var cond7 = new RandomizationData.CompletionCondition() { Id = 58, State = ProgressState.LEVELCOMPLETE };
-            var cond8 = new RandomizationData.CompletionCondition() { Id = 69, State = ProgressState.LEVELCOMPLETE };
-            var cond9 = new RandomizationData.CompletionCondition() { Id = 76, State = ProgressState.LEVELCOMPLETE };
-            var cond10 = new RandomizationData.CompletionCondition() { Id = 122, State = ProgressState.LEVELCOMPLETE };
-            var cond11 = new RandomizationData.CompletionCondition() { Id = 79, State = ProgressState.LEVELCOMPLETE };
-            var cond12 = new RandomizationData.CompletionCondition() { Id = 102, State = ProgressState.LEVELCOMPLETE };
-            var cond13 = new RandomizationData.CompletionCondition() { Id = 0, State = ProgressState.LEVELCOMPLETE };
-            var cond14 = new RandomizationData.CompletionCondition() { Id = 0, State = ProgressState.LEVELALLGOLD };
-            var cond15 = new RandomizationData.CompletionCondition() { Id = 1, State = ProgressState.LEVELALLGOLD };
-
-            CurrentRando.UnlockConditions[cond1] = new ItemData() { Value = 69, Type = ItemType.LevelUnlock };
-            CurrentRando.UnlockConditions[cond2] = new ItemData() { Value = 76, Type = ItemType.LevelUnlock };
-            CurrentRando.UnlockConditions[cond3] = new ItemData() { Value = 122, Type = ItemType.LevelUnlock };
-            CurrentRando.UnlockConditions[cond4] = new ItemData() { Value = 79, Type = ItemType.LevelUnlock };
-            CurrentRando.UnlockConditions[cond5] = new ItemData() { Value = 58, Type = ItemType.LevelUnlock };
-            CurrentRando.UnlockConditions[cond6] = new ItemData() { Value = 102, Type = ItemType.LevelUnlock };
-            CurrentRando.UnlockConditions[cond7] = new ItemData() { Value = 0, Type = ItemType.ProgressiveEpisodeUnlock };
-            CurrentRando.UnlockConditions[cond8] = new ItemData() { Value = 0, Type = ItemType.ProgressiveEpisodeUnlock };
-            CurrentRando.UnlockConditions[cond9] = new ItemData() { Value = 0, Type = ItemType.ProgressiveEpisodeUnlock };
-            CurrentRando.UnlockConditions[cond10] = new ItemData() { Value = 0, Type = ItemType.ProgressiveEpisodeUnlock };
-            CurrentRando.UnlockConditions[cond11] = new ItemData() { Value = 0, Type = ItemType.ProgressiveEpisodeUnlock };
-            CurrentRando.UnlockConditions[cond12] = new ItemData() { Value = 0, Type = ItemType.ProgressiveEpisodeUnlock };
-            CurrentRando.UnlockConditions[cond13] = new ItemData() { Value = 5, Type = ItemType.IncreaseStartTime };
-            CurrentRando.UnlockConditions[cond14] = new ItemData() { Value = 1, Type = ItemType.IncreaseGoldValue };
-            CurrentRando.UnlockConditions[cond15] = new ItemData() { Value = 21, Type = ItemType.ChangeColorPalette };
         }
 
         void GenerateButtonGrid()
@@ -310,7 +255,7 @@ namespace NAPClient
             MS.ReenableScoreSubmission();
         }
 
-        private void LevelButtonPressed(object sender, RoutedEventArgs e) 
+        private void LevelButtonPressed(object sender, RoutedEventArgs e)
         {
             var tag = -1;
             int.TryParse((sender as Button).Tag.ToString(), out tag);
@@ -324,7 +269,7 @@ namespace NAPClient
             UpdateLevelText(MS.LevelData[tag].GetLevelId());
         }
 
-        private void EpisodeButtonPressed(object sender, RoutedEventArgs e) 
+        private void EpisodeButtonPressed(object sender, RoutedEventArgs e)
         {
             LevelNameLabel.Content = "Episode functionality not yet hooked up";
         }
@@ -354,11 +299,6 @@ namespace NAPClient
             if (CurrentSelectedLevelId != -1)
                 UpdateLevelText(CurrentSelectedLevelId);
             RefreshLevelButtonColors();
-        }
-
-        private void RandomizePressed(object sender, RoutedEventArgs e)
-        {
-            RandomizeLevels();
         }
 
         void OnAPConnectionEstablished(List<int> levelOrder)
@@ -474,9 +414,9 @@ namespace NAPClient
                 var completionCondition = new RandomizationData.CompletionCondition()
                 {
                     Id = updatedLevel.GetLevelId(),
-                    State = ProgressState.LEVELCOMPLETE
+                    State = ProgressState.LevelComplete
                 };
-                
+
                 if (CurrentRando.UnlockConditions.ContainsKey(completionCondition))
                 {
                     ItemManager.HandleCondition(CurrentRando.UnlockConditions[completionCondition]);
@@ -490,7 +430,7 @@ namespace NAPClient
                 var completionCondition = new RandomizationData.CompletionCondition()
                 {
                     Id = updatedLevel.GetLevelId(),
-                    State = ProgressState.LEVELALLGOLD
+                    State = ProgressState.LevelAllGold
                 };
 
                 if (CurrentRando.UnlockConditions.ContainsKey(completionCondition))
@@ -514,7 +454,7 @@ namespace NAPClient
                 var completionCondition = new RandomizationData.CompletionCondition()
                 {
                     Id = updatedEpisode.GetEpisodeId(),
-                    State = ProgressState.EPISODECOMPLETE
+                    State = ProgressState.EpisodeComplete
                 };
 
                 if (CurrentRando.UnlockConditions.ContainsKey(completionCondition))
@@ -542,5 +482,26 @@ namespace NAPClient
                 ((Button)sender).Tag = "Connect";
             }
         }
+
+        private void BrowseLocalFiles(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog fileBrowser = new OpenFileDialog();
+
+            if (fileBrowser.ShowDialog() == true)
+            {
+                FilePath.Text = fileBrowser.FileName;
+            }
+        }
+
+        private void LoadLocalRandoFile(object sender, RoutedEventArgs e)
+        {
+            var randoString = File.ReadAllText(FilePath.Text);
+            var randoObject = JsonConvert.DeserializeObject<RandomizationData>(randoString, new RandomizationDataConverter());
+
+            CurrentRando = randoObject;
+            RandomizeLevels();
+        }
     }
 }
+
+
