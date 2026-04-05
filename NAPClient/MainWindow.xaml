@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="NAPClient" Height="600" Width="640"
+        Title="NAPClient" Height="600" Width="650"
         WindowStartupLocation="Manual"
         Top="200" Left="1300"
         Closing="MainWindow_Closing">
@@ -18,7 +18,7 @@
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="400*" />
-            <ColumnDefinition Width="240*"/>
+            <ColumnDefinition Width="250*"/>
         </Grid.ColumnDefinitions>
 
         <Grid x:Name="APConnection" Grid.Row="0" Visibility="Collapsed">
@@ -103,7 +103,7 @@
             <Label Grid.Row="3" Grid.Column="1" x:Name="AllGoldLabel">--</Label>
         </Grid>
         
-        <StackPanel Grid.Row="2" Grid.Column="1" Margin="5,0,5,0">
+        <StackPanel Grid.Row="2" Grid.Column="1" Margin="5,0,5,0" Visibility="Collapsed">
             <Button x:Name="BtnAdd" Margin="0,5,0,0" Click="HookToGameButtonPressed" IsEnabled="False">Hook To Game</Button>
             <Button x:Name="BtnUpdateValues" Click="ApplyStartTimeValueButtonPressed" Content="Update Values"/>
 
@@ -158,6 +158,32 @@
             <Button x:Name="BtnCycleLevelStatus" Margin="0,5,0,0" Click="CycleLevelStatusPressed">Cycle Level Status</Button>
             <Button x:Name="BtnUpdateLevelStatus" Margin="0,5,0,0" Click="UpdateLevelStatusPressed">Update Level Completion</Button>
 
+        </StackPanel>
+
+        <StackPanel Grid.Row="2" Grid.Column="1" Margin="5,0,5,0" Visibility="Visible">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="5*" />
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="3*" />
+                    <ColumnDefinition Width="5*" />
+                </Grid.ColumnDefinitions>
+                
+                <Label Grid.Row="1">Start Time:</Label>
+                <Label Grid.Row="1" Grid.Column="3" x:Name="StartTimeDisplay" Grid.ColumnSpan="3" Margin="0,0,3,0">9999</Label>
+                <Label Grid.Row="2">Gold Value:</Label>
+                <Label Grid.Row="2" Grid.Column="3" x:Name="GoldValueDisplay" Grid.ColumnSpan="3" Margin="0,0,3,0">9999</Label>
+                <Label Grid.Row="3">Max Time:</Label>
+                <Label Grid.Row="3" Grid.Column="3" x:Name="MaxTimeDisplay" Grid.ColumnSpan="3" Margin="0,0,3,0">9999</Label>
+
+                <ListBox Grid.Row="4" Grid.ColumnSpan="2" MaxHeight="300" x:Name="RandoLog" ScrollViewer.CanContentScroll="False" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Hidden"/>
+            </Grid>
         </StackPanel>
     </Grid>
 </Window>

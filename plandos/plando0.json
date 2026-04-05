@@ -131,6 +131,7 @@
     "StartingLevelTime": 5.0,
     "StartingGoldValue": 0.1,
     "InitialMaxTime": 5.0,
+    "Goal": "BeatOneEpisode",
     "UnlockConditions": [
       {
         "CompletionCondition": {
@@ -148,8 +149,128 @@
           "State": "LevelAllGold"
         },
         "ItemData": {
-          "Value": 5,
-          "Type": "IncreaseMaxTime"
+          "Value": 21,
+          "Type": "ChangeColorPalette"
+        }
+      },
+      {
+        "CompletionCondition": {
+          "Id": 5,
+          "State": "LevelComplete"
+        },
+        "ItemData": {
+          "Value": 13,
+          "Type": "ProgressiveEpisodeUnlock"
+        }
+      },
+      {
+        "CompletionCondition": {
+          "Id": 5,
+          "State": "LevelAllGold"
+        },
+        "ItemData": {
+          "Value": 11,
+          "Type": "ProgressiveEpisodeUnlock"
+        }
+      },
+      {
+        "CompletionCondition": {
+          "Id": 6,
+          "State": "LevelComplete"
+        },
+        "ItemData": {
+          "Value": 6,
+          "Type": "ProgressiveEpisodeUnlock"
+        }
+      },
+      {
+        "CompletionCondition": {
+          "Id": 6,
+          "State": "LevelAllGold"
+        },
+        "ItemData": {
+          "Value": 10,
+          "Type": "ProgressiveEpisodeUnlock"
+        }
+      },
+      {
+        "CompletionCondition": {
+          "Id": 7,
+          "State": "LevelComplete"
+        },
+        "ItemData": {
+          "Value": 1,
+          "Type": "IncreaseStartTime"
+        }
+      },
+      {
+        "CompletionCondition": {
+          "Id": 7,
+          "State": "LevelAllGold"
+        },
+        "ItemData": {
+          "Value": 11,
+          "Type": "ProgressiveEpisodeUnlock"
+        }
+      },
+      {
+        "CompletionCondition": {
+          "Id": 8,
+          "State": "LevelComplete"
+        },
+        "ItemData": {
+          "Value": 9,
+          "Type": "ProgressiveEpisodeUnlock"
+        }
+      },
+      {
+        "CompletionCondition": {
+          "Id": 8,
+          "State": "LevelAllGold"
+        },
+        "ItemData": {
+          "Value": 1,
+          "Type": "IncreaseGoldValue"
+        }
+      },
+      {
+        "CompletionCondition": {
+          "Id": 15,
+          "State": "LevelComplete"
+        },
+        "ItemData": {
+          "Value": 1,
+          "Type": "IncreaseGoldValue"
+        }
+      },
+      {
+        "CompletionCondition": {
+          "Id": 15,
+          "State": "LevelAllGold"
+        },
+        "ItemData": {
+          "Value": 1,
+          "Type": "ProgressiveEpisodeUnlock"
+        }
+      },
+      {
+        "CompletionCondition": {
+          "Id": 30,
+          "State": "LevelComplete"
+        },
+        "ItemData": {
+          "Value": 16,
+          "Type": "ProgressiveEpisodeUnlock"
+        }
+      },
+      {
+        "CompletionCondition": {
+          "Id": 30,
+          "State": "LevelAllGold"
+        },
+        "ItemData": {
+          "Value": 1,
+          "Type": "IncreaseGoldValue"
         }
       },
       {
@@ -170,6 +291,186 @@
         "ItemData": {
           "Value": 1,
           "Type": "IncreaseGoldValue"
+        }
+      },
+      {
+        "CompletionCondition": {
+          "Id": 46,
+          "State": "LevelComplete"
+        },
+        "ItemData": {
+          "Value": 20,
+          "Type": "ProgressiveEpisodeUnlock"
+        }
+      },
+      {
+        "CompletionCondition": {
+          "Id": 46,
+          "State": "LevelAllGold"
+        },
+        "ItemData": {
+          "Value": 41,
+          "Type": "ChangeColorPalette"
+        }
+      },
+      {
+        "CompletionCondition": {
+          "Id": 50,
+          "State": "LevelComplete"
+        },
+        "ItemData": {
+          "Value": 1,
+          "Type": "IncreaseMaxTime"
+        }
+      },
+      {
+        "CompletionCondition": {
+          "Id": 50,
+          "State": "LevelAllGold"
+        },
+        "ItemData": {
+          "Value": 1,
+          "Type": "IncreaseStartTime"
+        }
+      },
+      {
+        "CompletionCondition": {
+          "Id": 51,
+          "State": "LevelComplete"
+        },
+        "ItemData": {
+          "Value": 24,
+          "Type": "ProgressiveEpisodeUnlock"
+        }
+      },
+      {
+        "CompletionCondition": {
+          "Id": 51,
+          "State": "LevelAllGold"
+        },
+        "ItemData": {
+          "Value": 1,
+          "Type": "ProgressiveEpisodeUnlock"
+        }
+      },
+      {
+        "CompletionCondition": {
+          "Id": 56,
+          "State": "LevelComplete"
+        },
+        "ItemData": {
+          "Value": 17,
+          "Type": "ProgressiveEpisodeUnlock"
+        }
+      },
+      {
+        "CompletionCondition": {
+          "Id": 56,
+          "State": "LevelAllGold"
+        },
+        "ItemData": {
+          "Value": 23,
+          "Type": "ProgressiveEpisodeUnlock"
+        }
+      },
+      {
+        "CompletionCondition": {
+          "Id": 65,
+          "State": "LevelComplete"
+        },
+        "ItemData": {
+          "Value": 1,
+          "Type": "ProgressiveEpisodeUnlock"
+        }
+      },
+      {
+        "CompletionCondition": {
+          "Id": 65,
+          "State": "LevelAllGold"
+        },
+        "ItemData": {
+          "Value": 1,
+          "Type": "IncreaseMaxTime"
+        }
+      },
+      {
+        "CompletionCondition": {
+          "Id": 85,
+          "State": "LevelComplete"
+        },
+        "ItemData": {
+          "Value": 16,
+          "Type": "ProgressiveEpisodeUnlock"
+        }
+      },
+      {
+        "CompletionCondition": {
+          "Id": 85,
+          "State": "LevelAllGold"
+        },
+        "ItemData": {
+          "Value": 0,
+          "Type": "ProgressiveEpisodeUnlock"
+        }
+      },
+      {
+        "CompletionCondition": {
+          "Id": 105,
+          "State": "LevelComplete"
+        },
+        "ItemData": {
+          "Value": 1,
+          "Type": "IncreaseMaxTime"
+        }
+      },
+      {
+        "CompletionCondition": {
+          "Id": 105,
+          "State": "LevelAllGold"
+        },
+        "ItemData": {
+          "Value": 1,
+          "Type": "ProgressiveEpisodeUnlock"
+        }
+      },
+      {
+        "CompletionCondition": {
+          "Id": 115,
+          "State": "LevelComplete"
+        },
+        "ItemData": {
+          "Value": 1,
+          "Type": "IncreaseGoldValue"
+        }
+      },
+      {
+        "CompletionCondition": {
+          "Id": 115,
+          "State": "LevelAllGold"
+        },
+        "ItemData": {
+          "Value": 1,
+          "Type": "ProgressiveEpisodeUnlock"
+        }
+      },
+      {
+        "CompletionCondition": {
+          "Id": 120,
+          "State": "LevelComplete"
+        },
+        "ItemData": {
+          "Value": 1,
+          "Type": "IncreaseMaxTime"
+        }
+      },
+      {
+        "CompletionCondition": {
+          "Id": 120,
+          "State": "LevelAllGold"
+        },
+        "ItemData": {
+          "Value": 1,
+          "Type": "ProgressiveEpisodeUnlock"
         }
       }
     ]

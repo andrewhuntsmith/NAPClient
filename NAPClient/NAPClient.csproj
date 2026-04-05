@@ -70,6 +70,7 @@
     </ApplicationDefinition>
     <Compile Include="ArchipelagoManager.cs" />
     <Compile Include="EpisodeProfileMemoryBridge.cs" />
+    <Compile Include="GoalManager.cs" />
     <Compile Include="ItemData.cs" />
     <Compile Include="ItemManager.cs" />
     <Compile Include="LevelUnlockManager.cs" />

@@ -8,7 +8,9 @@ namespace NAPClient
         public LevelUnlockManager LevelUnlockManager;
         public bool Initializing;
 
-        double MaxTime = double.MaxValue;
+        public double MaxTime = double.MaxValue;
+
+        public Action<string> ItemAdded;
 
         public ItemManager(MemorySource ms) 
         { 
@@ -21,6 +23,7 @@ namespace NAPClient
 
         public void HandleCondition(ItemData item)
         {
+            ItemAdded?.Invoke("Received " + item.Type.ToString() + " " + item.Value.ToString());
             switch (item.Type)
             {
                 case ItemType.LevelUnlock:

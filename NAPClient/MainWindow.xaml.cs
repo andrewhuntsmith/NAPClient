@@ -20,6 +20,7 @@ namespace NAPClient
 
         public static MemorySource MS = new MemorySource();
         ItemManager ItemManager;
+        GoalManager GoalManager;
         ArchipelagoManager ApManager;
 
         Dictionary<LevelCompleteState, SolidColorBrush> LevelStateColorPalette = new Dictionary<LevelCompleteState, SolidColorBrush>();
@@ -56,6 +57,10 @@ namespace NAPClient
             RefreshLevelButtonColors();
 
             ItemManager = new ItemManager(MS);
+            ItemManager.ItemAdded += AddToRandoLog;
+
+            GoalManager = new GoalManager(MS);
+
             ApManager = new ArchipelagoManager(MS, ItemManager);
             ApManager.APConnectionEstablished += OnAPConnectionEstablished;
 
@@ -211,6 +216,19 @@ namespace NAPClient
             }
         }
 
+        void RefreshGameStatText()
+        {
+            StartTimeDisplay.Content = MS.LevelStartTime.Value.ToString();
+            GoldValueDisplay.Content = MS.TimeGrantedByGold.Value.ToString();
+            MaxTimeDisplay.Content = ItemManager.MaxTime.ToString();
+        }
+
+        public void AddToRandoLog(string message)
+        {
+            RandoLog.Items.Add(message);
+            RandoLog.ScrollIntoView(RandoLog.Items[RandoLog.Items.Count-1]);
+        }
+
         int GetLevelIdFromButtonTag(int tag)
         {
             return MS.LevelData[tag].GetLevelId();
@@ -312,6 +330,7 @@ namespace NAPClient
             MS.LevelStartTime.SetValue(CurrentRando.StartingLevelTime);
             MS.TimeGrantedByGold.SetValue(CurrentRando.StartingGoldValue);
             ItemManager.SetMaxTime(CurrentRando.InitialMaxTime);
+            GoalManager.SetGoal(CurrentRando.Goal);
 
             for (var id = 0; id < CurrentRando.LevelOrder.Count; id++)
             {
@@ -340,6 +359,8 @@ namespace NAPClient
             }
 
             RefreshLevelButtonColors();
+            RefreshGameStatText();
+            AddToRandoLog("Randomizer began!");
         }
 
         void UpdateLevelText(int levelId)
@@ -439,6 +460,12 @@ namespace NAPClient
                     CurrentRando.UnlockConditions.Remove(completionCondition);
                 }
             }
+
+            if (GoalManager.CheckMetGoal())
+            {
+                HandleGoalCompletion();
+            }
+            RefreshGameStatText();
         }
 
         void OnEpisodeProfileUpdate(EpisodeProfileMemoryBridge updatedEpisode)
@@ -463,6 +490,16 @@ namespace NAPClient
                     CurrentRando.UnlockConditions.Remove(completionCondition);
                 }
             }
+
+            if (GoalManager.CheckMetGoal())
+            {
+                HandleGoalCompletion();
+            }
+        }
+
+        void HandleGoalCompletion()
+        {
+            AddToRandoLog("Goal met!!! 🎉");
         }
 
         private void ConnectToServerPressed(object sender, RoutedEventArgs e)

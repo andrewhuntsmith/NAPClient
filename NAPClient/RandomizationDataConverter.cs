@@ -35,6 +35,16 @@ namespace NAPClient
             returnObject.StartingLevelTime = jo["RandomizationData"]["StartingLevelTime"].ToObject<float>();
             returnObject.StartingGoldValue = jo["RandomizationData"]["StartingGoldValue"].ToObject<float>();
             returnObject.InitialMaxTime = jo["RandomizationData"]["InitialMaxTime"].ToObject<double>();
+            
+            var goalParse = Enum.TryParse(jo["RandomizationData"]["Goal"].ToString(), true, out GoalType goal);
+            if (!goalParse)
+            {
+                string caption = "Error reading json!";
+                string errorMessage = "Cannot parse goal condition: " + jo["RandomizationData"]["Goal"].ToString();
+                MessageBox.Show(errorMessage, caption);
+                return null;
+            }
+            returnObject.Goal = goal;
 
             var unlockConditions = jo["RandomizationData"]["UnlockConditions"].ToObject<JSONUnlockCondition[]>();
             foreach (var condition in unlockConditions)
