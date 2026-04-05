@@ -9,6 +9,9 @@ namespace NAPClient
 {
     public class MemorySource
     {
+        public static bool ConnectedToGame;
+        public Action MemoryError;
+
         // pointer offset from npp.dll to get to timer section
         public const int TimerPointerOffset1 = 0xB7A7B4;
         public const int TimerPointerOffset2 = 0x08;
@@ -107,6 +110,8 @@ namespace NAPClient
 
         public bool HookMemory()
         {
+            ConnectedToGame = false;
+
             int bytesRead = 0;
             byte[] offsetPointer = new byte[8];
 
@@ -123,6 +128,7 @@ namespace NAPClient
             }
 
             if (!FindnppModule()) { return false; }
+            ConnectedToGame = true;
 
             // combines the nppdll address with the timer block offset, sets the value in offsetPointer
             ReadProcessMemory((int)NppProcessHandle, (int)(NppdllBaseAddress + TimerPointerOffset1), offsetPointer, offsetPointer.Length, ref bytesRead);
@@ -131,6 +137,7 @@ namespace NAPClient
             DisableScoreSubmission();
             DisableProfileWriting();
             InitializeAllValues();
+
             return true;
         }
 
@@ -225,6 +232,9 @@ namespace NAPClient
             LevelVictories = new IntAddressValue() { Offsets = new List<int> { NppdllBaseAddress.ToInt32() + VictoriesOffset1, VictoriesOffset2, LevelVictoriesOffset3 } };
             EpisodeVictories = new IntAddressValue() { Offsets = new List<int> { NppdllBaseAddress.ToInt32() + VictoriesOffset1, VictoriesOffset2, EpisodeVictoriesOffset3 } };
             PaletteIndex = new IntAddressValue() { Offsets = new List<int> { NppdllBaseAddress.ToInt32() + PaletteIndexOffset1, PaletteIndexOffset2, PaletteIndexOffset3 } };
+
+            AddressValue.MemoryError += OnMemoryError;
+
             ReadLevelData();
             ReadLevelProfile();
             ReadEpisodeProfile();
@@ -303,6 +313,12 @@ namespace NAPClient
         public void UpdateLevelProfileValue(int levelIndex, int byteIndex, int value)
         {
             MemorySource.WriteProcessMemory((int)MemorySource.NppProcessHandle, FirstLevelProfileAddress.AsInt() + LevelProfileOffset3 + levelIndex * LevelProfileSize + byteIndex, BitConverter.GetBytes(value), sizeof(int), out var bytesWritten);
+        }
+
+        void OnMemoryError()
+        {
+            ConnectedToGame = false;
+            MemoryError?.Invoke();
         }
     }
 }

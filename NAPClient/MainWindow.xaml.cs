@@ -50,6 +50,8 @@ namespace NAPClient
                 Close();
                 return;
             }
+
+            MS.MemoryError += OnMemoryError;
             AttachLevelProfileEvents();
 
             InitializeColorDictionary();
@@ -71,6 +73,13 @@ namespace NAPClient
             Thread passiveMemoryCheckingThread = new Thread(UpdateThread);
             passiveMemoryCheckingThread.Start();
 
+        }
+
+        void OnMemoryError()
+        {
+            // the caller of this function does not own the UI, because it is a different thread
+            // therefore we need to call methods through dispatchers like this
+            LevelGrid.Dispatcher.Invoke(() => Close());
         }
 
         bool Loop;
@@ -260,6 +269,9 @@ namespace NAPClient
         void MainWindow_Closing(object sender, CancelEventArgs e)
         {
             Loop = false;
+
+            if (!MemorySource.ConnectedToGame)
+                return;
 
             // TODO put levels back in the right order
             // alternately, just force quit the game? that should fix everything that needs to be fixed

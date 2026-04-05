@@ -7,7 +7,12 @@ using System.Windows;
 
 namespace NAPClient
 {
-    public abstract class AddressValue<T>
+    public abstract class AddressValue
+    {
+        public static Action MemoryError;
+    }
+
+    public abstract class AddressValue<T> : AddressValue
     {
         public List<int> Offsets;
         public T Value;
@@ -19,6 +24,9 @@ namespace NAPClient
 
         public void UpdateValue()
         {
+            if (!MemorySource.ConnectedToGame)
+                return;
+
             int bytesRead = 0;
             int i;
             List<byte[]> bufferList = new List<byte[]>();
@@ -28,6 +36,16 @@ namespace NAPClient
                 var byteArray = i < Offsets.Count - 1 ? new byte[8] : new byte[DataSize()];
                 bufferList.Add(byteArray);
                 MemorySource.ReadProcessMemory((int)MemorySource.NppProcessHandle, pointer + Offsets[i], bufferList[i], bufferList[i].Length, ref bytesRead);
+                
+                int error = Marshal.GetLastWin32Error();
+                if (bytesRead == 0)
+                {
+                    string caption = "Error reading memory!";
+                    string errorMessage = "Error number: " + error.ToString() + "\nDisconnecting from game!";
+                    MessageBox.Show(errorMessage, caption);
+                    MemoryError?.Invoke();
+                    return;
+                }
             }
 
             T value = ConvertToType(bufferList[i - 1]);
@@ -40,6 +58,9 @@ namespace NAPClient
 
         public void SetValue(T input)
         {
+            if (!MemorySource.ConnectedToGame)
+                return;
+
             int bytesRead = 0;
             int i;
             List<byte[]> bufferList = new List<byte[]>();
@@ -60,8 +81,9 @@ namespace NAPClient
             if (bytesWritten == 0)
             {
                 string caption = "Error writing memory!";
-                string errorMessage = "Error number: " + error.ToString();
+                string errorMessage = "Error number: " + error.ToString() + "\nDisconnecting from game!";
                 MessageBox.Show(errorMessage, caption);
+                MemoryError?.Invoke();
             }
 
             PreviousValue = Value;
