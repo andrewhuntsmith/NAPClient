@@ -235,7 +235,16 @@ namespace NAPClient
         public void AddToRandoLog(string message)
         {
             RandoLog.Items.Add(message);
-            RandoLog.ScrollIntoView(RandoLog.Items[RandoLog.Items.Count-1]);
+
+            // I got this code from https://stackoverflow.com/questions/2337822/wpf-listbox-scroll-to-end-automatically
+            //  but I refuse to believe *this* is the best way to scroll to the bottom of a ListBox
+            //  TODO: Find the right way to do this
+            if (VisualTreeHelper.GetChildrenCount(RandoLog) > 0)
+            {
+                Border border = (Border)VisualTreeHelper.GetChild(RandoLog, 0);
+                ScrollViewer scrollViewer = (ScrollViewer)VisualTreeHelper.GetChild(border, 0);
+                scrollViewer.ScrollToBottom();
+            }
         }
 
         int GetLevelIdFromButtonTag(int tag)
