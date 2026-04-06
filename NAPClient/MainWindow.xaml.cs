@@ -1,5 +1,6 @@
 ﻿using Microsoft.Win32;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -544,6 +545,7 @@ namespace NAPClient
         private void BrowseLocalFiles(object sender, RoutedEventArgs e)
         {
             OpenFileDialog fileBrowser = new OpenFileDialog();
+            fileBrowser.InitialDirectory = AppDomain.CurrentDomain.BaseDirectory;
 
             if (fileBrowser.ShowDialog() == true)
             {
