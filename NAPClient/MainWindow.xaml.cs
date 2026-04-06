@@ -546,10 +546,12 @@ namespace NAPClient
         {
             OpenFileDialog fileBrowser = new OpenFileDialog();
             fileBrowser.InitialDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            fileBrowser.Filter = "JSON files (*.json)|*.json";
 
             if (fileBrowser.ShowDialog() == true)
             {
                 FilePath.Text = fileBrowser.FileName;
+                BtnLoadFile.IsEnabled = true;
             }
         }
 

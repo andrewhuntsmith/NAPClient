@@ -61,7 +61,7 @@
             <Button Grid.Row="0" Grid.Column="1" Click="BrowseLocalFiles">Browse</Button>
             <TextBox Grid.Row="0" Grid.Column="2" x:Name="FilePath"></TextBox>
             
-            <Button Grid.Row="1" Grid.ColumnSpan="3" Click="LoadLocalRandoFile">Load File</Button>
+            <Button Grid.Row="1" Grid.ColumnSpan="3" x:Name="BtnLoadFile" Click="LoadLocalRandoFile" IsEnabled="False">Load File</Button>
         </Grid>
         
         <Label Grid.Row="1">Level Grid</Label>

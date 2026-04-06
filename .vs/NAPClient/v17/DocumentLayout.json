@@ -3,15 +3,19 @@
   "WorkspaceRootPath": "D:\\Programming\\NAP\u002B\u002B\\NAPClient\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Btoas\\AppData\\Local\\Temp\\.vsdbgsrc\\c6a5a7f5f1f891b96e7ce20decdfb3b83d9ea38a008c3e03a9a2dc211cf459f6\\WpfXamlLoader.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{80B4BB99-EE9D-4B86-8301-9ABED655CBD9}|NAPClient\\NAPClient.csproj|d:\\programming\\nap\u002B\u002B\\napclient\\napclient\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{80B4BB99-EE9D-4B86-8301-9ABED655CBD9}|NAPClient\\NAPClient.csproj|solutionrelative:napclient\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{80B4BB99-EE9D-4B86-8301-9ABED655CBD9}|NAPClient\\NAPClient.csproj|D:\\Programming\\NAP\u002B\u002B\\NAPClient\\napclient\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{80B4BB99-EE9D-4B86-8301-9ABED655CBD9}|NAPClient\\NAPClient.csproj|solutionrelative:napclient\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Btoas\\AppData\\Local\\Temp\\.vsdbgsrc\\e9b10ec289e9f2038bcbb87287e84bbed70d7fad7270a11cb65ff1844279babd\\RoutedEventHandlerInfo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{80B4BB99-EE9D-4B86-8301-9ABED655CBD9}|NAPClient\\NAPClient.csproj|D:\\Programming\\NAP\u002B\u002B\\NAPClient\\napclient\\memorysource.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{80B4BB99-EE9D-4B86-8301-9ABED655CBD9}|NAPClient\\NAPClient.csproj|solutionrelative:napclient\\memorysource.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{80B4BB99-EE9D-4B86-8301-9ABED655CBD9}|NAPClient\\NAPClient.csproj|d:\\programming\\nap\u002B\u002B\\napclient\\napclient\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{80B4BB99-EE9D-4B86-8301-9ABED655CBD9}|NAPClient\\NAPClient.csproj|solutionrelative:napclient\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{80B4BB99-EE9D-4B86-8301-9ABED655CBD9}|NAPClient\\NAPClient.csproj|D:\\Programming\\NAP\u002B\u002B\\NAPClient\\napclient\\addressvalue.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -20,10 +24,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{80B4BB99-EE9D-4B86-8301-9ABED655CBD9}|NAPClient\\NAPClient.csproj|D:\\Programming\\NAP\u002B\u002B\\NAPClient\\napclient\\itemmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{80B4BB99-EE9D-4B86-8301-9ABED655CBD9}|NAPClient\\NAPClient.csproj|solutionrelative:napclient\\itemmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{80B4BB99-EE9D-4B86-8301-9ABED655CBD9}|NAPClient\\NAPClient.csproj|D:\\Programming\\NAP\u002B\u002B\\NAPClient\\napclient\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
-      "RelativeMoniker": "D:0:0:{80B4BB99-EE9D-4B86-8301-9ABED655CBD9}|NAPClient\\NAPClient.csproj|solutionrelative:napclient\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{80B4BB99-EE9D-4B86-8301-9ABED655CBD9}|NAPClient\\NAPClient.csproj|D:\\Programming\\NAP\u002B\u002B\\NAPClient\\napclient\\goalmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -69,11 +69,11 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 1,
               "Title": "MainWindow.xaml",
               "DocumentMoniker": "D:\\Programming\\NAP\u002B\u002B\\NAPClient\\NAPClient\\MainWindow.xaml",
               "RelativeDocumentMoniker": "NAPClient\\MainWindow.xaml",
@@ -85,13 +85,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 0,
               "Title": "MainWindow.xaml.cs",
               "DocumentMoniker": "D:\\Programming\\NAP\u002B\u002B\\NAPClient\\NAPClient\\MainWindow.xaml.cs",
               "RelativeDocumentMoniker": "NAPClient\\MainWindow.xaml.cs",
               "ToolTip": "D:\\Programming\\NAP\u002B\u002B\\NAPClient\\NAPClient\\MainWindow.xaml.cs",
               "RelativeToolTip": "NAPClient\\MainWindow.xaml.cs",
-              "ViewState": "AgIAAAsCAAAAAAAAAAAAACMCAABRAAAAAAAAAA==",
+              "ViewState": "AgIAAAoCAAAAAAAAAAAUwCQCAAA2AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-01-16T07:24:58.321Z",
               "IsPinned": true,
@@ -99,18 +99,18 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "WpfXamlLoader.cs",
-              "DocumentMoniker": "C:\\Users\\Btoas\\AppData\\Local\\Temp\\.vsdbgsrc\\c6a5a7f5f1f891b96e7ce20decdfb3b83d9ea38a008c3e03a9a2dc211cf459f6\\WpfXamlLoader.cs",
-              "ToolTip": "C:\\Users\\Btoas\\AppData\\Local\\Temp\\.vsdbgsrc\\c6a5a7f5f1f891b96e7ce20decdfb3b83d9ea38a008c3e03a9a2dc211cf459f6\\WpfXamlLoader.cs [Read Only]",
-              "ViewState": "AgIAAF0AAAAAAAAAAAAswHcAAAADAAAAAQAAAA==",
+              "DocumentIndex": 2,
+              "Title": "RoutedEventHandlerInfo.cs",
+              "DocumentMoniker": "C:\\Users\\Btoas\\AppData\\Local\\Temp\\.vsdbgsrc\\e9b10ec289e9f2038bcbb87287e84bbed70d7fad7270a11cb65ff1844279babd\\RoutedEventHandlerInfo.cs",
+              "ToolTip": "C:\\Users\\Btoas\\AppData\\Local\\Temp\\.vsdbgsrc\\e9b10ec289e9f2038bcbb87287e84bbed70d7fad7270a11cb65ff1844279babd\\RoutedEventHandlerInfo.cs [Read Only]",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABwAAAAuAAAAAQAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-06T03:21:13.112Z",
+              "WhenOpened": "2026-04-06T04:28:14.969Z",
               "EditorCaption": " [Read Only]"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 3,
               "Title": "MemorySource.cs",
               "DocumentMoniker": "D:\\Programming\\NAP\u002B\u002B\\NAPClient\\NAPClient\\MemorySource.cs",
               "RelativeDocumentMoniker": "NAPClient\\MemorySource.cs",
@@ -118,8 +118,7 @@
               "RelativeToolTip": "NAPClient\\MemorySource.cs",
               "ViewState": "AgIAAOIAAAAAAAAAAAAswPwAAAAQAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-01-16T07:24:43.719Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-01-16T07:24:43.719Z"
             },
             {
               "$type": "Document",
@@ -135,7 +134,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "AddressValue.cs",
               "DocumentMoniker": "D:\\Programming\\NAP\u002B\u002B\\NAPClient\\NAPClient\\AddressValue.cs",
               "RelativeDocumentMoniker": "NAPClient\\AddressValue.cs",
@@ -171,7 +170,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 5,
               "Title": "ItemManager.cs",
               "DocumentMoniker": "D:\\Programming\\NAP\u002B\u002B\\NAPClient\\NAPClient\\ItemManager.cs",
               "RelativeDocumentMoniker": "NAPClient\\ItemManager.cs",
