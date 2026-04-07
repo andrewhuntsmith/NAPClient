@@ -1,0 +1,42 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[animation]
+
+compatibility/default_parent_skeleton_in_mesh_instance_3d=true
+
+[application]
+
+config/name="NAPClient"
+run/main_scene="uid://dguj5iff865bk"
+config/features=PackedStringArray("4.6", "C#", "GL Compatibility")
+config/icon="res://Images/icon.svg"
+config/windows_native_icon="res://Images/npp2.ico"
+
+[display]
+
+window/size/viewport_width=650
+window/size/viewport_height=600
+window/size/initial_position_type=4
+window/stretch/mode="viewport"
+
+[dotnet]
+
+project/assembly_name="NAPClient"
+
+[physics]
+
+3d/physics_engine="Jolt Physics"
+
+[rendering]
+
+rendering_device/driver.windows="d3d12"
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"

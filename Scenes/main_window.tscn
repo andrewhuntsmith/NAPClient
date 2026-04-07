@@ -1,0 +1,171 @@
+[gd_scene format=3 uid="uid://dguj5iff865bk"]
+
+[ext_resource type="Script" uid="uid://dt7qp1n8a3b6o" path="res://Scripts/MainWindow.cs" id="1_6t6yy"]
+[ext_resource type="PackedScene" uid="uid://4fpsmubnx1u1" path="res://Scenes/episode_grid.tscn" id="1_23hoq"]
+
+[node name="MainWindow" type="Control" unique_id=1707276420 node_paths=PackedStringArray("LevelGrid", "FilePath", "LoadFileButton", "StartTimeDisplay", "GoldValueDisplay", "MaxTimeDisplay", "RandoLog", "RandoLogContainer", "LevelIDLabel", "LevelNameLabel", "AvailableLabel", "AllGoldLabel", "ConfirmationDialog", "LoadFileDialog")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_6t6yy")
+LevelGrid = NodePath("GridContainer/LevelGridContainer/LevelGrid")
+EpisodeGridScene = ExtResource("1_23hoq")
+FilePath = NodePath("GridContainer/RandomizerLoading/FilePathField")
+LoadFileButton = NodePath("GridContainer/RandomizerLoading/LoadFileButton")
+StartTimeDisplay = NodePath("GridContainer/RandomizerDataContainer/RandomizerData/StartTimeValue")
+GoldValueDisplay = NodePath("GridContainer/RandomizerDataContainer/RandomizerData/GoldValueValue")
+MaxTimeDisplay = NodePath("GridContainer/RandomizerDataContainer/RandomizerData/MaxTimeValue")
+RandoLog = NodePath("GridContainer/RandomizerDataContainer/RandoLogContainer/RandoLog")
+RandoLogContainer = NodePath("GridContainer/RandomizerDataContainer/RandoLogContainer")
+LevelIDLabel = NodePath("GridContainer/SelectedItemData/LevelIdValue")
+LevelNameLabel = NodePath("GridContainer/SelectedItemData/LevelNameValue")
+AvailableLabel = NodePath("GridContainer/SelectedItemData/AvailableValue")
+AllGoldLabel = NodePath("GridContainer/SelectedItemData/AllGoldValue")
+ConfirmationDialog = NodePath("ConfirmationDialog")
+LoadFileDialog = NodePath("FileDialog")
+
+[node name="GridContainer" type="GridContainer" parent="." unique_id=1808778599]
+layout_mode = 0
+offset_right = 649.0
+offset_bottom = 599.0
+columns = 2
+
+[node name="RandomizerLoading" type="HBoxContainer" parent="GridContainer" unique_id=1206790516]
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+
+[node name="FilePathLabel" type="Label" parent="GridContainer/RandomizerLoading" unique_id=244126544]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+text = "File Path:"
+
+[node name="BrowseFilesButton" type="Button" parent="GridContainer/RandomizerLoading" unique_id=286854942]
+layout_mode = 2
+text = "Browse"
+
+[node name="FilePathField" type="TextEdit" parent="GridContainer/RandomizerLoading" unique_id=1652308149]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+placeholder_text = "THISISAFILEPATH"
+
+[node name="LoadFileButton" type="Button" parent="GridContainer/RandomizerLoading" unique_id=1101205253]
+layout_mode = 2
+disabled = true
+text = "Load File"
+
+[node name="Empty" type="HBoxContainer" parent="GridContainer" unique_id=1031274791]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+
+[node name="LevelGridContainer" type="VBoxContainer" parent="GridContainer" unique_id=479175184]
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="GridContainer/LevelGridContainer" unique_id=1269362718]
+layout_mode = 2
+text = "Level Grid"
+
+[node name="LevelGrid" type="VFlowContainer" parent="GridContainer/LevelGridContainer" unique_id=1490962611]
+custom_minimum_size = Vector2(0, 300)
+layout_mode = 2
+
+[node name="RandomizerDataContainer" type="VBoxContainer" parent="GridContainer" unique_id=1190438048]
+custom_minimum_size = Vector2(240, 0)
+layout_mode = 2
+
+[node name="RandomizerData" type="GridContainer" parent="GridContainer/RandomizerDataContainer" unique_id=376384017]
+layout_mode = 2
+columns = 2
+
+[node name="StartTimeLabel" type="Label" parent="GridContainer/RandomizerDataContainer/RandomizerData" unique_id=2135399100]
+layout_mode = 2
+text = "Start Time: "
+
+[node name="StartTimeValue" type="Label" parent="GridContainer/RandomizerDataContainer/RandomizerData" unique_id=1524815333]
+layout_mode = 2
+text = "9999"
+
+[node name="GoldValueLabel" type="Label" parent="GridContainer/RandomizerDataContainer/RandomizerData" unique_id=1309411776]
+layout_mode = 2
+text = "Gold Value:"
+
+[node name="GoldValueValue" type="Label" parent="GridContainer/RandomizerDataContainer/RandomizerData" unique_id=982939786]
+layout_mode = 2
+text = "9999"
+
+[node name="MaxTimeLabel" type="Label" parent="GridContainer/RandomizerDataContainer/RandomizerData" unique_id=1904418682]
+layout_mode = 2
+text = "Max Time:"
+
+[node name="MaxTimeValue" type="Label" parent="GridContainer/RandomizerDataContainer/RandomizerData" unique_id=1509292263]
+layout_mode = 2
+text = "9999"
+
+[node name="Empty" type="Control" parent="GridContainer/RandomizerDataContainer" unique_id=745131291]
+custom_minimum_size = Vector2(0, 10)
+layout_mode = 2
+
+[node name="RandoLogContainer" type="ScrollContainer" parent="GridContainer/RandomizerDataContainer" unique_id=1616769527]
+custom_minimum_size = Vector2(240, 300)
+layout_mode = 2
+size_flags_horizontal = 0
+horizontal_scroll_mode = 0
+
+[node name="RandoLog" type="VBoxContainer" parent="GridContainer/RandomizerDataContainer/RandoLogContainer" unique_id=1312694458]
+layout_mode = 2
+
+[node name="SelectedItemData" type="GridContainer" parent="GridContainer" unique_id=1849031604]
+layout_mode = 2
+columns = 2
+
+[node name="LevelNameLabel" type="Label" parent="GridContainer/SelectedItemData" unique_id=63824965]
+layout_mode = 2
+text = "Level Name: "
+
+[node name="LevelNameValue" type="Label" parent="GridContainer/SelectedItemData" unique_id=2142190652]
+layout_mode = 2
+text = "--"
+
+[node name="LevelIdLabel" type="Label" parent="GridContainer/SelectedItemData" unique_id=1548458722]
+layout_mode = 2
+text = "Level ID: "
+
+[node name="LevelIdValue" type="Label" parent="GridContainer/SelectedItemData" unique_id=1808730147]
+layout_mode = 2
+text = "--"
+
+[node name="AvailableLabel" type="Label" parent="GridContainer/SelectedItemData" unique_id=1674980798]
+layout_mode = 2
+text = "Available?"
+
+[node name="AvailableValue" type="Label" parent="GridContainer/SelectedItemData" unique_id=1927216194]
+layout_mode = 2
+text = "--"
+
+[node name="AllGoldLabel" type="Label" parent="GridContainer/SelectedItemData" unique_id=156986215]
+layout_mode = 2
+text = "G++?"
+
+[node name="AllGoldValue" type="Label" parent="GridContainer/SelectedItemData" unique_id=366328657]
+layout_mode = 2
+text = "--"
+
+[node name="ConfirmationDialog" type="ConfirmationDialog" parent="." unique_id=86313054]
+oversampling_override = 1.0
+
+[node name="FileDialog" type="FileDialog" parent="." unique_id=1472603267]
+title = "Open a File"
+ok_button_text = "Load"
+dialog_hide_on_ok = true
+file_mode = 0
+display_mode = 1
+access = 2
+filters = PackedStringArray("JSON files (*.json)", "*.json")
+use_native_dialog = true
+
+[connection signal="pressed" from="GridContainer/RandomizerLoading/BrowseFilesButton" to="." method="BrowseLocalFiles"]
+[connection signal="pressed" from="GridContainer/RandomizerLoading/LoadFileButton" to="." method="LoadLocalRandoFile"]
+[connection signal="file_selected" from="FileDialog" to="." method="LocalFileSelected"]

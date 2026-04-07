@@ -1,3 +1,5 @@
 NAPClient/bin
 NAPClient/obj
 /.vs
+.vs
+.godot

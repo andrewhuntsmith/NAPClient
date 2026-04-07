@@ -1,0 +1,77 @@
+[gd_scene format=3 uid="uid://4fpsmubnx1u1"]
+
+[ext_resource type="Script" uid="uid://dmfbnu16ljqjm" path="res://Scenes/EpisodeGrid.cs" id="1_cndep"]
+
+[node name="EpisodeGrid" type="Control" unique_id=979343656 node_paths=PackedStringArray("Background", "LevelButtons", "EpisodeButton")]
+custom_minimum_size = Vector2(56, 56)
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -594.0
+offset_bottom = -544.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+script = ExtResource("1_cndep")
+Background = NodePath("Background")
+LevelButtons = [NodePath("Button00"), NodePath("Button01"), NodePath("Button02"), NodePath("Button03"), NodePath("Button04")]
+EpisodeButton = NodePath("EpisodeButton")
+
+[node name="Background" type="ColorRect" parent="." unique_id=7548731]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.50928617, 0.50928617, 0.50928617, 1)
+
+[node name="Button00" type="Button" parent="." unique_id=1718873718]
+layout_mode = 0
+anchor_left = 0.035714287
+anchor_top = 0.035714287
+anchor_right = 0.32142857
+anchor_bottom = 0.32142857
+metadata/_edit_use_anchors_ = true
+
+[node name="Button01" type="Button" parent="." unique_id=147564346]
+layout_mode = 0
+anchor_left = 0.35714287
+anchor_top = 0.035714287
+anchor_right = 0.64285713
+anchor_bottom = 0.32142857
+metadata/_edit_use_anchors_ = true
+
+[node name="Button02" type="Button" parent="." unique_id=132403076]
+layout_mode = 0
+anchor_left = 0.6785714
+anchor_top = 0.035714287
+anchor_right = 0.96428573
+anchor_bottom = 0.32142857
+metadata/_edit_use_anchors_ = true
+
+[node name="Button03" type="Button" parent="." unique_id=219493728]
+layout_mode = 0
+anchor_left = 0.035714287
+anchor_top = 0.35714287
+anchor_right = 0.32142857
+anchor_bottom = 0.64285713
+metadata/_edit_use_anchors_ = true
+
+[node name="Button04" type="Button" parent="." unique_id=419145971]
+layout_mode = 0
+anchor_left = 0.35714287
+anchor_top = 0.35714287
+anchor_right = 0.64285713
+anchor_bottom = 0.64285713
+metadata/_edit_use_anchors_ = true
+
+[node name="EpisodeButton" type="Button" parent="." unique_id=868832125]
+layout_mode = 0
+anchor_left = 0.035714287
+anchor_top = 0.6785714
+anchor_right = 0.96428573
+anchor_bottom = 0.96428573
+metadata/_edit_use_anchors_ = true
