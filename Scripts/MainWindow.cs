@@ -37,14 +37,12 @@ namespace NAPClient
 		Dictionary<LevelCompleteState, StyleBoxFlat> LevelStateColorPalette = new Dictionary<LevelCompleteState, StyleBoxFlat>();
 		Dictionary<EpisodeCompleteState, StyleBoxFlat> EpisodeStateColorPalette = new Dictionary<EpisodeCompleteState, StyleBoxFlat>();
 
-		Color InaccessibleColor = Colors.Red;
-		Color AccessibleColor = Colors.LightGray;
-		Color BeatenColor = Colors.DarkGray;
-		Color AllGoldColor = Colors.Gold;
+        [Export] Color InaccessibleColor = Colors.Red;
+        [Export] Color AccessibleColor = Colors.LightGray;
+        [Export] Color BeatenColor = Colors.DarkGray;
+        [Export] Color AllGoldColor = Colors.Gold;
+		[Export] ColorKey ColorKey;
 
-		Color RectangleBackground = Colors.DarkGray;
-		Color RectangleOutline = Colors.Black;
-		
 		List<Button> LevelButtonList = new List<Button>();
 		List<Button> EpisodeButtonList = new List<Button>();
 
@@ -176,6 +174,8 @@ namespace NAPClient
 			EpisodeStateColorPalette[EpisodeCompleteState.LOCKED] = inaccessibleColor;
 			EpisodeStateColorPalette[EpisodeCompleteState.AVAILABLE] = accessibleColor;
 			EpisodeStateColorPalette[EpisodeCompleteState.COMPLETED] = beatenColor;
+
+			ColorKey.SetColors(InaccessibleColor, AccessibleColor, BeatenColor, AllGoldColor);
 		}
 
 		void RefreshLevelButtonColors()

@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://4fpsmubnx1u1"]
 
-[ext_resource type="Script" uid="uid://dmfbnu16ljqjm" path="res://Scenes/EpisodeGrid.cs" id="1_cndep"]
+[ext_resource type="Script" uid="uid://dmfbnu16ljqjm" path="res://Scripts/EpisodeGrid.cs" id="1_cndep"]
 
 [node name="EpisodeGrid" type="Control" unique_id=979343656 node_paths=PackedStringArray("Background", "LevelButtons", "EpisodeButton")]
 custom_minimum_size = Vector2(56, 56)

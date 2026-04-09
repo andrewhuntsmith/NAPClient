@@ -1,0 +1,55 @@
+[gd_scene format=3 uid="uid://c1hly5dgirq51"]
+
+[ext_resource type="Script" uid="uid://bj1nknj4f7kdk" path="res://Scripts/ColorKey.cs" id="1_mxrk3"]
+
+[node name="ColorKey" type="Control" unique_id=491526234 node_paths=PackedStringArray("UnavailableRect", "AvailableRect", "BeatenRect", "AllGoldRect")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -650.0
+offset_bottom = -600.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_mxrk3")
+UnavailableRect = NodePath("HBoxContainer/ColorRect")
+AvailableRect = NodePath("HBoxContainer/ColorRect2")
+BeatenRect = NodePath("HBoxContainer/ColorRect3")
+AllGoldRect = NodePath("HBoxContainer/ColorRect4")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=1283306631]
+layout_mode = 0
+offset_right = 120.0
+offset_bottom = 24.0
+
+[node name="ColorRect" type="ColorRect" parent="HBoxContainer" unique_id=1398214394]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HBoxContainer" unique_id=148186056]
+layout_mode = 2
+text = "Unavailable"
+
+[node name="ColorRect2" type="ColorRect" parent="HBoxContainer" unique_id=803893022]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="HBoxContainer" unique_id=1513066394]
+layout_mode = 2
+text = "Available"
+
+[node name="ColorRect3" type="ColorRect" parent="HBoxContainer" unique_id=1262547487]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+
+[node name="Label3" type="Label" parent="HBoxContainer" unique_id=582820265]
+layout_mode = 2
+text = "Beaten"
+
+[node name="ColorRect4" type="ColorRect" parent="HBoxContainer" unique_id=1480732923]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+
+[node name="Label4" type="Label" parent="HBoxContainer" unique_id=765902004]
+layout_mode = 2
+text = "All Gold"
