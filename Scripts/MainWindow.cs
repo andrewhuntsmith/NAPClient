@@ -227,7 +227,7 @@ namespace NAPClient
 
 		void ScrollToBottom()
 		{
-			RandoLogContainer.ScrollVertical = (int)RandoLogContainer.GetVScrollBar().MaxValue;
+			RandoLogContainer.SetDeferred("scroll_vertical", (int)RandoLogContainer.GetVScrollBar().MaxValue);
 		}
 
 		int GetLevelIdFromButtonTag(int tag)
@@ -356,7 +356,7 @@ namespace NAPClient
 			RefreshLevelButtonColors();
 			RefreshGameStatText();
 			AddToRandoLog("Randomizer began!");
-		}
+        }
 
 		void UpdateLevelText(int levelId)
 		{

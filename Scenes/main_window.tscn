@@ -96,7 +96,7 @@ text = "Start Time: "
 
 [node name="StartTimeValue" type="Label" parent="GridContainer/RandomizerDataContainer/RandomizerData" unique_id=1524815333]
 layout_mode = 2
-text = "9999"
+text = "----"
 
 [node name="GoldValueLabel" type="Label" parent="GridContainer/RandomizerDataContainer/RandomizerData" unique_id=1309411776]
 layout_mode = 2
@@ -104,7 +104,7 @@ text = "Gold Value:"
 
 [node name="GoldValueValue" type="Label" parent="GridContainer/RandomizerDataContainer/RandomizerData" unique_id=982939786]
 layout_mode = 2
-text = "9999"
+text = "----"
 
 [node name="MaxTimeLabel" type="Label" parent="GridContainer/RandomizerDataContainer/RandomizerData" unique_id=1904418682]
 layout_mode = 2
@@ -112,7 +112,7 @@ text = "Max Time:"
 
 [node name="MaxTimeValue" type="Label" parent="GridContainer/RandomizerDataContainer/RandomizerData" unique_id=1509292263]
 layout_mode = 2
-text = "9999"
+text = "----"
 
 [node name="Empty" type="Control" parent="GridContainer/RandomizerDataContainer" unique_id=745131291]
 custom_minimum_size = Vector2(0, 10)
