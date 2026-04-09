@@ -133,12 +133,14 @@ namespace NAPClient
 				{
 					var levelId = (i * 5) + j;
 					episode.LevelButtons[j].TooltipText = levelId.ToString();
+					episode.LevelButtons[j].Text = "-" + j.ToString();
 					LevelButtonList.Add(episode.LevelButtons[j]);
 					episode.LevelButtons[j].Pressed += () => LevelButtonPressed(levelId);
 				}
 				episode.EpisodeButton.TooltipText = i.ToString();
 				EpisodeButtonList.Add(episode.EpisodeButton);
                 episode.EpisodeButton.Pressed += () => EpisodeButtonPressed(i);
+				episode.EpisodeButton.Text = GenerateEpisodeName(i);
             }
         }
 
@@ -368,7 +370,7 @@ namespace NAPClient
 			var levelData = MS.LevelData[CurrentSelectedButtonId];
 			var profileData = MS.LevelProfile[levelId];
 
-			LevelIDLabel.Text = profileData.GetLevelId().ToString();
+			LevelIDLabel.Text = GenerateLevelName(levelId);
 			LevelNameLabel.Text = levelData.GetLevelName();
 			AvailableLabel.Text = profileData.GetLevelCompleteState() == LevelCompleteState.LOCKED ? "LOCKED" : "Available";
 			AllGoldLabel.Text = profileData.GetLevelCompleteState() != LevelCompleteState.ALLGOLD ? "No" : "Yes";
@@ -380,6 +382,13 @@ namespace NAPClient
 			var letter = letters[index % 5];
 			var number = index / 5;
 			return "SI-" + letter + "-" + number.ToString();
+		}
+
+		string GenerateLevelName(int index)
+		{
+			var episodeId = index / 5;
+			var levelId = index % 5;
+			return GenerateEpisodeName(episodeId) + "-" + levelId.ToString();
 		}
 
 		void CycleLevelStatus()
