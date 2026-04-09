@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://dt7qp1n8a3b6o" path="res://Scripts/MainWindow.cs" id="1_6t6yy"]
 [ext_resource type="PackedScene" uid="uid://4fpsmubnx1u1" path="res://Scenes/episode_grid.tscn" id="1_23hoq"]
+[ext_resource type="PackedScene" uid="uid://bhfysgvqbecg0" path="res://Scenes/log_entry.tscn" id="3_bet41"]
 [ext_resource type="PackedScene" uid="uid://c1hly5dgirq51" path="res://Scenes/color_key.tscn" id="3_w45st"]
 
 [node name="MainWindow" type="Control" unique_id=1707276420 node_paths=PackedStringArray("LevelGrid", "FilePath", "LoadFileButton", "StartTimeDisplay", "GoldValueDisplay", "MaxTimeDisplay", "RandoLog", "RandoLogContainer", "LevelIDLabel", "LevelNameLabel", "AvailableLabel", "AllGoldLabel", "ConfirmationDialog", "LoadFileDialog", "ColorKey")]
@@ -33,6 +34,7 @@ AccessibleColor = Color(0.6853, 0.89, 0.6853, 1)
 BeatenColor = Color(0.37254903, 0.75686276, 0.8235294, 1)
 AllGoldColor = Color(0.97, 0.8063934, 0.07759999, 1)
 ColorKey = NodePath("GridContainer/LevelGridContainer/ColorKey")
+LogEntryScene = ExtResource("3_bet41")
 
 [node name="GridContainer" type="GridContainer" parent="." unique_id=1808778599]
 layout_mode = 0

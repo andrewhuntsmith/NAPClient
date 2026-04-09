@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace NAPClient
 {
@@ -10,7 +10,7 @@ namespace NAPClient
 
         public double MaxTime = double.MaxValue;
 
-        public Action<string> ItemAdded;
+        public Action<ItemData> ItemAdded;
 
         public ItemManager(MemorySource ms) 
         { 
@@ -23,7 +23,7 @@ namespace NAPClient
 
         public void HandleCondition(ItemData item)
         {
-            ItemAdded?.Invoke("Received " + item.Type.ToString() + " " + item.Value.ToString());
+            ItemAdded?.Invoke(item);
             switch (item.Type)
             {
                 case ItemType.LevelUnlock:

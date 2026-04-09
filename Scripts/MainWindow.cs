@@ -42,6 +42,7 @@ namespace NAPClient
         [Export] Color BeatenColor = Colors.DarkGray;
         [Export] Color AllGoldColor = Colors.Gold;
 		[Export] ColorKey ColorKey;
+		[Export] PackedScene LogEntryScene;
 
 		List<Button> LevelButtonList = new List<Button>();
 		List<Button> EpisodeButtonList = new List<Button>();
@@ -140,7 +141,7 @@ namespace NAPClient
 				episode.EpisodeButton.TooltipText = i.ToString();
 				EpisodeButtonList.Add(episode.EpisodeButton);
                 episode.EpisodeButton.Pressed += () => EpisodeButtonPressed(i);
-				episode.EpisodeButton.Text = GenerateEpisodeName(i);
+				episode.EpisodeButton.Text = LogEntry.GenerateEpisodeName(i);
             }
         }
 
@@ -218,12 +219,20 @@ namespace NAPClient
 			MaxTimeDisplay.Text = ItemManager.MaxTime.ToString();
 		}
 
-		public void AddToRandoLog(string message)
+		public void AddToRandoLog(ItemData itemData)
 		{
-			var newLabel = new Label() { Text = message };
+			var newLabel = (LogEntry)LogEntryScene.Instantiate();
+			newLabel.SetData(itemData);
 			RandoLog.AddChild(newLabel);
 			CallDeferred(nameof(ScrollToBottom));
 		}
+
+		public void AddToRandoLog(string message)
+		{
+            var newLabel = new Label() { Text = message };
+            RandoLog.AddChild(newLabel);
+            CallDeferred(nameof(ScrollToBottom));
+        }
 
 		void ScrollToBottom()
 		{
@@ -370,25 +379,10 @@ namespace NAPClient
 			var levelData = MS.LevelData[CurrentSelectedButtonId];
 			var profileData = MS.LevelProfile[levelId];
 
-			LevelIDLabel.Text = GenerateLevelName(levelId);
+			LevelIDLabel.Text = LogEntry.GenerateLevelName(levelId);
 			LevelNameLabel.Text = levelData.GetLevelName();
 			AvailableLabel.Text = profileData.GetLevelCompleteState() == LevelCompleteState.LOCKED ? "LOCKED" : "Available";
 			AllGoldLabel.Text = profileData.GetLevelCompleteState() != LevelCompleteState.ALLGOLD ? "No" : "Yes";
-		}
-
-		string GenerateEpisodeName(int index)
-		{
-			var letters = "ABCDE";
-			var letter = letters[index % 5];
-			var number = index / 5;
-			return "SI-" + letter + "-" + number.ToString();
-		}
-
-		string GenerateLevelName(int index)
-		{
-			var episodeId = index / 5;
-			var levelId = index % 5;
-			return GenerateEpisodeName(episodeId) + "-" + levelId.ToString();
 		}
 
 		void CycleLevelStatus()

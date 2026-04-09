@@ -1,0 +1,19 @@
+[gd_scene format=3 uid="uid://bhfysgvqbecg0"]
+
+[ext_resource type="Script" uid="uid://b0h6tcrulqyfu" path="res://Scripts/LogEntry.cs" id="1_di2fn"]
+
+[node name="LogEntry" type="Label" unique_id=1474525889]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "Received IncreaseMaxTime 1"
+script = ExtResource("1_di2fn")
+StartTimeColor = Color(0.28590357, 0.5329663, 0.7572307, 1)
+GoldValueColor = Color(0.54601586, 0.43861455, 3.85046e-07, 1)
+MaxTimeColor = Color(0.93426543, 0.28438583, 0.13510796, 1)
+LevelUnlockColor = Color(0, 0.63, 0.27300003, 1)
+PaletteColor = Color(0.7200806, 0.52393955, 1, 1)
+UnhandledColor = Color(1, 0, 1, 1)
