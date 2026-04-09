@@ -20,28 +20,39 @@ public partial class LogEntry : Label
 		{
 			case ItemType.IncreaseStartTime:
 				stylebox.BgColor = StartTimeColor;
+				Text = "Start time increased by " + itemData.Value.ToString();
 				break;
 			case ItemType.IncreaseGoldValue:
 				stylebox.BgColor = GoldValueColor;
+				Text = "Gold value increased by " + (itemData.Value / 10f).ToString();
 				break;
 			case ItemType.IncreaseMaxTime:
 				stylebox.BgColor = MaxTimeColor;
+				Text = "Max time increased by " + itemData.Value.ToString();
 				break;
 			case ItemType.LevelUnlock:
-			case ItemType.EpisodeUnlock:
-			case ItemType.ProgressiveEpisodeUnlock:
+                stylebox.BgColor = LevelUnlockColor;
+                Text = "Unlocked level " + GenerateLevelName(itemData.Value);
+                break;
+            case ItemType.EpisodeUnlock:
+                stylebox.BgColor = LevelUnlockColor;
+                Text = "Unlocked episode " + GenerateEpisodeName(itemData.Value);
+                break;
+            case ItemType.ProgressiveEpisodeUnlock:
 				stylebox.BgColor = LevelUnlockColor;
+				Text = "Unlocked next level in " + GenerateEpisodeName(itemData.Value);
 				break;
 			case ItemType.ChangeColorPalette:
 				stylebox.BgColor = PaletteColor;
+				Text = "Palette changed to ID " + itemData.Value.ToString();
 				break;
 			default:
 				stylebox.BgColor = UnhandledColor;
+				Text = "Received unknown item!";
 				break;
 		}
 
 		AddThemeStyleboxOverride("normal", stylebox);
-		Text = "Received " + itemData.Type.ToString() + " " + itemData.Value.ToString();
     }
 
     public static string GenerateEpisodeName(int index)
