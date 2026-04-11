@@ -1,7 +1,5 @@
 using Godot;
-using Godot.Collections;
 using NAPClient;
-using System;
 
 public partial class LogEntry : Label
 {

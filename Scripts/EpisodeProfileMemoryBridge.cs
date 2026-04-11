@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace NAPClient
@@ -35,7 +35,10 @@ namespace NAPClient
             EpisodeSuccessAddressValue = new IntAddressValue() { Offsets = new List<int> { BaseEpisodePointer + 16 } };
             EpisodeLockedAddressValue = new ByteArrayAddressValue() { Offsets = new List<int> { BaseEpisodePointer + 20 }, ArraySize = 1 };
 
+            AttemptCountAddressValue.ValueUpdated += InternalValueUpdated;
             EpisodeLockedAddressValue.ValueUpdated += InternalValueUpdated;
+            LevelSuccessAddressValue.ValueUpdated += InternalValueUpdated;
+            EpisodeSuccessAddressValue.ValueUpdated += InternalValueUpdated;
         }
 
         public void UpdateValue()
@@ -54,7 +57,17 @@ namespace NAPClient
             }
         }
 
+        void InternalValueUpdated(int _, int __)
+        {
+            InternalValueUpdated();
+        }
+
         void InternalValueUpdated(byte[] _, byte[] __)
+        {
+            InternalValueUpdated();
+        }
+
+        void InternalValueUpdated()
         {
             RefreshEpisodeFlag = true;
         }

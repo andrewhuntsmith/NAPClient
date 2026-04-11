@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace NAPClient
@@ -34,8 +34,15 @@ namespace NAPClient
             LevelLockedAddressValue = new ByteArrayAddressValue() { Offsets = new List<int> { BaseLevelPointer + 20 }, ArraySize = 1 };
             AllGoldAddressValue = new ByteArrayAddressValue() { Offsets = new List<int> { BaseLevelPointer + 28 }, ArraySize = 1 };
 
+            AttemptCountAddressValue.SetValue(0);
+            LevelSuccessAddressValue.SetValue(0);
+            EpisodeSuccessAddressValue.SetValue(0);
+
+            AttemptCountAddressValue.ValueUpdated += InternalValueUpdated;
             LevelLockedAddressValue.ValueUpdated += InternalValueUpdated;
             AllGoldAddressValue.ValueUpdated += InternalValueUpdated;
+            LevelSuccessAddressValue.ValueUpdated += InternalValueUpdated;
+            EpisodeSuccessAddressValue.ValueUpdated += InternalValueUpdated;
         }
 
         public void UpdateValue()
@@ -55,7 +62,17 @@ namespace NAPClient
             }
         }
 
+        void InternalValueUpdated(int _, int __)
+        {
+            InternalValueUpdated();
+        }
+
         void InternalValueUpdated(byte[] _, byte[] __)
+        {
+            InternalValueUpdated();
+        }
+
+        void InternalValueUpdated()
         {
             RefreshLevelFlag = true;
         }
@@ -65,10 +82,15 @@ namespace NAPClient
             return IdAddressValue.Value;
         }
 
+        public int GetLevelSuccesses()
+        {
+            return LevelSuccessAddressValue.Value + EpisodeSuccessAddressValue.Value;
+        }
+
         public LevelCompleteState GetLevelCompleteState()
         {
             return LevelLockedAddressValue.Value[0] == 0 ? LevelCompleteState.LOCKED :
-                LevelLockedAddressValue.Value[0] == 1 ? LevelCompleteState.AVAILABLE :
+                GetLevelSuccesses() == 0 ? LevelCompleteState.AVAILABLE :
                 AllGoldAddressValue.Value[0] == 0 ? LevelCompleteState.COMPLETED :
                 LevelCompleteState.ALLGOLD;
         }
