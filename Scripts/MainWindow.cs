@@ -78,7 +78,9 @@ namespace NAPClient
 
 			MS.LevelVictories.UpdateValue();
 			MS.EpisodeVictories.UpdateValue();
+
 			ItemManager.Initializing = false;
+			GoalManager.Initializing = false;
 
 			Thread passiveMemoryCheckingThread = new Thread(UpdateThread);
 			passiveMemoryCheckingThread.Start();
@@ -331,6 +333,9 @@ namespace NAPClient
 
 		void RandomizeLevels()
 		{
+			ItemManager.Initializing = true;
+			GoalManager.Initializing = true;
+
 			MS.LevelStartTime.SetValue(CurrentRando.StartingLevelTime);
 			MS.TimeGrantedByGold.SetValue(CurrentRando.StartingGoldValue);
 			ItemManager.SetMaxTime(CurrentRando.InitialMaxTime);
@@ -365,6 +370,9 @@ namespace NAPClient
 			RefreshLevelButtonColors();
 			RefreshGameStatText();
 			AddToRandoLog("Randomizer began!");
+
+            ItemManager.Initializing = false;
+            GoalManager.Initializing = false;
         }
 
 		void UpdateLevelText(int levelId)

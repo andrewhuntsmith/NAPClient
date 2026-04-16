@@ -1,15 +1,17 @@
-﻿namespace NAPClient
+namespace NAPClient
 {
     public class GoalManager
     {
         GoalType CurrentGoal;
         bool GoalMet;
         MemorySource MS;
+        public bool Initializing;
 
         public GoalManager(MemorySource ms)
         {
             MS = ms;
             GoalMet = false;
+            Initializing = true;
         }
 
         public void SetGoal(GoalType goal)
@@ -19,7 +21,7 @@
 
         public bool CheckMetGoal()
         {
-            if (GoalMet)
+            if (GoalMet || Initializing)
                 return false;
 
             switch (CurrentGoal)
