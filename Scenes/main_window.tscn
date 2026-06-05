@@ -5,7 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://bhfysgvqbecg0" path="res://Scenes/log_entry.tscn" id="3_bet41"]
 [ext_resource type="PackedScene" uid="uid://c1hly5dgirq51" path="res://Scenes/color_key.tscn" id="3_w45st"]
 
-[node name="MainWindow" type="Control" unique_id=1707276420 node_paths=PackedStringArray("LevelGrid", "FilePath", "LoadFileButton", "StartTimeDisplay", "GoldValueDisplay", "MaxTimeDisplay", "RandoLog", "RandoLogContainer", "LevelIDLabel", "LevelNameLabel", "AvailableLabel", "AllGoldLabel", "ConfirmationDialog", "LoadFileDialog", "ColorKey")]
+[node name="MainWindow" type="Control" unique_id=1707276420 node_paths=PackedStringArray("LevelGrid", "FilePath", "UrlEntry", "SlotNameEntry", "PasswordEntry", "LoadFileButton", "StartTimeDisplay", "GoldValueDisplay", "MaxTimeDisplay", "RandoLog", "RandoLogContainer", "LevelIDLabel", "LevelNameLabel", "AvailableLabel", "AllGoldLabel", "ConfirmationDialog", "LoadFileDialog", "ColorKey")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -16,8 +16,11 @@ focus_behavior_recursive = 1
 script = ExtResource("1_6t6yy")
 LevelGrid = NodePath("GridContainer/LevelGridContainer/LevelGrid")
 EpisodeGridScene = ExtResource("1_23hoq")
-FilePath = NodePath("GridContainer/RandomizerLoading/FilePathField")
-LoadFileButton = NodePath("GridContainer/RandomizerLoading/LoadFileButton")
+FilePath = NodePath("GridContainer/RandomizerLoading/PlandoLoading/FilePathField")
+UrlEntry = NodePath("GridContainer/RandomizerLoading/APLoading/ServerField")
+SlotNameEntry = NodePath("GridContainer/RandomizerLoading/APLoading/SlotField")
+PasswordEntry = NodePath("GridContainer/RandomizerLoading/APLoading/PasswordField")
+LoadFileButton = NodePath("GridContainer/RandomizerLoading/PlandoLoading/LoadFileButton")
 StartTimeDisplay = NodePath("GridContainer/RandomizerDataContainer/RandomizerData/StartTimeValue")
 GoldValueDisplay = NodePath("GridContainer/RandomizerDataContainer/RandomizerData/GoldValueValue")
 MaxTimeDisplay = NodePath("GridContainer/RandomizerDataContainer/RandomizerData/MaxTimeValue")
@@ -42,28 +45,80 @@ offset_right = 649.0
 offset_bottom = 599.0
 columns = 2
 
-[node name="RandomizerLoading" type="HBoxContainer" parent="GridContainer" unique_id=1206790516]
+[node name="RandomizerLoading" type="BoxContainer" parent="GridContainer" unique_id=290384028]
 custom_minimum_size = Vector2(400, 0)
 layout_mode = 2
 
-[node name="FilePathLabel" type="Label" parent="GridContainer/RandomizerLoading" unique_id=244126544]
+[node name="PlandoLoading" type="HBoxContainer" parent="GridContainer/RandomizerLoading" unique_id=437815863]
+layout_mode = 2
+
+[node name="FilePathLabel" type="Label" parent="GridContainer/RandomizerLoading/PlandoLoading" unique_id=244126544]
 custom_minimum_size = Vector2(80, 0)
 layout_mode = 2
 text = "File Path:"
 
-[node name="BrowseFilesButton" type="Button" parent="GridContainer/RandomizerLoading" unique_id=286854942]
+[node name="BrowseFilesButton" type="Button" parent="GridContainer/RandomizerLoading/PlandoLoading" unique_id=286854942]
 layout_mode = 2
 text = "Browse"
 
-[node name="FilePathField" type="TextEdit" parent="GridContainer/RandomizerLoading" unique_id=1652308149]
+[node name="FilePathField" type="TextEdit" parent="GridContainer/RandomizerLoading/PlandoLoading" unique_id=1652308149]
 custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
 placeholder_text = "THISISAFILEPATH"
 
-[node name="LoadFileButton" type="Button" parent="GridContainer/RandomizerLoading" unique_id=1101205253]
+[node name="LoadFileButton" type="Button" parent="GridContainer/RandomizerLoading/PlandoLoading" unique_id=1101205253]
 layout_mode = 2
 disabled = true
 text = "Load File"
+
+[node name="APLoading" type="GridContainer" parent="GridContainer/RandomizerLoading" unique_id=520686855]
+visible = false
+layout_mode = 2
+columns = 2
+
+[node name="ServerLabel" type="Label" parent="GridContainer/RandomizerLoading/APLoading" unique_id=1921688714]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+text = "Server:"
+
+[node name="ServerField" type="LineEdit" parent="GridContainer/RandomizerLoading/APLoading" unique_id=555458397]
+custom_minimum_size = Vector2(150, 30)
+layout_mode = 2
+focus_behavior_recursive = 2
+placeholder_text = "Server"
+context_menu_enabled = false
+virtual_keyboard_enabled = false
+caret_blink = true
+
+[node name="SlotLabel" type="Label" parent="GridContainer/RandomizerLoading/APLoading" unique_id=1231049247]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+text = "Slot Name:"
+
+[node name="SlotField" type="LineEdit" parent="GridContainer/RandomizerLoading/APLoading" unique_id=1883470535]
+custom_minimum_size = Vector2(150, 30)
+layout_mode = 2
+focus_behavior_recursive = 2
+placeholder_text = "Slot Name"
+context_menu_enabled = false
+
+[node name="PasswordLabel" type="Label" parent="GridContainer/RandomizerLoading/APLoading" unique_id=1144125080]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+text = "Password:"
+
+[node name="PasswordField" type="LineEdit" parent="GridContainer/RandomizerLoading/APLoading" unique_id=1375174044]
+custom_minimum_size = Vector2(300, 30)
+layout_mode = 2
+focus_behavior_recursive = 2
+placeholder_text = "Password"
+context_menu_enabled = false
+secret = true
+secret_character = "🐑"
+
+[node name="ConnectButton" type="Button" parent="GridContainer/RandomizerLoading/APLoading" unique_id=927113802]
+layout_mode = 2
+text = "Connect"
 
 [node name="Empty" type="HBoxContainer" parent="GridContainer" unique_id=1031274791]
 custom_minimum_size = Vector2(250, 0)
@@ -178,6 +233,7 @@ access = 2
 filters = PackedStringArray("JSON files (*.json)", "*.json")
 use_native_dialog = true
 
-[connection signal="pressed" from="GridContainer/RandomizerLoading/BrowseFilesButton" to="." method="BrowseLocalFiles"]
-[connection signal="pressed" from="GridContainer/RandomizerLoading/LoadFileButton" to="." method="LoadLocalRandoFile"]
+[connection signal="pressed" from="GridContainer/RandomizerLoading/PlandoLoading/BrowseFilesButton" to="." method="BrowseLocalFiles"]
+[connection signal="pressed" from="GridContainer/RandomizerLoading/PlandoLoading/LoadFileButton" to="." method="LoadLocalRandoFile"]
+[connection signal="pressed" from="GridContainer/RandomizerLoading/APLoading/ConnectButton" to="." method="ConnectToServerPressed"]
 [connection signal="file_selected" from="FileDialog" to="." method="LocalFileSelected"]

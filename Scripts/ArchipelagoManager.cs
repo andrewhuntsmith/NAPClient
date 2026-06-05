@@ -1,4 +1,4 @@
-﻿using Archipelago.MultiClient.Net.Enums;
+using Archipelago.MultiClient.Net.Enums;
 using Archipelago.MultiClient.Net;
 using System;
 using Archipelago.MultiClient.Net.Helpers;
@@ -83,6 +83,7 @@ namespace NAPClient
             }
 
             var loginSuccess = (LoginSuccessful)result;
+            RandomizeLevels(loginSuccess);
             return true;
         }
 
@@ -93,7 +94,7 @@ namespace NAPClient
 
         void RandomizeLevels(LoginSuccessful loginSuccessful)
         {
-            var levelOrder = (List<int>)loginSuccessful.SlotData["LevelOrder"];
+            var levelOrder = (List<int>)loginSuccessful.SlotData["level_data"];
             APConnectionEstablished.Invoke(levelOrder);
         }
 

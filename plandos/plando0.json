@@ -239,7 +239,7 @@
           "State": "LevelComplete"
         },
         "ItemData": {
-          "Value": 1,
+          "Value": 6,
           "Type": "IncreaseGoldValue"
         }
       },
@@ -289,7 +289,7 @@
           "State": "LevelAllGold"
         },
         "ItemData": {
-          "Value": 1,
+          "Value": 6,
           "Type": "IncreaseGoldValue"
         }
       },
@@ -399,7 +399,7 @@
           "State": "LevelComplete"
         },
         "ItemData": {
-          "Value": 1,
+          "Value": 6,
           "Type": "IncreaseGoldValue"
         }
       },
@@ -429,7 +429,7 @@
           "State": "LevelAllGold"
         },
         "ItemData": {
-          "Value": 1,
+          "Value": 6,
           "Type": "IncreaseGoldValue"
         }
       },
@@ -459,7 +459,7 @@
           "State": "LevelComplete"
         },
         "ItemData": {
-          "Value": 1,
+          "Value": 6,
           "Type": "IncreaseGoldValue"
         }
       },

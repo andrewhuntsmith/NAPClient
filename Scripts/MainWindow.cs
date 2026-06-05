@@ -1,10 +1,6 @@
 using Godot;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.IO;
-using System.Threading;
 
 namespace NAPClient
 {
@@ -15,7 +11,10 @@ namespace NAPClient
 		[Export] Control LevelGrid;
 		[Export] PackedScene EpisodeGridScene;
 		[Export] TextEdit FilePath;
-		[Export] Button LoadFileButton;
+		[Export] LineEdit UrlEntry;
+		[Export] LineEdit SlotNameEntry;
+		[Export] LineEdit PasswordEntry;
+        [Export] Button LoadFileButton;
 		[Export] Label StartTimeDisplay;
 		[Export] Label GoldValueDisplay;
 		[Export] Label MaxTimeDisplay;
@@ -28,11 +27,6 @@ namespace NAPClient
 
 		[Export] ConfirmationDialog ConfirmationDialog;
 		[Export] FileDialog LoadFileDialog;
-
-        public static MemorySource MS = new MemorySource();
-		ItemManager ItemManager;
-		GoalManager GoalManager;
-		ArchipelagoManager ApManager;
 
 		Dictionary<LevelCompleteState, StyleBoxFlat> LevelStateColorPalette = new Dictionary<LevelCompleteState, StyleBoxFlat>();
 		Dictionary<EpisodeCompleteState, StyleBoxFlat> EpisodeStateColorPalette = new Dictionary<EpisodeCompleteState, StyleBoxFlat>();
@@ -47,83 +41,28 @@ namespace NAPClient
 		List<Button> LevelButtonList = new List<Button>();
 		List<Button> EpisodeButtonList = new List<Button>();
 
-		int CurrentSelectedLevelId = -1;
-		int CurrentSelectedButtonId = -1;
-
-		RandomizationData CurrentRando = new RandomizationData();
+		MainLogic Main;
 
 		public override void _Ready()
 		{
-			Instance = this;
-			if (MS.HookMemory() == false)
-			{
+			Main = new MainLogic();
+			if (!Main.Initialize(this))
 				ForceQuit();
-				return;
-			}
 
-			MS.MemoryError += OnMemoryError;
-			AttachLevelProfileEvents();
+            InitializeColorDictionary();
+            GenerateButtonGrid();
+            RefreshLevelButtonColors();
+        }
 
-			InitializeColorDictionary();
-			GenerateButtonGrid();
-			RefreshLevelButtonColors();
-
-			ItemManager = new ItemManager(MS);
-			ItemManager.ItemAdded += AddToRandoLog;
-
-			GoalManager = new GoalManager(MS);
-
-			ApManager = new ArchipelagoManager(MS, ItemManager);
-			ApManager.APConnectionEstablished += OnAPConnectionEstablished;
-
-			MS.LevelVictories.UpdateValue();
-			MS.EpisodeVictories.UpdateValue();
-
-			ItemManager.Initializing = false;
-			GoalManager.Initializing = false;
-
-			Thread passiveMemoryCheckingThread = new Thread(UpdateThread);
-			passiveMemoryCheckingThread.Start();
-
-		}
-
-		void OnMemoryError()
-		{
-			 CallDeferred(nameof(ForceQuit));
-		}
-
-		void ForceQuit()
+        void ForceQuit()
 		{
 			GetTree().Quit();
         }
 
-		bool Loop;
-		void UpdateThread()
+		public void OnMemoryError()
 		{
-			Loop = true;
-			MS.LevelVictories.ValueChanged += OnExitsChanged;
-			MS.EpisodeVictories.ValueChanged += OnExitsChanged;
-			// just run forever lmao
-			while (Loop)
-			{
-				MS.LevelVictories.UpdateValue();
-				MS.EpisodeVictories.UpdateValue();
-				MS.GoldCollectedInCurrentLevel.UpdateValue();
-			}
-		}
-
-		void OnExitsChanged()
-		{
-			CallDeferred(nameof(UpdateLevelStatus));
-		}
-
-		void AttachLevelProfileEvents()
-		{
-			foreach (var levelProfile in MS.LevelProfile)
-				levelProfile.ValueUpdated += OnLevelProfileUpdate;
-			foreach (var episodeProfile in MS.EpisodeProfile)
-				episodeProfile.ValueUpdated += OnEpisodeProfileUpdate;
-		}
+            CallDeferred(nameof(ForceQuit));
+        }
 
 		void GenerateButtonGrid()
 		{
@@ -183,7 +122,13 @@ namespace NAPClient
 			ColorKey.SetColors(InaccessibleColor, AccessibleColor, BeatenColor, AllGoldColor);
 		}
 
-		void RefreshLevelButtonColors()
+		public void OnUIRefresh()
+		{
+			CallDeferred(nameof(RefreshLevelButtonColors));
+			CallDeferred(nameof(RefreshGameStatText));
+		}
+
+		public void RefreshLevelButtonColors()
 		{
 			foreach (var button in LevelButtonList)
 			{
@@ -195,7 +140,7 @@ namespace NAPClient
 					return;
 				}
 
-				var profileData = MS.LevelProfile[GetLevelIdFromButtonTag(tag)];
+				var profileData = MainLogic.MS.LevelProfile[GetLevelIdFromButtonTag(tag)];
                 button.AddThemeStyleboxOverride("normal", LevelStateColorPalette[profileData.GetLevelCompleteState()]);
 			}
 
@@ -209,30 +154,30 @@ namespace NAPClient
 					return;
 				}
 
-				var profileData = MS.EpisodeProfile[tag];
+				var profileData = MainLogic.MS.EpisodeProfile[tag];
 				button.AddThemeStyleboxOverride("normal", EpisodeStateColorPalette[profileData.GetEpisodeCompleteState()]);
 			}
 		}
 
-		void RefreshGameStatText()
+		public void RefreshGameStatText()
 		{
-			StartTimeDisplay.Text = MS.LevelStartTime.Value.ToString();
-			GoldValueDisplay.Text = MS.TimeGrantedByGold.Value.ToString();
-			MaxTimeDisplay.Text = ItemManager.MaxTime.ToString();
+			StartTimeDisplay.Text = MainLogic.MS.LevelStartTime.Value.ToString();
+			GoldValueDisplay.Text = MainLogic.MS.TimeGrantedByGold.Value.ToString();
+			MaxTimeDisplay.Text = Main.ItemManager.MaxTime.ToString();
 		}
 
 		public void AddToRandoLog(ItemData itemData)
 		{
 			var newLabel = (LogEntry)LogEntryScene.Instantiate();
 			newLabel.SetData(itemData);
-			RandoLog.AddChild(newLabel);
+            RandoLog.CallDeferred(Node.MethodName.AddChild, newLabel);
 			CallDeferred(nameof(ScrollToBottom));
 		}
 
 		public void AddToRandoLog(string message)
 		{
             var newLabel = new Label() { Text = message };
-            RandoLog.AddChild(newLabel);
+            RandoLog.CallDeferred(Node.MethodName.AddChild, newLabel);
             CallDeferred(nameof(ScrollToBottom));
         }
 
@@ -243,7 +188,7 @@ namespace NAPClient
 
 		int GetLevelIdFromButtonTag(int tag)
 		{
-			return MS.LevelData[tag].GetLevelId();
+			return MainLogic.MS.LevelData[tag].GetLevelId();
 		}
 
 		//void ApplyStartTimeValueButtonPressed(object sender, RoutedEventArgs e)
@@ -271,26 +216,13 @@ namespace NAPClient
 
 		public override void _ExitTree()
 		{
-			Loop = false;
-
-			if (!MemorySource.ConnectedToGame)
-				return;
-
-			// TODO force quit the game, that should fix everything that needs to be fixed
-			foreach (var level in MS.OriginalLevelMapping)
-			{
-				MS.SwapLevels(level.Key, MS.NewLevelMapping[MS.OriginalLevelMapping[level.Key]]);
-			}
-
-			MS.LevelStartTime.SetValue(90f);
-			MS.TimeGrantedByGold.SetValue(2f);
-			MS.ReenableScoreSubmission();
+			Main.OnQuit();
 		}
 
 		private void LevelButtonPressed(int tag)
 		{
-			CurrentSelectedButtonId = tag;
-			UpdateLevelText(MS.LevelData[tag].GetLevelId());
+            Main.CurrentSelectedButtonId = tag;
+			UpdateLevelText(MainLogic.MS.LevelData[tag].GetLevelId());
 		}
 
 		private void EpisodeButtonPressed(int tag)
@@ -308,74 +240,8 @@ namespace NAPClient
 			//UpdateLevelStatus();
 		//}
 
-		void UpdateLevelStatus()
-		{
-			foreach (var levelProfile in MS.LevelProfile)
-			{
-				levelProfile.UpdateValue();
-			}
 
-			foreach (var episodeProfile in MS.EpisodeProfile)
-			{
-				episodeProfile.UpdateValue();
-			}
-
-			if (CurrentSelectedLevelId != -1)
-				UpdateLevelText(CurrentSelectedLevelId);
-			RefreshLevelButtonColors();
-		}
-
-		void OnAPConnectionEstablished(List<int> levelOrder)
-		{
-			CurrentRando.LevelOrder = levelOrder;
-			RandomizeLevels();
-		}
-
-		void RandomizeLevels()
-		{
-			ItemManager.Initializing = true;
-			GoalManager.Initializing = true;
-
-			MS.LevelStartTime.SetValue(CurrentRando.StartingLevelTime);
-			MS.TimeGrantedByGold.SetValue(CurrentRando.StartingGoldValue);
-			ItemManager.SetMaxTime(CurrentRando.InitialMaxTime);
-			GoalManager.SetGoal(CurrentRando.Goal);
-
-			for (var id = 0; id < CurrentRando.LevelOrder.Count; id++)
-			{
-				MS.SwapLevels(id, MS.NewLevelMapping[MS.OriginalLevelMapping[CurrentRando.LevelOrder[id]]]);
-			}
-
-			foreach (var levelProfile in MS.LevelProfile)
-			{
-				levelProfile.RevokeAllGold();
-				if (CurrentRando.InitialLevels.Contains(levelProfile.GetLevelId()))
-				{
-					ItemManager.LevelUnlockManager.AddLevelToUnlocks(levelProfile.GetLevelId());
-					levelProfile.UnlockLevel();
-				}
-				else
-				{
-					ItemManager.LevelUnlockManager.RemoveLevelFromUnlocks(levelProfile.GetLevelId());
-					levelProfile.LockLevel();
-				}
-				levelProfile.UpdateValue();
-			}
-
-			foreach (var episodeProfile in MS.EpisodeProfile)
-			{
-				episodeProfile.LockEpisode();
-			}
-
-			RefreshLevelButtonColors();
-			RefreshGameStatText();
-			AddToRandoLog("Randomizer began!");
-
-            ItemManager.Initializing = false;
-            GoalManager.Initializing = false;
-        }
-
-		void UpdateLevelText(int levelId)
+		public void UpdateLevelText(int levelId)
 		{
 			if (levelId == -1)
 			{
@@ -383,9 +249,9 @@ namespace NAPClient
 				return;
 			}
 
-			CurrentSelectedLevelId = levelId;
-			var levelData = MS.LevelData[CurrentSelectedButtonId];
-			var profileData = MS.LevelProfile[levelId];
+			Main.CurrentSelectedLevelId = levelId;
+			var levelData = MainLogic.MS.LevelData[Main.CurrentSelectedButtonId];
+			var profileData = MainLogic.MS.LevelProfile[levelId];
 
 			LevelIDLabel.Text = LogEntry.GenerateLevelName(levelId);
 			LevelNameLabel.Text = levelData.GetLevelName();
@@ -393,135 +259,12 @@ namespace NAPClient
 			AllGoldLabel.Text = profileData.GetLevelCompleteState() != LevelCompleteState.ALLGOLD ? "No" : "Yes";
 		}
 
-		void CycleLevelStatus()
-		{
-			if (CurrentSelectedLevelId == -1)
-			{
-				LevelIDLabel.Text = "Error getting level ID";
-				return;
-			}
-
-			var profileData = MS.LevelProfile[CurrentSelectedLevelId];
-			if (profileData.GetLevelCompleteState() == LevelCompleteState.LOCKED)
-			{
-				profileData.UnlockLevel();
-			}
-			else if (profileData.GetLevelCompleteState() == LevelCompleteState.AVAILABLE)
-			{
-				profileData.SetLevelBeaten();
-			}
-			else if (profileData.GetLevelCompleteState() == LevelCompleteState.COMPLETED)
-			{
-				profileData.SetAllGold();
-			}
-			else
-			{
-				profileData.LockLevel();
-				profileData.RevokeAllGold();
-			}
-
-			profileData.UpdateValue();
-			UpdateLevelText(CurrentSelectedLevelId);
-			RefreshLevelButtonColors();
-			return;
-		}
-
-		void OnLevelProfileUpdate(LevelProfileMemoryBridge updatedLevel)
-		{
-			// check for level becoming unlocked when it shouldn't be
-			if (updatedLevel.GetLevelCompleteState() >= LevelCompleteState.AVAILABLE)
-				if (!ItemManager.LevelUnlockManager.ShouldLevelUnlock(updatedLevel))
-					return;
-
-			// check for completion
-			if (updatedLevel.GetLevelCompleteState() >= LevelCompleteState.COMPLETED)
-			{
-				var completionCondition = new RandomizationData.CompletionCondition()
-				{
-					Id = updatedLevel.GetLevelId(),
-					State = ProgressState.LevelComplete
-				};
-
-				if (CurrentRando.UnlockConditions.ContainsKey(completionCondition))
-				{
-					ItemManager.HandleCondition(CurrentRando.UnlockConditions[completionCondition]);
-					CurrentRando.UnlockConditions.Remove(completionCondition);
-				}
-			}
-
-			// check for all gold
-			if (updatedLevel.GetLevelCompleteState() == LevelCompleteState.ALLGOLD)
-			{
-				var completionCondition = new RandomizationData.CompletionCondition()
-				{
-					Id = updatedLevel.GetLevelId(),
-					State = ProgressState.LevelAllGold
-				};
-
-				if (CurrentRando.UnlockConditions.ContainsKey(completionCondition))
-				{
-					ItemManager.HandleCondition(CurrentRando.UnlockConditions[completionCondition]);
-					CurrentRando.UnlockConditions.Remove(completionCondition);
-				}
-			}
-
-			if (GoalManager.CheckMetGoal())
-			{
-				HandleGoalCompletion();
-			}
-			RefreshGameStatText();
-		}
-
-		void OnEpisodeProfileUpdate(EpisodeProfileMemoryBridge updatedEpisode)
-		{
-			// check for level becoming unlocked when it shouldn't be
-			if (updatedEpisode.GetEpisodeCompleteState() >= EpisodeCompleteState.AVAILABLE)
-				if (!ItemManager.LevelUnlockManager.ShouldEpisodeUnlock(updatedEpisode))
-					return;
-
-			// check for completion
-			if (updatedEpisode.GetEpisodeCompleteState() >= EpisodeCompleteState.COMPLETED)
-			{
-				var completionCondition = new RandomizationData.CompletionCondition()
-				{
-					Id = updatedEpisode.GetEpisodeId(),
-					State = ProgressState.EpisodeComplete
-				};
-
-				if (CurrentRando.UnlockConditions.ContainsKey(completionCondition))
-				{
-					ItemManager.HandleCondition(CurrentRando.UnlockConditions[completionCondition]);
-					CurrentRando.UnlockConditions.Remove(completionCondition);
-				}
-			}
-
-			if (GoalManager.CheckMetGoal())
-			{
-				HandleGoalCompletion();
-			}
-		}
-
-		void HandleGoalCompletion()
-		{
-			AddToRandoLog("Goal met!!! 🎉");
-		}
-
 		private void ConnectToServerPressed()
 		{
-			//if (((Button)sender).Tag.ToString() == "Connect")
-			//{
-			//	if (UrlEntry.Text.Length == 0 || SlotNameEntry.Text.Length == 0)
-			//		return;
-			//	if (!ApManager.TryConnect(UrlEntry.Text, SlotNameEntry.Text, PasswordEntry.Password))
-			//		return;
-			//	((Button)sender).Content = "Disconnect";
-			//	((Button)sender).Tag = "Disconnect";
-			//}
-			//else
-			//{
-			//	((Button)sender).Content = "Connect";
-			//	((Button)sender).Tag = "Connect";
-			//}
+			if (UrlEntry.Text.Length == 0 || SlotNameEntry.Text.Length == 0)
+				return;
+			Main.ConnectToServer(UrlEntry.Text, SlotNameEntry.Text, PasswordEntry.Text);
+			//change button from connect to disconnect
 		}
 
 		private void BrowseLocalFiles()
@@ -537,11 +280,7 @@ namespace NAPClient
 
 		private void LoadLocalRandoFile()
 		{
-			var randoString = File.ReadAllText(FilePath.Text);
-			var randoObject = JsonConvert.DeserializeObject<RandomizationData>(randoString, new RandomizationDataConverter());
-
-			CurrentRando = randoObject;
-			RandomizeLevels();
+			Main.LoadLocalRandoFile(FilePath.Text);
 		}
 
 		static public void DisplayErrorPopup(string title, string dialogText, Action confirmMethod, Action denyMethod = null)

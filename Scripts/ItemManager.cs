@@ -107,7 +107,7 @@ namespace NAPClient
 
         void IncreaseGoldTime(int time)
         {
-            var adjustTime = time / 10.0f;
+            var adjustTime = time / 60.0f;
             MS.TimeGrantedByGold.SetValue(MS.TimeGrantedByGold.Value + adjustTime);
         }
 
