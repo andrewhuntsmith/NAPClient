@@ -15,6 +15,10 @@ namespace NAPClient
 		[Export] LineEdit SlotNameEntry;
 		[Export] LineEdit PasswordEntry;
         [Export] Button LoadFileButton;
+		[Export] Button HideSetupButton;
+		[Export] Button SwitchPlandoAPButton;
+		[Export] Control PlandoLoading;
+		[Export] Control APLoading;
 		[Export] Label StartTimeDisplay;
 		[Export] Label GoldValueDisplay;
 		[Export] Label MaxTimeDisplay;
@@ -40,6 +44,9 @@ namespace NAPClient
 
 		List<Button> LevelButtonList = new List<Button>();
 		List<Button> EpisodeButtonList = new List<Button>();
+
+		bool SetupHidden = false;
+		bool LoadWithPlando = true;
 
 		MainLogic Main;
 
@@ -291,5 +298,37 @@ namespace NAPClient
             Instance.ConfirmationDialog.Confirmed += confirmMethod;
             Instance.ConfirmationDialog.PopupCentered();
 		}
+
+		private void HideSetupPressed()
+		{
+			if (SetupHidden)
+			{
+				if (LoadWithPlando)
+					PlandoLoading.Show();
+				else
+					APLoading.Show();
+				SwitchPlandoAPButton.Show();
+			}
+            else
+            {
+                if (LoadWithPlando)
+                    PlandoLoading.Hide();
+                else
+                    APLoading.Hide();
+				SwitchPlandoAPButton.Hide();
+            }
+
+            SetupHidden = !SetupHidden;
+			HideSetupButton.Text = SetupHidden ? "Show Setup" : "Hide Setup";
+        }
+
+		private void SwitchPlandoAPPressed()
+		{
+			LoadWithPlando = !LoadWithPlando;
+			PlandoLoading.Visible = LoadWithPlando;
+			APLoading.Visible = !LoadWithPlando;
+
+			SwitchPlandoAPButton.Text = LoadWithPlando ? "Archipelago Menu" : "Plando Menu";
+        }
 	}
 }

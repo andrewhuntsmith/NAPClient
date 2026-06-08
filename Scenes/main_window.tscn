@@ -5,7 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://bhfysgvqbecg0" path="res://Scenes/log_entry.tscn" id="3_bet41"]
 [ext_resource type="PackedScene" uid="uid://c1hly5dgirq51" path="res://Scenes/color_key.tscn" id="3_w45st"]
 
-[node name="MainWindow" type="Control" unique_id=1707276420 node_paths=PackedStringArray("LevelGrid", "FilePath", "UrlEntry", "SlotNameEntry", "PasswordEntry", "LoadFileButton", "StartTimeDisplay", "GoldValueDisplay", "MaxTimeDisplay", "RandoLog", "RandoLogContainer", "LevelIDLabel", "LevelNameLabel", "AvailableLabel", "AllGoldLabel", "ConfirmationDialog", "LoadFileDialog", "ColorKey")]
+[node name="MainWindow" type="Control" unique_id=1707276420 node_paths=PackedStringArray("LevelGrid", "FilePath", "UrlEntry", "SlotNameEntry", "PasswordEntry", "LoadFileButton", "HideSetupButton", "SwitchPlandoAPButton", "PlandoLoading", "APLoading", "StartTimeDisplay", "GoldValueDisplay", "MaxTimeDisplay", "RandoLog", "RandoLogContainer", "LevelIDLabel", "LevelNameLabel", "AvailableLabel", "AllGoldLabel", "ConfirmationDialog", "LoadFileDialog", "ColorKey")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -21,6 +21,10 @@ UrlEntry = NodePath("GridContainer/RandomizerLoading/APLoading/ServerField")
 SlotNameEntry = NodePath("GridContainer/RandomizerLoading/APLoading/SlotField")
 PasswordEntry = NodePath("GridContainer/RandomizerLoading/APLoading/PasswordField")
 LoadFileButton = NodePath("GridContainer/RandomizerLoading/PlandoLoading/LoadFileButton")
+HideSetupButton = NodePath("GridContainer/Empty/HideSetupButton")
+SwitchPlandoAPButton = NodePath("GridContainer/Empty/SwitchPlandoAPButton")
+PlandoLoading = NodePath("GridContainer/RandomizerLoading/PlandoLoading")
+APLoading = NodePath("GridContainer/RandomizerLoading/APLoading")
 StartTimeDisplay = NodePath("GridContainer/RandomizerDataContainer/RandomizerData/StartTimeValue")
 GoldValueDisplay = NodePath("GridContainer/RandomizerDataContainer/RandomizerData/GoldValueValue")
 MaxTimeDisplay = NodePath("GridContainer/RandomizerDataContainer/RandomizerData/MaxTimeValue")
@@ -123,6 +127,14 @@ text = "Connect"
 [node name="Empty" type="HBoxContainer" parent="GridContainer" unique_id=1031274791]
 custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
+
+[node name="HideSetupButton" type="Button" parent="GridContainer/Empty" unique_id=14172859]
+layout_mode = 2
+text = "Hide Setup"
+
+[node name="SwitchPlandoAPButton" type="Button" parent="GridContainer/Empty" unique_id=1246770855]
+layout_mode = 2
+text = "Archipelago Menu"
 
 [node name="LevelGridContainer" type="VBoxContainer" parent="GridContainer" unique_id=479175184]
 custom_minimum_size = Vector2(400, 0)
@@ -236,4 +248,6 @@ use_native_dialog = true
 [connection signal="pressed" from="GridContainer/RandomizerLoading/PlandoLoading/BrowseFilesButton" to="." method="BrowseLocalFiles"]
 [connection signal="pressed" from="GridContainer/RandomizerLoading/PlandoLoading/LoadFileButton" to="." method="LoadLocalRandoFile"]
 [connection signal="pressed" from="GridContainer/RandomizerLoading/APLoading/ConnectButton" to="." method="ConnectToServerPressed"]
+[connection signal="pressed" from="GridContainer/Empty/HideSetupButton" to="." method="HideSetupPressed"]
+[connection signal="pressed" from="GridContainer/Empty/SwitchPlandoAPButton" to="." method="SwitchPlandoAPPressed"]
 [connection signal="file_selected" from="FileDialog" to="." method="LocalFileSelected"]
