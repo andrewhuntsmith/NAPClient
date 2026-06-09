@@ -132,12 +132,12 @@ namespace NAPClient
         {
             var newItem = new ItemData();
 
-            if (itemName.Contains("prog"))
+            if (itemName.Contains("Prog"))
             {
                 newItem.Type = ItemType.ProgressiveEpisodeUnlock;
 
-                var idArray = itemName.Split('_')[0];
-                var rowNumber = "abcde".IndexOf(idArray[0]);
+                var idArray = itemName.Split(' ')[0];
+                var rowNumber = "ABCDE".IndexOf(idArray[0]);
                 int.TryParse(idArray.Substring(1), out var colNumber);
                 newItem.Value = (rowNumber * 5) + colNumber;
             }
@@ -149,25 +149,25 @@ namespace NAPClient
             {
                 throw new NotImplementedException();
             }
-            else if (itemName.Contains("gold"))
+            else if (itemName.Contains("Gold"))
             {
                 newItem.Type = ItemType.IncreaseGoldValue;
 
-                int.TryParse(itemName.Split('_')[2], out var valueNumber);
+                int.TryParse(itemName.Split(' ')[0], out var valueNumber);
                 newItem.Value = valueNumber;
             }
-            else if (itemName.Contains("start"))
+            else if (itemName.Contains("Start"))
             {
                 newItem.Type = ItemType.IncreaseStartTime;
 
-                int.TryParse(itemName.Split('_')[2], out var valueNumber);
+                int.TryParse(itemName.Split(' ')[0].Substring(1), out var valueNumber);
                 newItem.Value = valueNumber;
             }
-            else if (itemName.Contains("max"))
+            else if (itemName.Contains("Max"))
             {
                 newItem.Type = ItemType.IncreaseMaxTime;
 
-                int.TryParse(itemName.Split('_')[2], out var valueNumber);
+                int.TryParse(itemName.Split(' ')[0].Substring(1), out var valueNumber);
                 newItem.Value = valueNumber;
             }
 

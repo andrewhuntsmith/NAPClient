@@ -4,8 +4,6 @@ using System;
 using Archipelago.MultiClient.Net.Helpers;
 using System.Collections.ObjectModel;
 using Archipelago.MultiClient.Net.MessageLog.Messages;
-using System.Collections.Generic;
-using Newtonsoft.Json;
 
 namespace NAPClient
 {
@@ -134,13 +132,37 @@ namespace NAPClient
 
         void OnCheckedLocationsUpdated(ReadOnlyCollection<long> newCheckedLocations)
         {
-            throw new NotImplementedException();
+            return;
         }
 
         void OnMessageReceived(LogMessage message)
         {
             // TODO: Display incoming messages
             return;
+        }
+
+        public bool IsConnected() 
+        { 
+            return ApSession != null; 
+        }
+
+        public void SendItem(RandomizationData.CompletionCondition condition)
+        {
+            long id = 0;
+            var stringVersion = "";
+            switch (condition.State)
+            {
+                case ProgressState.LevelComplete:
+                    id = ApSession.Locations.GetLocationIdFromName("N++", LogEntry.GenerateLevelName(condition.Id) + " Completion");
+                    break;
+                case ProgressState.LevelAllGold:
+                    id = ApSession.Locations.GetLocationIdFromName("N++", LogEntry.GenerateLevelName(condition.Id) + " Challenge 1 Completion");
+                    break;
+                case ProgressState.EpisodeComplete:
+                    id = ApSession.Locations.GetLocationIdFromName("N++", LogEntry.GenerateEpisodeName(condition.Id) + " Completion");
+                    break;
+            }
+            ApSession.Locations.CompleteLocationChecksAsync(id);
         }
     }
 }

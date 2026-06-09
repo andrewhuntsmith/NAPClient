@@ -210,6 +210,11 @@ public class MainLogic
                 ItemManager.HandleCondition(CurrentRando.UnlockConditions[completionCondition]);
                 CurrentRando.UnlockConditions.Remove(completionCondition);
             }
+
+            if (ApManager.IsConnected())
+            {
+                ApManager.SendItem(completionCondition);
+            }
         }
 
         // check for all gold
@@ -225,6 +230,11 @@ public class MainLogic
             {
                 ItemManager.HandleCondition(CurrentRando.UnlockConditions[completionCondition]);
                 CurrentRando.UnlockConditions.Remove(completionCondition);
+            }
+
+            if (ApManager.IsConnected())
+            {
+                ApManager.SendItem(completionCondition);
             }
         }
 
@@ -255,6 +265,11 @@ public class MainLogic
             {
                 ItemManager.HandleCondition(CurrentRando.UnlockConditions[completionCondition]);
                 CurrentRando.UnlockConditions.Remove(completionCondition);
+            }
+
+            if (ApManager.IsConnected())
+            {
+                ApManager.SendItem(completionCondition);
             }
         }
 

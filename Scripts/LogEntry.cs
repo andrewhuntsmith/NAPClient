@@ -58,14 +58,14 @@ public partial class LogEntry : Label
         var letters = "ABCDE";
         var letter = letters[index % 5];
         var number = index / 5;
-        return "SI-" + letter + "-" + number.ToString();
+        return letter + "-0" + number.ToString();
     }
 
     public static string GenerateLevelName(int index)
     {
         var episodeId = index / 5;
         var levelId = index % 5;
-        return GenerateEpisodeName(episodeId) + "-" + levelId.ToString();
+        return GenerateEpisodeName(episodeId) + "-0" + levelId.ToString();
     }
 
 }
