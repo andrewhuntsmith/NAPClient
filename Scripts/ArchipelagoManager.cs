@@ -5,6 +5,7 @@ using Archipelago.MultiClient.Net.Helpers;
 using System.Collections.ObjectModel;
 using Archipelago.MultiClient.Net.MessageLog.Messages;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace NAPClient
 {
@@ -15,7 +16,7 @@ namespace NAPClient
         ItemManager ItemManager;
         int CurrentItemIndex = 0;
 
-        public Action<List<int>> APConnectionEstablished;
+        public Action<LoginSuccessful> APConnectionEstablished;
 
         public ArchipelagoManager(MemorySource ms, ItemManager im)
         {
@@ -83,19 +84,13 @@ namespace NAPClient
             }
 
             var loginSuccess = (LoginSuccessful)result;
-            RandomizeLevels(loginSuccess);
+            APConnectionEstablished.Invoke(loginSuccess);
             return true;
         }
 
         private static void Reset()
         {
             ApSession = null;
-        }
-
-        void RandomizeLevels(LoginSuccessful loginSuccessful)
-        {
-            var levelOrder = (List<int>)loginSuccessful.SlotData["level_data"];
-            APConnectionEstablished.Invoke(levelOrder);
         }
 
         void OnErrorReceived(Exception e, string message)

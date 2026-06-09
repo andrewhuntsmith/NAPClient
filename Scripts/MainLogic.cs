@@ -1,4 +1,5 @@
 
+using Archipelago.MultiClient.Net;
 using NAPClient;
 using Newtonsoft.Json;
 using System.Collections.Generic;
@@ -103,9 +104,23 @@ public class MainLogic
         GodotTreeNode.AddToRandoLog(item);
     }
 
-    void OnAPConnectionEstablished(List<int> levelOrder)
+    void OnAPConnectionEstablished(LoginSuccessful loginSuccess)
     {
+        var levelOrder = JsonConvert.DeserializeObject<List<int>>(loginSuccess.SlotData["level_data"].ToString());
         CurrentRando.LevelOrder = levelOrder;
+        var challenges = JsonConvert.DeserializeObject<List<List<int>>>(loginSuccess.SlotData["challenge_data"].ToString());
+
+        var objective = JsonConvert.DeserializeObject<int>(loginSuccess.SlotData["objective"].ToString());
+        CurrentRando.Goal = (GoalType)objective;
+        var startingTime = JsonConvert.DeserializeObject<int>(loginSuccess.SlotData["initial_starting_time"].ToString());
+        CurrentRando.StartingLevelTime = startingTime;
+        var maxTime = JsonConvert.DeserializeObject<int>(loginSuccess.SlotData["initial_max_time"].ToString());
+        CurrentRando.InitialMaxTime = maxTime;
+        var goldValue = JsonConvert.DeserializeObject<int>(loginSuccess.SlotData["initial_gold_time"].ToString());
+        CurrentRando.StartingGoldValue = goldValue;
+
+        //Right now we simply start with the first level unlocked
+        CurrentRando.InitialLevels = new List<int> { 0 };
         RandomizeLevels();
     }
 
