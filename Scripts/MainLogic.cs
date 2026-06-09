@@ -44,9 +44,6 @@ public class MainLogic
         MS.LevelVictories.UpdateValue();
         MS.EpisodeVictories.UpdateValue();
 
-        ItemManager.Initializing = false;
-        GoalManager.Initializing = false;
-
         Thread passiveMemoryCheckingThread = new Thread(UpdateThread);
         passiveMemoryCheckingThread.Start();
 
@@ -165,6 +162,8 @@ public class MainLogic
 
         ItemManager.Initializing = false;
         GoalManager.Initializing = false;
+
+        ItemManager.ApplyPreviouslyReceivedItemsToRando();
     }
 
     void OnExitsChanged()

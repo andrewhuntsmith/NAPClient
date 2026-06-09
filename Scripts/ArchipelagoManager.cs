@@ -4,6 +4,7 @@ using System;
 using Archipelago.MultiClient.Net.Helpers;
 using System.Collections.ObjectModel;
 using Archipelago.MultiClient.Net.MessageLog.Messages;
+using System.Collections.Generic;
 
 namespace NAPClient
 {
@@ -125,8 +126,11 @@ namespace NAPClient
             {
                 var newItem = helper.DequeueItem();
                 var newItemData = ItemManager.ConvertStringToItem(newItem.ItemName);
-                ItemManager.HandleCondition(newItemData);
-                // TODO: display received item in client
+
+                if (ItemManager.Initializing)
+                    ItemManager.PreviouslyReceivedItems.Add(newItemData);
+                else
+                    ItemManager.HandleCondition(newItemData);
             }
         }
 

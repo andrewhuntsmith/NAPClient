@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace NAPClient
 {
@@ -7,6 +8,7 @@ namespace NAPClient
         public static MemorySource MS;
         public LevelUnlockManager LevelUnlockManager;
         public bool Initializing;
+        public List<ItemData> PreviouslyReceivedItems;
 
         public double MaxTime = double.MaxValue;
 
@@ -16,6 +18,7 @@ namespace NAPClient
         { 
             MS = ms;
             LevelUnlockManager = new LevelUnlockManager();
+            PreviouslyReceivedItems = new List<ItemData>();
             Initializing = true;
 
             MS.GoldCollectedInCurrentLevel.ValueChanged += AdjustToMaxTime;
@@ -138,7 +141,7 @@ namespace NAPClient
 
                 var idArray = itemName.Split(' ')[0];
                 var rowNumber = "ABCDE".IndexOf(idArray[0]);
-                int.TryParse(idArray.Substring(1), out var colNumber);
+                int.TryParse(idArray.Substring(2), out var colNumber);
                 newItem.Value = (rowNumber * 5) + colNumber;
             }
             else if (itemName.Contains("Level Unlock"))
@@ -172,6 +175,12 @@ namespace NAPClient
             }
 
             return newItem;
+        }
+
+        public void ApplyPreviouslyReceivedItemsToRando()
+        {
+            foreach (var item in PreviouslyReceivedItems)
+                HandleCondition(item);
         }
     }
 }
