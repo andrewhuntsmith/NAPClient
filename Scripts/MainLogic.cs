@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
+using static NAPClient.RandomizationData;
 
 public class MainLogic
 {
@@ -276,11 +277,16 @@ public class MainLogic
         {
             HandleGoalCompletion();
         }
+        GodotTreeNode.OnUIRefresh();
     }
 
     void HandleGoalCompletion()
     {
         GodotTreeNode.AddToRandoLog("Goal met!!! 🎉");
+        if (ApManager.IsConnected())
+        {
+            ApManager.SendGoalMet();
+        }
     }
 
     public void LoadLocalRandoFile(string filePath)

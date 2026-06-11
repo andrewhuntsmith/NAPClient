@@ -169,5 +169,10 @@ namespace NAPClient
             id = ApSession.Locations.GetLocationIdFromName("N++", locationString);
             ApSession.Locations.CompleteLocationChecksAsync(id);
         }
+
+        public void SendGoalMet()
+        {
+            ApSession.SetGoalAchieved();
+        }
     }
 }
