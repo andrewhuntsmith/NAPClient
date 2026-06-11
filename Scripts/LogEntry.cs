@@ -22,7 +22,7 @@ public partial class LogEntry : Label
 				break;
 			case ItemType.IncreaseGoldValue:
 				stylebox.BgColor = GoldValueColor;
-				Text = "Gold value increased by " + (itemData.Value / 60f).ToString();
+				Text = "Gold value increased by " + (itemData.Value / 60f).ToString("f3");
 				break;
 			case ItemType.IncreaseMaxTime:
 				stylebox.BgColor = MaxTimeColor;
