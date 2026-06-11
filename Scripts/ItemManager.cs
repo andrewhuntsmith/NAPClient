@@ -142,7 +142,7 @@ namespace NAPClient
                 var idArray = itemName.Split(' ')[0];
                 var rowNumber = "ABCDE".IndexOf(idArray[0]);
                 int.TryParse(idArray.Substring(2), out var colNumber);
-                newItem.Value = (rowNumber * 5) + colNumber;
+                newItem.Value = (colNumber * 5) + rowNumber;
             }
             else if (itemName.Contains("Level Unlock"))
             {

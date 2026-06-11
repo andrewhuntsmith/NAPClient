@@ -153,19 +153,20 @@ namespace NAPClient
         public void SendItem(RandomizationData.CompletionCondition condition)
         {
             long id = 0;
-            var stringVersion = "";
+            var locationString = "";
             switch (condition.State)
             {
                 case ProgressState.LevelComplete:
-                    id = ApSession.Locations.GetLocationIdFromName("N++", LogEntry.GenerateLevelName(condition.Id) + " Completion");
+                    locationString = LogEntry.GenerateLevelName(condition.Id) + " Completion";
                     break;
                 case ProgressState.LevelAllGold:
-                    id = ApSession.Locations.GetLocationIdFromName("N++", LogEntry.GenerateLevelName(condition.Id) + " Challenge 1 Completion");
+                    locationString = LogEntry.GenerateLevelName(condition.Id) + " Challenge 1 Completion";
                     break;
                 case ProgressState.EpisodeComplete:
-                    id = ApSession.Locations.GetLocationIdFromName("N++", LogEntry.GenerateEpisodeName(condition.Id) + " Completion");
+                    locationString = LogEntry.GenerateEpisodeName(condition.Id) + " Completion";
                     break;
             }
+            id = ApSession.Locations.GetLocationIdFromName("N++", locationString);
             ApSession.Locations.CompleteLocationChecksAsync(id);
         }
     }
