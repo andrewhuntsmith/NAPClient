@@ -21,19 +21,19 @@ UrlEntry = NodePath("GridContainer/RandomizerLoading/APLoading/ServerField")
 SlotNameEntry = NodePath("GridContainer/RandomizerLoading/APLoading/SlotField")
 PasswordEntry = NodePath("GridContainer/RandomizerLoading/APLoading/PasswordField")
 LoadFileButton = NodePath("GridContainer/RandomizerLoading/PlandoLoading/LoadFileButton")
-HideSetupButton = NodePath("GridContainer/Empty/HideSetupButton")
-SwitchPlandoAPButton = NodePath("GridContainer/Empty/SwitchPlandoAPButton")
+HideSetupButton = NodePath("GridContainer/SetupButtons/HideSetupButton")
+SwitchPlandoAPButton = NodePath("GridContainer/SetupButtons/SwitchPlandoAPButton")
 PlandoLoading = NodePath("GridContainer/RandomizerLoading/PlandoLoading")
 APLoading = NodePath("GridContainer/RandomizerLoading/APLoading")
 StartTimeDisplay = NodePath("GridContainer/RandomizerDataContainer/RandomizerData/StartTimeValue")
 GoldValueDisplay = NodePath("GridContainer/RandomizerDataContainer/RandomizerData/GoldValueValue")
 MaxTimeDisplay = NodePath("GridContainer/RandomizerDataContainer/RandomizerData/MaxTimeValue")
-RandoLog = NodePath("GridContainer/RandomizerDataContainer/RandoLogContainer/RandoLog")
-RandoLogContainer = NodePath("GridContainer/RandomizerDataContainer/RandoLogContainer")
-LevelIDLabel = NodePath("GridContainer/SelectedItemData/LevelIdValue")
-LevelNameLabel = NodePath("GridContainer/SelectedItemData/LevelNameValue")
-AvailableLabel = NodePath("GridContainer/SelectedItemData/AvailableValue")
-AllGoldLabel = NodePath("GridContainer/SelectedItemData/AllGoldValue")
+RandoLog = NodePath("GridContainer/RandoLogContainer/RandoLog")
+RandoLogContainer = NodePath("GridContainer/RandoLogContainer")
+LevelIDLabel = NodePath("GridContainer/RandomizerDataContainer/SelectedItemData/LevelIdValue")
+LevelNameLabel = NodePath("GridContainer/RandomizerDataContainer/SelectedItemData/LevelNameValue")
+AvailableLabel = NodePath("GridContainer/RandomizerDataContainer/SelectedItemData/AvailableValue")
+AllGoldLabel = NodePath("GridContainer/RandomizerDataContainer/SelectedItemData/AllGoldValue")
 ConfirmationDialog = NodePath("ConfirmationDialog")
 LoadFileDialog = NodePath("FileDialog")
 InaccessibleColor = Color(1, 0.6819396, 0.63331324, 1)
@@ -88,6 +88,8 @@ text = "Server:"
 [node name="ServerField" type="LineEdit" parent="GridContainer/RandomizerLoading/APLoading" unique_id=555458397]
 custom_minimum_size = Vector2(150, 30)
 layout_mode = 2
+focus_neighbor_top = NodePath(".")
+focus_neighbor_bottom = NodePath(".")
 focus_behavior_recursive = 2
 placeholder_text = "Server"
 context_menu_enabled = false
@@ -102,6 +104,8 @@ text = "Slot Name:"
 [node name="SlotField" type="LineEdit" parent="GridContainer/RandomizerLoading/APLoading" unique_id=1883470535]
 custom_minimum_size = Vector2(150, 30)
 layout_mode = 2
+focus_neighbor_top = NodePath(".")
+focus_neighbor_bottom = NodePath(".")
 focus_behavior_recursive = 2
 placeholder_text = "Slot Name"
 context_menu_enabled = false
@@ -114,6 +118,8 @@ text = "Password:"
 [node name="PasswordField" type="LineEdit" parent="GridContainer/RandomizerLoading/APLoading" unique_id=1375174044]
 custom_minimum_size = Vector2(300, 30)
 layout_mode = 2
+focus_neighbor_top = NodePath(".")
+focus_neighbor_bottom = NodePath(".")
 focus_behavior_recursive = 2
 placeholder_text = "Password"
 context_menu_enabled = false
@@ -124,15 +130,15 @@ secret_character = "🐑"
 layout_mode = 2
 text = "Connect"
 
-[node name="Empty" type="HBoxContainer" parent="GridContainer" unique_id=1031274791]
+[node name="SetupButtons" type="HBoxContainer" parent="GridContainer" unique_id=1031274791]
 custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
 
-[node name="HideSetupButton" type="Button" parent="GridContainer/Empty" unique_id=14172859]
+[node name="HideSetupButton" type="Button" parent="GridContainer/SetupButtons" unique_id=14172859]
 layout_mode = 2
 text = "Hide Setup"
 
-[node name="SwitchPlandoAPButton" type="Button" parent="GridContainer/Empty" unique_id=1246770855]
+[node name="SwitchPlandoAPButton" type="Button" parent="GridContainer/SetupButtons" unique_id=1246770855]
 layout_mode = 2
 text = "Archipelago Menu"
 
@@ -149,6 +155,7 @@ custom_minimum_size = Vector2(0, 300)
 layout_mode = 2
 
 [node name="ColorKey" parent="GridContainer/LevelGridContainer" unique_id=491526234 instance=ExtResource("3_w45st")]
+custom_minimum_size = Vector2(0, 30)
 layout_mode = 2
 
 [node name="RandomizerDataContainer" type="VBoxContainer" parent="GridContainer" unique_id=1190438048]
@@ -187,50 +194,50 @@ text = "----"
 custom_minimum_size = Vector2(0, 10)
 layout_mode = 2
 
-[node name="RandoLogContainer" type="ScrollContainer" parent="GridContainer/RandomizerDataContainer" unique_id=1616769527]
-custom_minimum_size = Vector2(240, 300)
+[node name="SelectedItemData" type="GridContainer" parent="GridContainer/RandomizerDataContainer" unique_id=1849031604]
+layout_mode = 2
+columns = 2
+
+[node name="LevelNameLabel" type="Label" parent="GridContainer/RandomizerDataContainer/SelectedItemData" unique_id=63824965]
+layout_mode = 2
+text = "Level Name: "
+
+[node name="LevelNameValue" type="Label" parent="GridContainer/RandomizerDataContainer/SelectedItemData" unique_id=2142190652]
+layout_mode = 2
+text = "--"
+
+[node name="LevelIdLabel" type="Label" parent="GridContainer/RandomizerDataContainer/SelectedItemData" unique_id=1548458722]
+layout_mode = 2
+text = "Level ID: "
+
+[node name="LevelIdValue" type="Label" parent="GridContainer/RandomizerDataContainer/SelectedItemData" unique_id=1808730147]
+layout_mode = 2
+text = "--"
+
+[node name="AvailableLabel" type="Label" parent="GridContainer/RandomizerDataContainer/SelectedItemData" unique_id=1674980798]
+layout_mode = 2
+text = "Available?"
+
+[node name="AvailableValue" type="Label" parent="GridContainer/RandomizerDataContainer/SelectedItemData" unique_id=1927216194]
+layout_mode = 2
+text = "--"
+
+[node name="AllGoldLabel" type="Label" parent="GridContainer/RandomizerDataContainer/SelectedItemData" unique_id=156986215]
+layout_mode = 2
+text = "G++?"
+
+[node name="AllGoldValue" type="Label" parent="GridContainer/RandomizerDataContainer/SelectedItemData" unique_id=366328657]
+layout_mode = 2
+text = "--"
+
+[node name="RandoLogContainer" type="ScrollContainer" parent="GridContainer" unique_id=1616769527]
+custom_minimum_size = Vector2(400, 200)
 layout_mode = 2
 size_flags_horizontal = 0
 horizontal_scroll_mode = 0
 
-[node name="RandoLog" type="VBoxContainer" parent="GridContainer/RandomizerDataContainer/RandoLogContainer" unique_id=1312694458]
+[node name="RandoLog" type="VBoxContainer" parent="GridContainer/RandoLogContainer" unique_id=1312694458]
 layout_mode = 2
-
-[node name="SelectedItemData" type="GridContainer" parent="GridContainer" unique_id=1849031604]
-layout_mode = 2
-columns = 2
-
-[node name="LevelNameLabel" type="Label" parent="GridContainer/SelectedItemData" unique_id=63824965]
-layout_mode = 2
-text = "Level Name: "
-
-[node name="LevelNameValue" type="Label" parent="GridContainer/SelectedItemData" unique_id=2142190652]
-layout_mode = 2
-text = "--"
-
-[node name="LevelIdLabel" type="Label" parent="GridContainer/SelectedItemData" unique_id=1548458722]
-layout_mode = 2
-text = "Level ID: "
-
-[node name="LevelIdValue" type="Label" parent="GridContainer/SelectedItemData" unique_id=1808730147]
-layout_mode = 2
-text = "--"
-
-[node name="AvailableLabel" type="Label" parent="GridContainer/SelectedItemData" unique_id=1674980798]
-layout_mode = 2
-text = "Available?"
-
-[node name="AvailableValue" type="Label" parent="GridContainer/SelectedItemData" unique_id=1927216194]
-layout_mode = 2
-text = "--"
-
-[node name="AllGoldLabel" type="Label" parent="GridContainer/SelectedItemData" unique_id=156986215]
-layout_mode = 2
-text = "G++?"
-
-[node name="AllGoldValue" type="Label" parent="GridContainer/SelectedItemData" unique_id=366328657]
-layout_mode = 2
-text = "--"
 
 [node name="ConfirmationDialog" type="ConfirmationDialog" parent="." unique_id=86313054]
 oversampling_override = 1.0
@@ -248,6 +255,6 @@ use_native_dialog = true
 [connection signal="pressed" from="GridContainer/RandomizerLoading/PlandoLoading/BrowseFilesButton" to="." method="BrowseLocalFiles"]
 [connection signal="pressed" from="GridContainer/RandomizerLoading/PlandoLoading/LoadFileButton" to="." method="LoadLocalRandoFile"]
 [connection signal="pressed" from="GridContainer/RandomizerLoading/APLoading/ConnectButton" to="." method="ConnectToServerPressed"]
-[connection signal="pressed" from="GridContainer/Empty/HideSetupButton" to="." method="HideSetupPressed"]
-[connection signal="pressed" from="GridContainer/Empty/SwitchPlandoAPButton" to="." method="SwitchPlandoAPPressed"]
+[connection signal="pressed" from="GridContainer/SetupButtons/HideSetupButton" to="." method="HideSetupPressed"]
+[connection signal="pressed" from="GridContainer/SetupButtons/SwitchPlandoAPButton" to="." method="SwitchPlandoAPPressed"]
 [connection signal="file_selected" from="FileDialog" to="." method="LocalFileSelected"]

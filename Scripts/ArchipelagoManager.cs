@@ -159,11 +159,17 @@ namespace NAPClient
                 case ProgressState.LevelComplete:
                     locationString = LogEntry.GenerateLevelName(condition.Id) + " Completion";
                     break;
-                case ProgressState.LevelAllGold:
-                    locationString = LogEntry.GenerateLevelName(condition.Id) + " Challenge 1 Completion";
-                    break;
                 case ProgressState.EpisodeComplete:
                     locationString = LogEntry.GenerateEpisodeName(condition.Id) + " Completion";
+                    break;
+                case ProgressState.LevelChallenge1:
+                    locationString = LogEntry.GenerateLevelName(condition.Id) + " Challenge 1 Completion";
+                    break;
+                case ProgressState.LevelChallenge2:
+                    locationString = LogEntry.GenerateLevelName(condition.Id) + " Challenge 2 Completion";
+                    break;
+                case ProgressState.LevelChallenge3:
+                    locationString = LogEntry.GenerateLevelName(condition.Id) + " Challenge 3 Completion";
                     break;
             }
             id = ApSession.Locations.GetLocationIdFromName("N++", locationString);

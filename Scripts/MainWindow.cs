@@ -28,6 +28,7 @@ namespace NAPClient
 		[Export] Label LevelNameLabel;
 		[Export] Label AvailableLabel;
 		[Export] Label AllGoldLabel;
+		[Export] Label CurrentItemLabel;
 
 		[Export] ConfirmationDialog ConfirmationDialog;
 		[Export] FileDialog LoadFileDialog;

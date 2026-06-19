@@ -92,7 +92,10 @@ public class MainLogic
     void AttachLevelProfileEvents()
     {
         foreach (var levelProfile in MS.LevelProfile)
+        {
             levelProfile.ValueUpdated += OnLevelProfileUpdate;
+            levelProfile.OnChallengeCompleted += OnLevelChallengeCompleted;
+        }
         foreach (var episodeProfile in MS.EpisodeProfile)
             episodeProfile.ValueUpdated += OnEpisodeProfileUpdate;
     }
@@ -107,6 +110,7 @@ public class MainLogic
         var levelOrder = JsonConvert.DeserializeObject<List<int>>(loginSuccess.SlotData["level_data"].ToString());
         CurrentRando.LevelOrder = levelOrder;
         var challenges = JsonConvert.DeserializeObject<List<List<int>>>(loginSuccess.SlotData["challenge_data"].ToString());
+        CurrentRando.Challenges = challenges;
 
         var objective = JsonConvert.DeserializeObject<int>(loginSuccess.SlotData["objective"].ToString());
         CurrentRando.Goal = (GoalType)objective;
@@ -118,7 +122,7 @@ public class MainLogic
         CurrentRando.StartingGoldValue = goldValue;
 
         //Right now we simply start with the first level unlocked
-        CurrentRando.InitialLevels = new List<int> { 0 };
+        CurrentRando.InitialLevels = new List<int> { 0, 5, 10, 15, 20 };
         RandomizeLevels();
     }
 
@@ -165,6 +169,15 @@ public class MainLogic
         GoalManager.Initializing = false;
 
         ItemManager.ApplyPreviouslyReceivedItemsToRando();
+        AssignChallengeData();
+    }
+
+    void AssignChallengeData()
+    {
+        for (var i = 0; i < CurrentRando.Challenges.Count; i++)
+        {
+            MS.LevelProfile[i].SetChallengeData(CurrentRando.Challenges[i]);
+        }
     }
 
     void OnExitsChanged()
@@ -231,11 +244,6 @@ public class MainLogic
                 ItemManager.HandleCondition(CurrentRando.UnlockConditions[completionCondition]);
                 CurrentRando.UnlockConditions.Remove(completionCondition);
             }
-
-            if (ApManager.IsConnected())
-            {
-                ApManager.SendItem(completionCondition);
-            }
         }
 
         if (GoalManager.CheckMetGoal())
@@ -243,6 +251,28 @@ public class MainLogic
             HandleGoalCompletion();
         }
         GodotTreeNode.OnUIRefresh();
+    }
+
+    void OnLevelChallengeCompleted(int levelId, int challengeIndex)
+    {
+        var completionCondition = new CompletionCondition()
+        {
+            Id = levelId,
+            State = challengeIndex == 0 ? ProgressState.LevelChallenge1 :
+                    challengeIndex == 1 ? ProgressState.LevelChallenge2 :
+                    ProgressState.LevelChallenge3
+        };
+
+        if (CurrentRando.UnlockConditions.ContainsKey(completionCondition))
+        {
+            ItemManager.HandleCondition(CurrentRando.UnlockConditions[completionCondition]);
+            CurrentRando.UnlockConditions.Remove(completionCondition);
+        }
+
+        if (ApManager.IsConnected()) 
+        { 
+            ApManager.SendItem(completionCondition);
+        }
     }
 
     void OnEpisodeProfileUpdate(EpisodeProfileMemoryBridge updatedEpisode)

@@ -1,3 +1,4 @@
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 
@@ -7,6 +8,7 @@ namespace NAPClient
     {
         public Action<LevelProfileMemoryBridge> ValueUpdated;
         public int BaseLevelPointer;
+        public Action<int, int> OnChallengeCompleted;
 
         public ByteArrayAddressValue TotalLevelProfile = new ByteArrayAddressValue();
 
@@ -16,7 +18,10 @@ namespace NAPClient
         IntAddressValue EpisodeSuccessAddressValue = new IntAddressValue();
         ByteArrayAddressValue LevelLockedAddressValue = new ByteArrayAddressValue();
         ByteArrayAddressValue AllGoldAddressValue = new ByteArrayAddressValue();
+        IntAddressValue ChallengeAddressValue = new IntAddressValue();
         bool RefreshLevelFlag;
+        List<int> Challenges;
+        List<int> CompletedChallenges;
 
         public LevelProfileMemoryBridge(int basePointer)
         {
@@ -33,6 +38,7 @@ namespace NAPClient
             EpisodeSuccessAddressValue = new IntAddressValue() { Offsets = new List<int> { BaseLevelPointer + 16 } };
             LevelLockedAddressValue = new ByteArrayAddressValue() { Offsets = new List<int> { BaseLevelPointer + 20 }, ArraySize = 1 };
             AllGoldAddressValue = new ByteArrayAddressValue() { Offsets = new List<int> { BaseLevelPointer + 28 }, ArraySize = 1 };
+            ChallengeAddressValue = new IntAddressValue() { Offsets = new List<int> { BaseLevelPointer + 30 } };
 
             AttemptCountAddressValue.SetValue(0);
             LevelSuccessAddressValue.SetValue(0);
@@ -43,6 +49,10 @@ namespace NAPClient
             AllGoldAddressValue.ValueUpdated += InternalValueUpdated;
             LevelSuccessAddressValue.ValueUpdated += InternalValueUpdated;
             EpisodeSuccessAddressValue.ValueUpdated += InternalValueUpdated;
+            ChallengeAddressValue.ValueChanged += GetChallengeCompleted;
+
+            Challenges = new List<int>();
+            CompletedChallenges = new List<int>();
         }
 
         public void UpdateValue()
@@ -54,6 +64,7 @@ namespace NAPClient
             EpisodeSuccessAddressValue.UpdateValue();
             LevelLockedAddressValue.UpdateValue();
             AllGoldAddressValue.UpdateValue();
+            ChallengeAddressValue.UpdateValue();
 
             if (RefreshLevelFlag)
             {
@@ -118,6 +129,26 @@ namespace NAPClient
         public void SetAllGold()
         {
             AllGoldAddressValue.SetValue(new byte[] { 1 });
+        }
+
+        public void SetChallengeData(List<int> challenges)
+        {
+            Challenges.Clear();
+            Challenges.AddRange(challenges);
+        }
+
+        public void GetChallengeCompleted()
+        {
+            var challengeAsInt = ChallengeAddressValue.Value;
+            foreach (var challenge in Challenges)
+            {
+                if ((challengeAsInt & challenge) == challenge && !CompletedChallenges.Contains(challenge))
+                {
+                    CompletedChallenges.Add(challenge);
+                    OnChallengeCompleted(GetLevelId(), Challenges.IndexOf(challenge));
+                }
+            }
+            ChallengeAddressValue.SetValue(0);
         }
     }
 

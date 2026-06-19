@@ -29,6 +29,7 @@ namespace NAPClient
         // If the first number in LevelOrder is 10, the completion conditions attached to that level will still be 0
         public List<int> LevelOrder = new List<int>();
         public List<int> InitialLevels = new List<int>();
+        public List<List<int>> Challenges = new List<List<int>>();
         public float StartingLevelTime;
         public float StartingGoldValue;
         public double InitialMaxTime;
@@ -41,6 +42,9 @@ namespace NAPClient
         LevelComplete,
         LevelAllGold,
         EpisodeComplete,
-        EpisodeAllGold
+        EpisodeAllGold,
+        LevelChallenge1,
+        LevelChallenge2,
+        LevelChallenge3
     }
 }
