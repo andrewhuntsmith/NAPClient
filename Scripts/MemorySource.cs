@@ -62,6 +62,11 @@ namespace NAPClient
 		public const int PaletteIndexOffset2 = TimerPointerOffset2;
 		public const int PaletteIndexOffset3 = 0x2B4;
 
+		// pointer offsets for current level information
+		public const int CurrentLevelLogicOffset = CommonPointerOffset;
+		public const int CurrentLevelIdOffset = 0x898;
+		public const int InLevelViewOffset = 0x934;
+
 		// string offsets
 		public const int ProfileNameOffset = 0x587790;
 		public const string OriginalProfileName = "nprofile.gz";
@@ -95,6 +100,8 @@ namespace NAPClient
 		public IntAddressValue LevelVictories;
 		public IntAddressValue EpisodeVictories;
 		public IntAddressValue PaletteIndex;
+		public IntAddressValue CurrentSelectedLevel;
+		public IntAddressValue InLevelView;
 
 		[DllImport("kernel32.dll", SetLastError = true)]
 		public static extern IntPtr OpenProcess(int dwDesiredAccess, bool bInheritHandle, int dwProcessId);
@@ -244,8 +251,10 @@ namespace NAPClient
 			LevelVictories = new IntAddressValue() { Offsets = new List<int> { NppdllBaseAddress.ToInt32() + VictoriesOffset1, VictoriesOffset2, LevelVictoriesOffset3 } };
 			EpisodeVictories = new IntAddressValue() { Offsets = new List<int> { NppdllBaseAddress.ToInt32() + VictoriesOffset1, VictoriesOffset2, EpisodeVictoriesOffset3 } };
 			PaletteIndex = new IntAddressValue() { Offsets = new List<int> { NppdllBaseAddress.ToInt32() + PaletteIndexOffset1, PaletteIndexOffset2, PaletteIndexOffset3 } };
+			CurrentSelectedLevel = new IntAddressValue() { Offsets = new List<int> { NppdllBaseAddress.ToInt32() + CurrentLevelLogicOffset, CurrentLevelIdOffset } };
+            InLevelView = new IntAddressValue() { Offsets = new List<int> { NppdllBaseAddress.ToInt32() + CurrentLevelLogicOffset, InLevelViewOffset } };
 
-			AddressValue.MemoryError += OnMemoryError;
+            AddressValue.MemoryError += OnMemoryError;
 
 			ReadLevelData();
 			ReadLevelProfile();

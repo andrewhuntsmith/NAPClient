@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace NAPClient
@@ -83,7 +83,7 @@ namespace NAPClient
 
         public string GetLevelName()
         {
-            return LevelName.Value;
+            return LevelName.Value.Replace("\0", string.Empty);
         }
 
         public int GetLevelId()

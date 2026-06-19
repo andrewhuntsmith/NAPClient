@@ -150,6 +150,58 @@ namespace NAPClient
             }
             ChallengeAddressValue.SetValue(0);
         }
+
+        public string GetLevelChallengesString()
+        {
+            if (Challenges.Count == 0)
+                return "none";
+
+            var returnString = "";
+            for (var i = 0; i < Challenges.Count; i++)
+            {
+                var challengeAsString = GetChallengeAsString(Challenges[i]);
+                var completed = CompletedChallenges.Contains(Challenges[i]) ? "✅\n" : "❌\n";
+                returnString += "[" + i.ToString() + "] " + challengeAsString + completed;
+            }
+
+            return returnString;
+        }
+
+        string GetChallengeAsString(int challengeValue)
+        {
+            var challenge = "";
+            if ((challengeValue & 2) == 2)
+                challenge += "G++";
+            if ((challengeValue & 4) == 4)
+                challenge += "G--";
+            if ((challengeValue & 8) == 8)
+                challenge += "T++";
+            if ((challengeValue & 16) == 16)
+                challenge += "T--";
+            if ((challengeValue & 32) == 32)
+                challenge += "O++";
+            if ((challengeValue & 64) == 64)
+                challenge += "O--";
+            if ((challengeValue & 128) == 128)
+                challenge += "C++";
+            if ((challengeValue & 256) == 256)
+                challenge += "C--";
+            if ((challengeValue & 512) == 512)
+                challenge += "E++";
+            if ((challengeValue & 1024) == 1024)
+                challenge += "E--";
+            return challenge;
+        }
+
+        public int GetChallengeCount()
+        {
+            return Challenges.Count;
+        }
+
+        public int GetCompletedChallengeCount()
+        {
+            return CompletedChallenges.Count;
+        }
     }
 
     public enum LevelCompleteState

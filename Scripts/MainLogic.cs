@@ -62,12 +62,18 @@ public class MainLogic
         Loop = true;
         MS.LevelVictories.ValueChanged += OnExitsChanged;
         MS.EpisodeVictories.ValueChanged += OnExitsChanged;
+        MS.LevelVictories.ValueChanged += OnCurrentLevelChanged;
+        MS.EpisodeVictories.ValueChanged += OnCurrentLevelChanged;
+        MS.CurrentSelectedLevel.ValueChanged += OnCurrentLevelChanged;
+        MS.InLevelView.ValueChanged += OnCurrentLevelChanged;
         // just run forever lmao
         while (Loop)
         {
             MS.LevelVictories.UpdateValue();
             MS.EpisodeVictories.UpdateValue();
             MS.GoldCollectedInCurrentLevel.UpdateValue();
+            MS.CurrentSelectedLevel.UpdateValue();
+            MS.InLevelView.UpdateValue();
         }
     }
 
@@ -364,5 +370,63 @@ public class MainLogic
         GodotTreeNode.UpdateLevelText(CurrentSelectedLevelId);
         GodotTreeNode.RefreshLevelButtonColors();
         return;
+    }
+
+    void OnCurrentLevelChanged()
+    {
+        var displayText = "";
+        var currentId = MS.CurrentSelectedLevel.Value;
+
+        if (MS.InLevelView.Value == 0)  // level view
+        {
+            if (currentId >= MS.LevelProfile.Count)
+                return;
+
+            var availableText = MS.LevelProfile[currentId].GetLevelCompleteState() > LevelCompleteState.LOCKED ? "✅\n" : "❌\n";
+            var beatenText = MS.LevelProfile[currentId].GetLevelCompleteState() > LevelCompleteState.AVAILABLE ? "✅\n" : "❌\n";
+
+            displayText += "Current Level\n";
+            displayText += MS.LevelData[currentId].GetLevelName() + "\n";
+            displayText += LogEntry.GenerateLevelName(currentId) + "\n";
+            displayText += "Available? " + availableText;
+            displayText += "Beaten? " + beatenText;
+            displayText += "Challenges?\n";
+            displayText += MS.LevelProfile[currentId].GetLevelChallengesString();
+        }
+        else       // episode view
+        {
+            if (currentId >= MS.EpisodeProfile.Count)
+                return;
+
+            var availableText = MS.EpisodeProfile[currentId].GetEpisodeCompleteState() > EpisodeCompleteState.LOCKED ? "✅\n" : "❌\n";
+            var beatenText = MS.EpisodeProfile[currentId].GetEpisodeCompleteState() > EpisodeCompleteState.AVAILABLE ? "✅\n" : "❌\n"; 
+            
+            displayText += "Current Episode\n";
+            displayText += LogEntry.GenerateEpisodeName(currentId) + "\n";
+            displayText += "Available? " + availableText;
+            displayText += "Beaten? " + beatenText;
+
+            if (ApManager.IsConnected())
+                displayText += "Checks? " + GetEpisodeCheckCount(currentId);
+        }
+
+        GodotTreeNode.UpdateCurrentLevelText(displayText);
+    }
+
+    string GetEpisodeCheckCount(int episodeId)
+    {
+        var episodeCheckTotal = 1;
+        var episodeChecksCompleted = MS.EpisodeProfile[episodeId].GetEpisodeCompleteState() > EpisodeCompleteState.AVAILABLE ? 1 : 0;
+
+        for (var i = 5 * episodeId; i < (5 * episodeId) + 5; i++)
+        {
+            episodeCheckTotal += 1;
+            episodeCheckTotal += MS.LevelProfile[i].GetChallengeCount();
+            if (MS.LevelProfile[i].GetLevelCompleteState() > LevelCompleteState.AVAILABLE)
+                episodeChecksCompleted++;
+            episodeChecksCompleted += MS.LevelProfile[i].GetCompletedChallengeCount();
+        }
+
+        return episodeChecksCompleted.ToString() + " / " + episodeCheckTotal.ToString();
     }
 }

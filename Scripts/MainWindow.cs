@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace NAPClient
 {
@@ -174,18 +175,20 @@ namespace NAPClient
 			MaxTimeDisplay.Text = Main.ItemManager.MaxTime.ToString();
 		}
 
-		public void AddToRandoLog(ItemData itemData)
+		public async void AddToRandoLog(ItemData itemData)
 		{
 			var newLabel = (LogEntry)LogEntryScene.Instantiate();
 			newLabel.SetData(itemData);
             RandoLog.CallDeferred(Node.MethodName.AddChild, newLabel);
-			CallDeferred(nameof(ScrollToBottom));
-		}
+			await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+            CallDeferred(nameof(ScrollToBottom));
+        }
 
-		public void AddToRandoLog(string message)
+		public async void AddToRandoLog(string message)
 		{
             var newLabel = new Label() { Text = message };
             RandoLog.CallDeferred(Node.MethodName.AddChild, newLabel);
+			await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
             CallDeferred(nameof(ScrollToBottom));
         }
 
@@ -248,7 +251,6 @@ namespace NAPClient
 			//UpdateLevelStatus();
 		//}
 
-
 		public void UpdateLevelText(int levelId)
 		{
 			if (levelId == -1)
@@ -266,6 +268,16 @@ namespace NAPClient
 			AvailableLabel.Text = profileData.GetLevelCompleteState() == LevelCompleteState.LOCKED ? "LOCKED" : "Available";
 			AllGoldLabel.Text = profileData.GetLevelCompleteState() != LevelCompleteState.ALLGOLD ? "No" : "Yes";
 		}
+
+		public void UpdateCurrentLevelText(string displayString)
+		{
+			CallDeferred(nameof(SetCurrentLevelText), displayString);
+		}
+
+		void SetCurrentLevelText(string displayString)
+		{
+            CurrentItemLabel.Text = displayString;
+        }
 
 		private void ConnectToServerPressed()
 		{
