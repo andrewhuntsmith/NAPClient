@@ -142,7 +142,8 @@ namespace NAPClient
             var challengeAsInt = ChallengeAddressValue.Value;
             foreach (var challenge in Challenges)
             {
-                if ((challengeAsInt & challenge) == challenge && !CompletedChallenges.Contains(challenge))
+                var challengeIgnoringOptimality = challenge & ~32768;
+                if ((challengeAsInt & challengeIgnoringOptimality) == challengeIgnoringOptimality && !CompletedChallenges.Contains(challenge))
                 {
                     CompletedChallenges.Add(challenge);
                     OnChallengeCompleted(GetLevelId(), Challenges.IndexOf(challenge));
