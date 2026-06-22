@@ -196,6 +196,7 @@ custom_minimum_size = Vector2(0, 10)
 layout_mode = 2
 
 [node name="SelectedItemData" type="GridContainer" parent="GridContainer/RandomizerDataContainer" unique_id=1849031604]
+visible = false
 layout_mode = 2
 columns = 2
 
