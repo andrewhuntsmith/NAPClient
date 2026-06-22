@@ -415,11 +415,16 @@ public class MainLogic
 
     string GetEpisodeCheckCount(int episodeId)
     {
-        var episodeCheckTotal = 1;
+        var episodeCheckTotal = 0;
+        if (MS.EpisodeProfile[episodeId].GetEpisodeCompleteState() > EpisodeCompleteState.LOCKED)
+            episodeCheckTotal++;
         var episodeChecksCompleted = MS.EpisodeProfile[episodeId].GetEpisodeCompleteState() > EpisodeCompleteState.AVAILABLE ? 1 : 0;
 
         for (var i = 5 * episodeId; i < (5 * episodeId) + 5; i++)
         {
+            if (MS.LevelProfile[i].GetLevelCompleteState() == LevelCompleteState.LOCKED)
+                continue;
+
             episodeCheckTotal += 1;
             episodeCheckTotal += MS.LevelProfile[i].GetChallengeCount();
             if (MS.LevelProfile[i].GetLevelCompleteState() > LevelCompleteState.AVAILABLE)
