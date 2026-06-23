@@ -130,7 +130,7 @@ public class MainLogic
         //Right now we simply start with the first level unlocked
         CurrentRando.InitialLevels = new List<int> { 0, 5, 10, 15, 20 };
         RandomizeLevels();
-        ApplyLocationsChecked();
+        GetCheckedLocations();
         GodotTreeNode.OnUIRefresh();
     }
 
@@ -188,18 +188,25 @@ public class MainLogic
         }
     }
 
-    void ApplyLocationsChecked()
+    void GetCheckedLocations()
     {
         var conditions = ApManager.GetLocationsChecked();
+        ApplyLocationsChecked(conditions);
+    }
+
+    public void ApplyLocationsChecked(List<CompletionCondition> conditions)
+    {
         foreach (var condition in conditions)
         {
             switch (condition.State)
             {
                 case ProgressState.EpisodeComplete:
+                    ItemManager.LevelUnlockManager.AddEpisodeToUnlocks(condition.Id);
                     MS.EpisodeProfile[condition.Id].SetEpisodeBeaten();
                     MS.EpisodeProfile[condition.Id].UpdateValue();
                     break;
                 case ProgressState.LevelComplete:
+                    ItemManager.LevelUnlockManager.AddLevelToUnlocks(condition.Id); 
                     MS.LevelProfile[condition.Id].SetLevelBeaten();
                     MS.LevelProfile[condition.Id].UpdateValue();
                     break;

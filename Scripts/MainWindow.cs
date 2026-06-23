@@ -54,6 +54,7 @@ namespace NAPClient
 
 		public override void _Ready()
 		{
+			Instance = this;
 			Main = new MainLogic();
 			if (!Main.Initialize(this))
 				ForceQuit();

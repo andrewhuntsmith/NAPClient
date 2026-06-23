@@ -5,6 +5,7 @@ using Archipelago.MultiClient.Net.Helpers;
 using System.Collections.ObjectModel;
 using Archipelago.MultiClient.Net.MessageLog.Messages;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace NAPClient
 {
@@ -132,11 +133,18 @@ namespace NAPClient
                 else
                     ItemManager.HandleCondition(newItemData);
             }
+
+            MainWindow.Instance.OnUIRefresh();
         }
 
         void OnCheckedLocationsUpdated(ReadOnlyCollection<long> newCheckedLocations)
         {
-            return;
+            if (ItemManager.Initializing)
+                return;
+
+            var conditions = ConvertLocationData(newCheckedLocations.ToList());
+            MainLogic.Instance.ApplyLocationsChecked(conditions);
+            MainWindow.Instance.OnUIRefresh();
         }
 
         void OnMessageReceived(LogMessage message)
@@ -183,9 +191,14 @@ namespace NAPClient
 
         public List<RandomizationData.CompletionCondition> GetLocationsChecked()
         {
+            return ConvertLocationData(ApSession.Locations.AllLocationsChecked.ToList());
+        }
+
+        public List<RandomizationData.CompletionCondition> ConvertLocationData(List<long> locations)
+        {
             var locationManager = ApSession.Locations;
             var conditions = new List<RandomizationData.CompletionCondition>();
-            foreach (var locationId in locationManager.AllLocationsChecked)
+            foreach (var locationId in locations)
             {
                 var locationName = locationManager.GetLocationNameFromId(locationId);
                 var newCondition = RandomizationData.ConvertApStringToCondition(locationName);
