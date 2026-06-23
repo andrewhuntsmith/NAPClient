@@ -180,5 +180,18 @@ namespace NAPClient
         {
             ApSession.SetGoalAchieved();
         }
+
+        public List<RandomizationData.CompletionCondition> GetLocationsChecked()
+        {
+            var locationManager = ApSession.Locations;
+            var conditions = new List<RandomizationData.CompletionCondition>();
+            foreach (var locationId in locationManager.AllLocationsChecked)
+            {
+                var locationName = locationManager.GetLocationNameFromId(locationId);
+                var newCondition = RandomizationData.ConvertApStringToCondition(locationName);
+                conditions.Add(newCondition);
+            }
+            return conditions;
+        }
     }
 }

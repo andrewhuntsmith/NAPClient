@@ -130,6 +130,8 @@ public class MainLogic
         //Right now we simply start with the first level unlocked
         CurrentRando.InitialLevels = new List<int> { 0, 5, 10, 15, 20 };
         RandomizeLevels();
+        ApplyLocationsChecked();
+        GodotTreeNode.OnUIRefresh();
     }
 
     void RandomizeLevels()
@@ -183,6 +185,37 @@ public class MainLogic
         for (var i = 0; i < CurrentRando.Challenges.Count; i++)
         {
             MS.LevelProfile[i].SetChallengeData(CurrentRando.Challenges[i]);
+        }
+    }
+
+    void ApplyLocationsChecked()
+    {
+        var conditions = ApManager.GetLocationsChecked();
+        foreach (var condition in conditions)
+        {
+            switch (condition.State)
+            {
+                case ProgressState.EpisodeComplete:
+                    MS.EpisodeProfile[condition.Id].SetEpisodeBeaten();
+                    MS.EpisodeProfile[condition.Id].UpdateValue();
+                    break;
+                case ProgressState.LevelComplete:
+                    MS.LevelProfile[condition.Id].SetLevelBeaten();
+                    MS.LevelProfile[condition.Id].UpdateValue();
+                    break;
+                case ProgressState.LevelChallenge1:
+                    MS.LevelProfile[condition.Id].SetChallengeCompletedByIndex(0);
+                    MS.LevelProfile[condition.Id].UpdateValue();
+                    break;
+                case ProgressState.LevelChallenge2:
+                    MS.LevelProfile[condition.Id].SetChallengeCompletedByIndex(1);
+                    MS.LevelProfile[condition.Id].UpdateValue();
+                    break;
+                case ProgressState.LevelChallenge3:
+                    MS.LevelProfile[condition.Id].SetChallengeCompletedByIndex(2);
+                    MS.LevelProfile[condition.Id].UpdateValue();
+                    break;
+            }
         }
     }
 
@@ -379,7 +412,7 @@ public class MainLogic
 
         if (MS.InLevelView.Value == 0)  // level view
         {
-            if (currentId >= MS.LevelProfile.Count)
+            if (currentId >= MS.LevelProfile.Count || currentId < 0)
                 return;
 
             var availableText = MS.LevelProfile[currentId].GetLevelCompleteState() > LevelCompleteState.LOCKED ? "✅\n" : "❌\n";
@@ -395,7 +428,7 @@ public class MainLogic
         }
         else       // episode view
         {
-            if (currentId >= MS.EpisodeProfile.Count)
+            if (currentId >= MS.EpisodeProfile.Count || currentId < 0)
                 return;
 
             var availableText = MS.EpisodeProfile[currentId].GetEpisodeCompleteState() > EpisodeCompleteState.LOCKED ? "✅\n" : "❌\n";

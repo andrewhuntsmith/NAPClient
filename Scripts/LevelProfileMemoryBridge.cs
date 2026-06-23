@@ -101,9 +101,9 @@ namespace NAPClient
         public LevelCompleteState GetLevelCompleteState()
         {
             return LevelLockedAddressValue.Value[0] == 0 ? LevelCompleteState.LOCKED :
-                GetLevelSuccesses() == 0 ? LevelCompleteState.AVAILABLE :
-                AllGoldAddressValue.Value[0] == 0 ? LevelCompleteState.COMPLETED :
-                LevelCompleteState.ALLGOLD;
+                LevelLockedAddressValue.Value[0] == 1 ? LevelCompleteState.AVAILABLE :
+                AllGoldAddressValue.Value[0] == 1 ? LevelCompleteState.ALLGOLD : 
+                LevelCompleteState.COMPLETED;
         }
 
         public void LockLevel()
@@ -202,6 +202,16 @@ namespace NAPClient
         public int GetCompletedChallengeCount()
         {
             return CompletedChallenges.Count;
+        }
+
+        public void SetChallengeCompletedByIndex(int index)
+        {
+            var challenge = Challenges[index];
+            if (!CompletedChallenges.Contains(challenge))
+                CompletedChallenges.Add(challenge);
+
+            if ((challenge & 2) == 2)
+                SetAllGold();
         }
     }
 
