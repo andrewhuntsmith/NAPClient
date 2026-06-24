@@ -66,6 +66,7 @@ namespace NAPClient
                 LevelUnlockManager.AddLevelToUnlocks(levelId);
                 levelProfile.UnlockLevel();
             }
+            MS.EpisodeProfile[levelId / 5].UpdateCompletedChecks();
         }
 
         void UnlockEpisodeFromRandomizer(int episodeId)
@@ -77,6 +78,7 @@ namespace NAPClient
                 LevelUnlockManager.AddEpisodeToUnlocks(episodeId);
                 episodeProfile.UnlockEpisode();
             }
+            MS.EpisodeProfile[episodeId].UpdateCompletedChecks();
         }
 
         void ProgressiveEpisodeUnlock(int episodeId)
@@ -92,6 +94,7 @@ namespace NAPClient
             }
 
             UnlockEpisodeFromRandomizer(episodeId);
+            MS.EpisodeProfile[episodeId].UpdateCompletedChecks();
         }
 
         void PaletteSwap(int paletteId)

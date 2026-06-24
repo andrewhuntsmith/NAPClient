@@ -1,4 +1,3 @@
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 
@@ -100,7 +99,8 @@ namespace NAPClient
 
         public LevelCompleteState GetLevelCompleteState()
         {
-            return LevelLockedAddressValue.Value[0] == 0 ? LevelCompleteState.LOCKED :
+            return IsCompleted() ? LevelCompleteState.ALLCHECKS :
+                LevelLockedAddressValue.Value[0] == 0 ? LevelCompleteState.LOCKED :
                 LevelLockedAddressValue.Value[0] == 1 ? LevelCompleteState.AVAILABLE :
                 AllGoldAddressValue.Value[0] == 1 ? LevelCompleteState.ALLGOLD : 
                 LevelCompleteState.COMPLETED;
@@ -204,6 +204,11 @@ namespace NAPClient
             return CompletedChallenges.Count;
         }
 
+        public bool IsCompleted()
+        {
+            return CompletedChallenges.Count == Challenges.Count && LevelLockedAddressValue.Value[0] > 1;
+        }
+
         public void SetChallengeCompletedByIndex(int index)
         {
             var challenge = Challenges[index];
@@ -220,6 +225,7 @@ namespace NAPClient
         LOCKED,
         AVAILABLE,
         COMPLETED,
-        ALLGOLD
+        ALLGOLD,
+        ALLCHECKS
     }
 }

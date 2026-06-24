@@ -122,14 +122,16 @@ namespace NAPClient
 			LevelStateColorPalette[LevelCompleteState.LOCKED] = inaccessibleColor;
 			LevelStateColorPalette[LevelCompleteState.AVAILABLE] = accessibleColor;
 			LevelStateColorPalette[LevelCompleteState.COMPLETED] = beatenColor;
-			LevelStateColorPalette[LevelCompleteState.ALLGOLD] = allGoldColor;
+			LevelStateColorPalette[LevelCompleteState.ALLGOLD] = beatenColor;
+			LevelStateColorPalette[LevelCompleteState.ALLCHECKS] = allGoldColor;
 
-			EpisodeStateColorPalette = new Dictionary<EpisodeCompleteState, StyleBoxFlat>();
+            EpisodeStateColorPalette = new Dictionary<EpisodeCompleteState, StyleBoxFlat>();
 			EpisodeStateColorPalette[EpisodeCompleteState.LOCKED] = inaccessibleColor;
 			EpisodeStateColorPalette[EpisodeCompleteState.AVAILABLE] = accessibleColor;
 			EpisodeStateColorPalette[EpisodeCompleteState.COMPLETED] = beatenColor;
+			EpisodeStateColorPalette[EpisodeCompleteState.ALLCHECKS] = allGoldColor;
 
-			ColorKey.SetColors(InaccessibleColor, AccessibleColor, BeatenColor, AllGoldColor);
+            ColorKey.SetColors(InaccessibleColor, AccessibleColor, BeatenColor, AllGoldColor);
 		}
 
 		public void OnUIRefresh()

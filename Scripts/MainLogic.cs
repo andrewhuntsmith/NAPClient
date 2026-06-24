@@ -250,6 +250,9 @@ public class MainLogic
 
     void OnLevelProfileUpdate(LevelProfileMemoryBridge updatedLevel)
     {
+        var episodeId = updatedLevel.GetLevelId() / 5;
+        MS.EpisodeProfile[episodeId].UpdateCompletedChecks();
+
         // check for level becoming unlocked when it shouldn't be
         if (updatedLevel.GetLevelCompleteState() >= LevelCompleteState.AVAILABLE)
             if (!ItemManager.LevelUnlockManager.ShouldLevelUnlock(updatedLevel))
@@ -301,6 +304,9 @@ public class MainLogic
 
     void OnLevelChallengeCompleted(int levelId, int challengeIndex)
     {
+        var episodeId = levelId / 5;
+        MS.EpisodeProfile[episodeId].UpdateCompletedChecks();
+
         var completionCondition = new CompletionCondition()
         {
             Id = levelId,
@@ -323,6 +329,8 @@ public class MainLogic
 
     void OnEpisodeProfileUpdate(EpisodeProfileMemoryBridge updatedEpisode)
     {
+        updatedEpisode.UpdateCompletedChecks();
+
         // check for level becoming unlocked when it shouldn't be
         if (updatedEpisode.GetEpisodeCompleteState() >= EpisodeCompleteState.AVAILABLE)
             if (!ItemManager.LevelUnlockManager.ShouldEpisodeUnlock(updatedEpisode))
@@ -447,31 +455,9 @@ public class MainLogic
             displayText += "Beaten? " + beatenText;
 
             if (ApManager.IsConnected())
-                displayText += "Checks? " + GetEpisodeCheckCount(currentId);
+                displayText += "Checks? " + MS.EpisodeProfile[currentId].GetChecksString();
         }
 
         GodotTreeNode.UpdateCurrentLevelText(displayText);
-    }
-
-    string GetEpisodeCheckCount(int episodeId)
-    {
-        var episodeCheckTotal = 0;
-        if (MS.EpisodeProfile[episodeId].GetEpisodeCompleteState() > EpisodeCompleteState.LOCKED)
-            episodeCheckTotal++;
-        var episodeChecksCompleted = MS.EpisodeProfile[episodeId].GetEpisodeCompleteState() > EpisodeCompleteState.AVAILABLE ? 1 : 0;
-
-        for (var i = 5 * episodeId; i < (5 * episodeId) + 5; i++)
-        {
-            if (MS.LevelProfile[i].GetLevelCompleteState() == LevelCompleteState.LOCKED)
-                continue;
-
-            episodeCheckTotal += 1;
-            episodeCheckTotal += MS.LevelProfile[i].GetChallengeCount();
-            if (MS.LevelProfile[i].GetLevelCompleteState() > LevelCompleteState.AVAILABLE)
-                episodeChecksCompleted++;
-            episodeChecksCompleted += MS.LevelProfile[i].GetCompletedChallengeCount();
-        }
-
-        return episodeChecksCompleted.ToString() + " / " + episodeCheckTotal.ToString();
     }
 }

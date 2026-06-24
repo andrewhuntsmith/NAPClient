@@ -20,6 +20,10 @@ namespace NAPClient
         ByteArrayAddressValue EpisodeLockedAddressValue = new ByteArrayAddressValue();
         bool RefreshEpisodeFlag;
 
+        int TotalChecks;
+        int AccessibleChecks;
+        int CompletedChecks;
+
         public EpisodeProfileMemoryBridge(int basePointer)
         {
             BaseEpisodePointer = basePointer;
@@ -81,6 +85,7 @@ namespace NAPClient
         {
             return EpisodeLockedAddressValue.Value[0] == 0 ? EpisodeCompleteState.LOCKED :
                 EpisodeLockedAddressValue.Value[0] == 1 ? EpisodeCompleteState.AVAILABLE :
+                IsCompleted() ? EpisodeCompleteState.ALLCHECKS :
                 EpisodeCompleteState.COMPLETED;
         }
 
@@ -98,12 +103,46 @@ namespace NAPClient
         {
             EpisodeLockedAddressValue.SetValue(new byte[] { 2 });
         }
+
+        public void UpdateCompletedChecks()
+        {
+            var episodeId = IdAddressValue.Value;
+            var levelProfile = MainLogic.MS.LevelProfile;
+            TotalChecks = 1;
+            AccessibleChecks = 0;
+            if (GetEpisodeCompleteState() > EpisodeCompleteState.LOCKED)
+                AccessibleChecks++;
+            CompletedChecks = GetEpisodeCompleteState() > EpisodeCompleteState.AVAILABLE ? 1 : 0;
+
+            for (var i = 5 * episodeId; i < (5 * episodeId) + 5; i++)
+            {
+                var levelLocked = levelProfile[i].GetLevelCompleteState() == LevelCompleteState.LOCKED;
+
+                TotalChecks += levelProfile[i].GetChallengeCount() + 1;
+                if (!levelLocked)
+                    AccessibleChecks += levelProfile[i].GetChallengeCount() + 1;
+                if (levelProfile[i].GetLevelCompleteState() > LevelCompleteState.AVAILABLE)
+                    CompletedChecks++;
+                CompletedChecks += levelProfile[i].GetCompletedChallengeCount();
+            }
+        }
+
+        bool IsCompleted()
+        {
+            return CompletedChecks == TotalChecks;
+        }
+
+        public string GetChecksString()
+        {
+            return CompletedChecks.ToString() + " / " + AccessibleChecks.ToString();
+        }
     }
 
     public enum EpisodeCompleteState
     {
         LOCKED,
         AVAILABLE,
-        COMPLETED
+        COMPLETED,
+        ALLCHECKS
     }
 }
