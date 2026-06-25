@@ -114,6 +114,10 @@ public class MainLogic
 
     void OnAPConnectionEstablished(LoginSuccessful loginSuccess)
     {
+        CurrentRando = new RandomizationData();
+        ItemManager.Reset();
+        GoalManager.Reset();
+
         var levelOrder = JsonConvert.DeserializeObject<List<int>>(loginSuccess.SlotData["level_data"].ToString());
         CurrentRando.LevelOrder = levelOrder;
         var challenges = JsonConvert.DeserializeObject<List<List<int>>>(loginSuccess.SlotData["challenge_data"].ToString());
@@ -191,6 +195,9 @@ public class MainLogic
 
     void GetCheckedLocations()
     {
+        if (!ApManager.IsConnected())
+            return;
+
         var conditions = ApManager.GetLocationsChecked();
         ApplyLocationsChecked(conditions);
     }

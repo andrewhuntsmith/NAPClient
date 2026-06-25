@@ -285,7 +285,6 @@ use_native_dialog = true
 
 [connection signal="pressed" from="VBoxContainer/GridContainer/RandomizerLoading/PlandoLoading/BrowseFilesButton" to="." method="BrowseLocalFiles"]
 [connection signal="pressed" from="VBoxContainer/GridContainer/RandomizerLoading/PlandoLoading/LoadFileButton" to="." method="LoadLocalRandoFile"]
-[connection signal="pressed" from="VBoxContainer/GridContainer/RandomizerLoading/APLoading/ConnectButton" to="." method="ConnectToServerPressed"]
 [connection signal="pressed" from="VBoxContainer/GridContainer/SetupButtons/HideSetupButton" to="." method="HideSetupPressed"]
 [connection signal="pressed" from="VBoxContainer/GridContainer/SetupButtons/SwitchPlandoAPButton" to="." method="SwitchPlandoAPPressed"]
 [connection signal="file_selected" from="FileDialog" to="." method="LocalFileSelected"]

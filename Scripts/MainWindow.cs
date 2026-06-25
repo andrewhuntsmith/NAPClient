@@ -2,6 +2,7 @@ using Godot;
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace NAPClient
 {
@@ -64,6 +65,8 @@ namespace NAPClient
             InitializeColorDictionary();
             GenerateButtonGrid();
             RefreshLevelButtonColors();
+			ArchipelagoManager.APDisconnectComplete += OnDisconnectFromServerComplete;
+            ConnectToApButton.Connect(Button.SignalName.Pressed, Callable.From(ConnectToServerPressed));
         }
 
         void ForceQuit()
@@ -308,14 +311,15 @@ namespace NAPClient
 		{
             ConnectToApButton.Text = "Disconnect";
             ConnectToApButton.Disabled = false;
-            ConnectToApButton.Pressed -= ConnectToServerPressed;
-            ConnectToApButton.Pressed += DisconnectFromServerPressed;
+			ConnectToApButton.Disconnect(Button.SignalName.Pressed, Callable.From(ConnectToServerPressed));
+			ConnectToApButton.Connect(Button.SignalName.Pressed, Callable.From(DisconnectFromServerPressed));
         }
 
 		public void OnApConnectionFailed()
 		{
 			CallDeferred(nameof(SetApButtonAfterFailedConnect));
         }
+
         void SetApButtonAfterFailedConnect()
         {
             ServerConnection = false;
@@ -325,16 +329,30 @@ namespace NAPClient
 
         void DisconnectFromServerPressed()
 		{
-            CallDeferred(nameof(SetApButtonAfterDisconnect));
+			CallDeferred(nameof(SetApButtonAfterDisconnectPressed));
+            new Thread(Main.DisconnectFromServer).Start();
         }
 
-        void SetApButtonAfterDisconnect()
+        void SetApButtonAfterDisconnectPressed()
+        {
+            ConnectToApButton.Disabled = true;
+        }
+
+        async void OnDisconnectFromServerComplete()
+		{
+			// force user to wait before being able to try to connect again
+			await ToSignal(GetTree().CreateTimer(3.0), SceneTreeTimer.SignalName.Timeout);
+            CallDeferred(nameof(SetApButtonAfterDisconnectComplete));
+        }
+
+        void SetApButtonAfterDisconnectComplete()
         {
             ServerConnection = false;
             ConnectToApButton.Text = "Connect";
-            Main.DisconnectFromServer();
-            ConnectToApButton.Pressed += ConnectToServerPressed;
-            ConnectToApButton.Pressed -= DisconnectFromServerPressed;
+            ConnectToApButton.Disabled = false;
+            ConnectToApButton.Disconnect(Button.SignalName.Pressed, Callable.From(DisconnectFromServerPressed));
+            ConnectToApButton.Connect(Button.SignalName.Pressed, Callable.From(ConnectToServerPressed));
+			AddToRandoLog("Disconnected from server");
         }
 
         private void BrowseLocalFiles()

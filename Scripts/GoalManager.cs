@@ -16,6 +16,11 @@ namespace NAPClient
             Initializing = true;
         }
 
+        public void Reset()
+        {
+            GoalMet = false;
+        }
+
         public void SetGoal(GoalType goal)
         {
             CurrentGoal = goal;

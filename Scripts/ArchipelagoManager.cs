@@ -17,6 +17,7 @@ namespace NAPClient
         int CurrentItemIndex = 0;
 
         public Action<LoginSuccessful> APConnectionEstablished;
+        public static Action APDisconnectComplete;
 
         public ArchipelagoManager(MemorySource ms, ItemManager im)
         {
@@ -95,6 +96,7 @@ namespace NAPClient
 
             ApSession.Socket.DisconnectAsync();
             ApSession = null;
+            APDisconnectComplete.Invoke();
         }
 
         void OnErrorReceived(Exception e, string message)
@@ -153,7 +155,8 @@ namespace NAPClient
 
         void OnMessageReceived(LogMessage message)
         {
-            if (ApSession.Players.ActivePlayer != null && message.ToString().Contains(ApSession.Players.ActivePlayer.Name))
+            if (ApSession != null && ApSession.Players.ActivePlayer != null && 
+                message.ToString().Contains(ApSession.Players.ActivePlayer.Name))
                 MainWindow.Instance.AddToRandoLog(message.ToString());
         }
 

@@ -24,6 +24,12 @@ namespace NAPClient
             MS.GoldCollectedInCurrentLevel.ValueChanged += AdjustToMaxTime;
         }
 
+        public void Reset()
+        {
+            LevelUnlockManager = new LevelUnlockManager();
+            PreviouslyReceivedItems = new List<ItemData>();
+        }
+
         public void HandleCondition(ItemData item)
         {
             ItemAdded?.Invoke(item);
