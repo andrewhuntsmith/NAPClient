@@ -8,6 +8,7 @@ public partial class LogEntry : Label
     [Export] Color MaxTimeColor;
 	[Export] Color LevelUnlockColor;
 	[Export] Color PaletteColor;
+	[Export] Color PlainTextColor;
 	[Export] Color UnhandledColor;
 
 	public void SetData(ItemData itemData)
@@ -50,6 +51,14 @@ public partial class LogEntry : Label
 				break;
 		}
 
+		AddThemeStyleboxOverride("normal", stylebox);
+    }
+
+	public void SetData(string textInput)
+	{
+        var stylebox = new StyleBoxFlat();
+		stylebox.BgColor = PlainTextColor;
+		Text = textInput;
 		AddThemeStyleboxOverride("normal", stylebox);
     }
 

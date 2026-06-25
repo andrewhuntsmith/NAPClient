@@ -149,8 +149,8 @@ namespace NAPClient
 
         void OnMessageReceived(LogMessage message)
         {
-            // TODO: Display incoming messages
-            return;
+            if (message.ToString().Contains(ApSession.Players.ActivePlayer.Name))
+                MainWindow.Instance.AddToRandoLog(message.ToString());
         }
 
         public bool IsConnected() 

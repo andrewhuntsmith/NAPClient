@@ -108,7 +108,8 @@ public class MainLogic
 
     void AddToRandoLog(ItemData item)
     {
-        GodotTreeNode.AddToRandoLog(item);
+        if (!ApManager.IsConnected())
+            GodotTreeNode.AddToRandoLog(item);
     }
 
     void OnAPConnectionEstablished(LoginSuccessful loginSuccess)

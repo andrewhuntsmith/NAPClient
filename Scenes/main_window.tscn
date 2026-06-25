@@ -14,79 +14,82 @@ grow_horizontal = 2
 grow_vertical = 2
 focus_behavior_recursive = 1
 script = ExtResource("1_6t6yy")
-LevelGrid = NodePath("GridContainer/LevelGridContainer/LevelGrid")
+LevelGrid = NodePath("VBoxContainer/GridContainer/LevelGridContainer/LevelGrid")
 EpisodeGridScene = ExtResource("1_23hoq")
-FilePath = NodePath("GridContainer/RandomizerLoading/PlandoLoading/FilePathField")
-UrlEntry = NodePath("GridContainer/RandomizerLoading/APLoading/ServerField")
-SlotNameEntry = NodePath("GridContainer/RandomizerLoading/APLoading/SlotField")
-PasswordEntry = NodePath("GridContainer/RandomizerLoading/APLoading/PasswordField")
-LoadFileButton = NodePath("GridContainer/RandomizerLoading/PlandoLoading/LoadFileButton")
-HideSetupButton = NodePath("GridContainer/SetupButtons/HideSetupButton")
-SwitchPlandoAPButton = NodePath("GridContainer/SetupButtons/SwitchPlandoAPButton")
-PlandoLoading = NodePath("GridContainer/RandomizerLoading/PlandoLoading")
-APLoading = NodePath("GridContainer/RandomizerLoading/APLoading")
-StartTimeDisplay = NodePath("GridContainer/RandomizerDataContainer/RandomizerData/StartTimeValue")
-GoldValueDisplay = NodePath("GridContainer/RandomizerDataContainer/RandomizerData/GoldValueValue")
-MaxTimeDisplay = NodePath("GridContainer/RandomizerDataContainer/RandomizerData/MaxTimeValue")
-RandoLog = NodePath("GridContainer/RandoLogContainer/RandoLog")
-RandoLogContainer = NodePath("GridContainer/RandoLogContainer")
-LevelIDLabel = NodePath("GridContainer/RandomizerDataContainer/SelectedItemData/LevelIdValue")
-LevelNameLabel = NodePath("GridContainer/RandomizerDataContainer/SelectedItemData/LevelNameValue")
-AvailableLabel = NodePath("GridContainer/RandomizerDataContainer/SelectedItemData/AvailableValue")
-AllGoldLabel = NodePath("GridContainer/RandomizerDataContainer/SelectedItemData/AllGoldValue")
-CurrentItemLabel = NodePath("GridContainer/RandomizerDataContainer/CurrentItemData/CurrentItemData")
+FilePath = NodePath("VBoxContainer/GridContainer/RandomizerLoading/PlandoLoading/FilePathField")
+UrlEntry = NodePath("VBoxContainer/GridContainer/RandomizerLoading/APLoading/ServerField")
+SlotNameEntry = NodePath("VBoxContainer/GridContainer/RandomizerLoading/APLoading/SlotField")
+PasswordEntry = NodePath("VBoxContainer/GridContainer/RandomizerLoading/APLoading/PasswordField")
+LoadFileButton = NodePath("VBoxContainer/GridContainer/RandomizerLoading/PlandoLoading/LoadFileButton")
+HideSetupButton = NodePath("VBoxContainer/GridContainer/SetupButtons/HideSetupButton")
+SwitchPlandoAPButton = NodePath("VBoxContainer/GridContainer/SetupButtons/SwitchPlandoAPButton")
+PlandoLoading = NodePath("VBoxContainer/GridContainer/RandomizerLoading/PlandoLoading")
+APLoading = NodePath("VBoxContainer/GridContainer/RandomizerLoading/APLoading")
+StartTimeDisplay = NodePath("VBoxContainer/GridContainer/RandomizerDataContainer/RandomizerData/StartTimeValue")
+GoldValueDisplay = NodePath("VBoxContainer/GridContainer/RandomizerDataContainer/RandomizerData/GoldValueValue")
+MaxTimeDisplay = NodePath("VBoxContainer/GridContainer/RandomizerDataContainer/RandomizerData/MaxTimeValue")
+RandoLog = NodePath("VBoxContainer/LogContainer/RandoLogContainer/RandoLog")
+RandoLogContainer = NodePath("VBoxContainer/LogContainer/RandoLogContainer")
+LevelIDLabel = NodePath("VBoxContainer/GridContainer/RandomizerDataContainer/SelectedItemData/LevelIdValue")
+LevelNameLabel = NodePath("VBoxContainer/GridContainer/RandomizerDataContainer/SelectedItemData/LevelNameValue")
+AvailableLabel = NodePath("VBoxContainer/GridContainer/RandomizerDataContainer/SelectedItemData/AvailableValue")
+AllGoldLabel = NodePath("VBoxContainer/GridContainer/RandomizerDataContainer/SelectedItemData/AllGoldValue")
+CurrentItemLabel = NodePath("VBoxContainer/GridContainer/RandomizerDataContainer/CurrentItemData/CurrentItemData")
 ConfirmationDialog = NodePath("ConfirmationDialog")
 LoadFileDialog = NodePath("FileDialog")
 InaccessibleColor = Color(1, 0.6819396, 0.63331324, 1)
 AccessibleColor = Color(0.6853, 0.89, 0.6853, 1)
 BeatenColor = Color(0.37254903, 0.75686276, 0.8235294, 1)
 AllGoldColor = Color(0.97, 0.8063934, 0.07759999, 1)
-ColorKey = NodePath("GridContainer/LevelGridContainer/ColorKey")
+ColorKey = NodePath("VBoxContainer/GridContainer/LevelGridContainer/ColorKey")
 LogEntryScene = ExtResource("3_bet41")
 
-[node name="GridContainer" type="GridContainer" parent="." unique_id=1808778599]
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1956339209]
 layout_mode = 0
-offset_right = 649.0
-offset_bottom = 599.0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="GridContainer" type="GridContainer" parent="VBoxContainer" unique_id=1808778599]
+layout_mode = 2
 columns = 2
 
-[node name="RandomizerLoading" type="BoxContainer" parent="GridContainer" unique_id=290384028]
+[node name="RandomizerLoading" type="BoxContainer" parent="VBoxContainer/GridContainer" unique_id=290384028]
 custom_minimum_size = Vector2(400, 0)
 layout_mode = 2
 
-[node name="PlandoLoading" type="HBoxContainer" parent="GridContainer/RandomizerLoading" unique_id=437815863]
+[node name="PlandoLoading" type="HBoxContainer" parent="VBoxContainer/GridContainer/RandomizerLoading" unique_id=437815863]
 layout_mode = 2
 
-[node name="FilePathLabel" type="Label" parent="GridContainer/RandomizerLoading/PlandoLoading" unique_id=244126544]
+[node name="FilePathLabel" type="Label" parent="VBoxContainer/GridContainer/RandomizerLoading/PlandoLoading" unique_id=244126544]
 custom_minimum_size = Vector2(80, 0)
 layout_mode = 2
 text = "File Path:"
 
-[node name="BrowseFilesButton" type="Button" parent="GridContainer/RandomizerLoading/PlandoLoading" unique_id=286854942]
+[node name="BrowseFilesButton" type="Button" parent="VBoxContainer/GridContainer/RandomizerLoading/PlandoLoading" unique_id=286854942]
 layout_mode = 2
 text = "Browse"
 
-[node name="FilePathField" type="TextEdit" parent="GridContainer/RandomizerLoading/PlandoLoading" unique_id=1652308149]
+[node name="FilePathField" type="TextEdit" parent="VBoxContainer/GridContainer/RandomizerLoading/PlandoLoading" unique_id=1652308149]
 custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
 placeholder_text = "THISISAFILEPATH"
 
-[node name="LoadFileButton" type="Button" parent="GridContainer/RandomizerLoading/PlandoLoading" unique_id=1101205253]
+[node name="LoadFileButton" type="Button" parent="VBoxContainer/GridContainer/RandomizerLoading/PlandoLoading" unique_id=1101205253]
 layout_mode = 2
 disabled = true
 text = "Load File"
 
-[node name="APLoading" type="GridContainer" parent="GridContainer/RandomizerLoading" unique_id=520686855]
+[node name="APLoading" type="GridContainer" parent="VBoxContainer/GridContainer/RandomizerLoading" unique_id=520686855]
 visible = false
 layout_mode = 2
 columns = 2
 
-[node name="ServerLabel" type="Label" parent="GridContainer/RandomizerLoading/APLoading" unique_id=1921688714]
+[node name="ServerLabel" type="Label" parent="VBoxContainer/GridContainer/RandomizerLoading/APLoading" unique_id=1921688714]
 custom_minimum_size = Vector2(80, 0)
 layout_mode = 2
 text = "Server:"
 
-[node name="ServerField" type="LineEdit" parent="GridContainer/RandomizerLoading/APLoading" unique_id=555458397]
+[node name="ServerField" type="LineEdit" parent="VBoxContainer/GridContainer/RandomizerLoading/APLoading" unique_id=555458397]
 custom_minimum_size = Vector2(150, 30)
 layout_mode = 2
 focus_neighbor_top = NodePath(".")
@@ -97,12 +100,12 @@ context_menu_enabled = false
 virtual_keyboard_enabled = false
 caret_blink = true
 
-[node name="SlotLabel" type="Label" parent="GridContainer/RandomizerLoading/APLoading" unique_id=1231049247]
+[node name="SlotLabel" type="Label" parent="VBoxContainer/GridContainer/RandomizerLoading/APLoading" unique_id=1231049247]
 custom_minimum_size = Vector2(80, 0)
 layout_mode = 2
 text = "Slot Name:"
 
-[node name="SlotField" type="LineEdit" parent="GridContainer/RandomizerLoading/APLoading" unique_id=1883470535]
+[node name="SlotField" type="LineEdit" parent="VBoxContainer/GridContainer/RandomizerLoading/APLoading" unique_id=1883470535]
 custom_minimum_size = Vector2(150, 30)
 layout_mode = 2
 focus_neighbor_top = NodePath(".")
@@ -111,12 +114,12 @@ focus_behavior_recursive = 2
 placeholder_text = "Slot Name"
 context_menu_enabled = false
 
-[node name="PasswordLabel" type="Label" parent="GridContainer/RandomizerLoading/APLoading" unique_id=1144125080]
+[node name="PasswordLabel" type="Label" parent="VBoxContainer/GridContainer/RandomizerLoading/APLoading" unique_id=1144125080]
 custom_minimum_size = Vector2(80, 0)
 layout_mode = 2
 text = "Password:"
 
-[node name="PasswordField" type="LineEdit" parent="GridContainer/RandomizerLoading/APLoading" unique_id=1375174044]
+[node name="PasswordField" type="LineEdit" parent="VBoxContainer/GridContainer/RandomizerLoading/APLoading" unique_id=1375174044]
 custom_minimum_size = Vector2(300, 30)
 layout_mode = 2
 focus_neighbor_top = NodePath(".")
@@ -127,139 +130,143 @@ context_menu_enabled = false
 secret = true
 secret_character = "🐑"
 
-[node name="ConnectButton" type="Button" parent="GridContainer/RandomizerLoading/APLoading" unique_id=927113802]
+[node name="ConnectButton" type="Button" parent="VBoxContainer/GridContainer/RandomizerLoading/APLoading" unique_id=927113802]
 layout_mode = 2
 text = "Connect"
 
-[node name="SetupButtons" type="HBoxContainer" parent="GridContainer" unique_id=1031274791]
+[node name="SetupButtons" type="HBoxContainer" parent="VBoxContainer/GridContainer" unique_id=1031274791]
 custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
 
-[node name="HideSetupButton" type="Button" parent="GridContainer/SetupButtons" unique_id=14172859]
+[node name="HideSetupButton" type="Button" parent="VBoxContainer/GridContainer/SetupButtons" unique_id=14172859]
 layout_mode = 2
 text = "Hide Setup"
 
-[node name="SwitchPlandoAPButton" type="Button" parent="GridContainer/SetupButtons" unique_id=1246770855]
+[node name="SwitchPlandoAPButton" type="Button" parent="VBoxContainer/GridContainer/SetupButtons" unique_id=1246770855]
 layout_mode = 2
 text = "Archipelago Menu"
 
-[node name="LevelGridContainer" type="VBoxContainer" parent="GridContainer" unique_id=479175184]
+[node name="LevelGridContainer" type="VBoxContainer" parent="VBoxContainer/GridContainer" unique_id=479175184]
 custom_minimum_size = Vector2(400, 0)
 layout_mode = 2
 
-[node name="Label" type="Label" parent="GridContainer/LevelGridContainer" unique_id=1269362718]
+[node name="Label" type="Label" parent="VBoxContainer/GridContainer/LevelGridContainer" unique_id=1269362718]
 layout_mode = 2
 text = "Level Grid"
 
-[node name="LevelGrid" type="VFlowContainer" parent="GridContainer/LevelGridContainer" unique_id=1490962611]
+[node name="LevelGrid" type="VFlowContainer" parent="VBoxContainer/GridContainer/LevelGridContainer" unique_id=1490962611]
 custom_minimum_size = Vector2(0, 300)
 layout_mode = 2
 
-[node name="ColorKey" parent="GridContainer/LevelGridContainer" unique_id=491526234 instance=ExtResource("3_w45st")]
+[node name="ColorKey" parent="VBoxContainer/GridContainer/LevelGridContainer" unique_id=491526234 instance=ExtResource("3_w45st")]
 custom_minimum_size = Vector2(0, 30)
 layout_mode = 2
 
-[node name="RandomizerDataContainer" type="VBoxContainer" parent="GridContainer" unique_id=1190438048]
+[node name="RandomizerDataContainer" type="VBoxContainer" parent="VBoxContainer/GridContainer" unique_id=1190438048]
 custom_minimum_size = Vector2(240, 0)
 layout_mode = 2
 
-[node name="RandomizerData" type="GridContainer" parent="GridContainer/RandomizerDataContainer" unique_id=376384017]
+[node name="RandomizerData" type="GridContainer" parent="VBoxContainer/GridContainer/RandomizerDataContainer" unique_id=376384017]
 layout_mode = 2
 columns = 2
 
-[node name="StartTimeLabel" type="Label" parent="GridContainer/RandomizerDataContainer/RandomizerData" unique_id=2135399100]
+[node name="StartTimeLabel" type="Label" parent="VBoxContainer/GridContainer/RandomizerDataContainer/RandomizerData" unique_id=2135399100]
 layout_mode = 2
 text = "Start Time: "
 
-[node name="StartTimeValue" type="Label" parent="GridContainer/RandomizerDataContainer/RandomizerData" unique_id=1524815333]
+[node name="StartTimeValue" type="Label" parent="VBoxContainer/GridContainer/RandomizerDataContainer/RandomizerData" unique_id=1524815333]
 layout_mode = 2
 text = "----"
 
-[node name="GoldValueLabel" type="Label" parent="GridContainer/RandomizerDataContainer/RandomizerData" unique_id=1309411776]
+[node name="GoldValueLabel" type="Label" parent="VBoxContainer/GridContainer/RandomizerDataContainer/RandomizerData" unique_id=1309411776]
 layout_mode = 2
 text = "Gold Value:"
 
-[node name="GoldValueValue" type="Label" parent="GridContainer/RandomizerDataContainer/RandomizerData" unique_id=982939786]
+[node name="GoldValueValue" type="Label" parent="VBoxContainer/GridContainer/RandomizerDataContainer/RandomizerData" unique_id=982939786]
 layout_mode = 2
 text = "----"
 
-[node name="MaxTimeLabel" type="Label" parent="GridContainer/RandomizerDataContainer/RandomizerData" unique_id=1904418682]
+[node name="MaxTimeLabel" type="Label" parent="VBoxContainer/GridContainer/RandomizerDataContainer/RandomizerData" unique_id=1904418682]
 layout_mode = 2
 text = "Max Time:"
 
-[node name="MaxTimeValue" type="Label" parent="GridContainer/RandomizerDataContainer/RandomizerData" unique_id=1509292263]
+[node name="MaxTimeValue" type="Label" parent="VBoxContainer/GridContainer/RandomizerDataContainer/RandomizerData" unique_id=1509292263]
 layout_mode = 2
 text = "----"
 
-[node name="Empty" type="Control" parent="GridContainer/RandomizerDataContainer" unique_id=745131291]
+[node name="Empty" type="Control" parent="VBoxContainer/GridContainer/RandomizerDataContainer" unique_id=745131291]
 custom_minimum_size = Vector2(0, 10)
 layout_mode = 2
 
-[node name="SelectedItemData" type="GridContainer" parent="GridContainer/RandomizerDataContainer" unique_id=1849031604]
+[node name="SelectedItemData" type="GridContainer" parent="VBoxContainer/GridContainer/RandomizerDataContainer" unique_id=1849031604]
 visible = false
 layout_mode = 2
 columns = 2
 
-[node name="SelectedLevelLabel" type="Label" parent="GridContainer/RandomizerDataContainer/SelectedItemData" unique_id=1496032506]
+[node name="SelectedLevelLabel" type="Label" parent="VBoxContainer/GridContainer/RandomizerDataContainer/SelectedItemData" unique_id=1496032506]
 layout_mode = 2
 text = "Selected Level"
 
-[node name="Empty" type="Control" parent="GridContainer/RandomizerDataContainer/SelectedItemData" unique_id=1887252553]
+[node name="Empty" type="Control" parent="VBoxContainer/GridContainer/RandomizerDataContainer/SelectedItemData" unique_id=1887252553]
 custom_minimum_size = Vector2(0, 10)
 layout_mode = 2
 
-[node name="LevelNameLabel" type="Label" parent="GridContainer/RandomizerDataContainer/SelectedItemData" unique_id=63824965]
+[node name="LevelNameLabel" type="Label" parent="VBoxContainer/GridContainer/RandomizerDataContainer/SelectedItemData" unique_id=63824965]
 layout_mode = 2
 text = "Level Name: "
 
-[node name="LevelNameValue" type="Label" parent="GridContainer/RandomizerDataContainer/SelectedItemData" unique_id=2142190652]
+[node name="LevelNameValue" type="Label" parent="VBoxContainer/GridContainer/RandomizerDataContainer/SelectedItemData" unique_id=2142190652]
 layout_mode = 2
 text = "--"
 
-[node name="LevelIdLabel" type="Label" parent="GridContainer/RandomizerDataContainer/SelectedItemData" unique_id=1548458722]
+[node name="LevelIdLabel" type="Label" parent="VBoxContainer/GridContainer/RandomizerDataContainer/SelectedItemData" unique_id=1548458722]
 layout_mode = 2
 text = "Level ID: "
 
-[node name="LevelIdValue" type="Label" parent="GridContainer/RandomizerDataContainer/SelectedItemData" unique_id=1808730147]
+[node name="LevelIdValue" type="Label" parent="VBoxContainer/GridContainer/RandomizerDataContainer/SelectedItemData" unique_id=1808730147]
 layout_mode = 2
 text = "--"
 
-[node name="AvailableLabel" type="Label" parent="GridContainer/RandomizerDataContainer/SelectedItemData" unique_id=1674980798]
+[node name="AvailableLabel" type="Label" parent="VBoxContainer/GridContainer/RandomizerDataContainer/SelectedItemData" unique_id=1674980798]
 layout_mode = 2
 text = "Available?"
 
-[node name="AvailableValue" type="Label" parent="GridContainer/RandomizerDataContainer/SelectedItemData" unique_id=1927216194]
+[node name="AvailableValue" type="Label" parent="VBoxContainer/GridContainer/RandomizerDataContainer/SelectedItemData" unique_id=1927216194]
 layout_mode = 2
 text = "--"
 
-[node name="AllGoldLabel" type="Label" parent="GridContainer/RandomizerDataContainer/SelectedItemData" unique_id=156986215]
+[node name="AllGoldLabel" type="Label" parent="VBoxContainer/GridContainer/RandomizerDataContainer/SelectedItemData" unique_id=156986215]
 layout_mode = 2
 text = "G++?"
 
-[node name="AllGoldValue" type="Label" parent="GridContainer/RandomizerDataContainer/SelectedItemData" unique_id=366328657]
+[node name="AllGoldValue" type="Label" parent="VBoxContainer/GridContainer/RandomizerDataContainer/SelectedItemData" unique_id=366328657]
 layout_mode = 2
 text = "--"
 
-[node name="Empty2" type="Control" parent="GridContainer/RandomizerDataContainer" unique_id=820541639]
+[node name="Empty2" type="Control" parent="VBoxContainer/GridContainer/RandomizerDataContainer" unique_id=820541639]
 custom_minimum_size = Vector2(0, 10)
 layout_mode = 2
 
-[node name="CurrentItemData" type="GridContainer" parent="GridContainer/RandomizerDataContainer" unique_id=2017788452]
+[node name="CurrentItemData" type="GridContainer" parent="VBoxContainer/GridContainer/RandomizerDataContainer" unique_id=2017788452]
 layout_mode = 2
 columns = 2
 
-[node name="CurrentItemData" type="Label" parent="GridContainer/RandomizerDataContainer/CurrentItemData" unique_id=1056811748]
+[node name="CurrentItemData" type="Label" parent="VBoxContainer/GridContainer/RandomizerDataContainer/CurrentItemData" unique_id=1056811748]
 layout_mode = 2
 text = "--"
 
-[node name="RandoLogContainer" type="ScrollContainer" parent="GridContainer" unique_id=1616769527]
-custom_minimum_size = Vector2(400, 100)
+[node name="LogContainer" type="VBoxContainer" parent="VBoxContainer" unique_id=794709117]
+layout_mode = 2
+
+[node name="RandoLogContainer" type="ScrollContainer" parent="VBoxContainer/LogContainer" unique_id=1616769527]
+custom_minimum_size = Vector2(650, 100)
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 3
 horizontal_scroll_mode = 0
 
-[node name="RandoLog" type="VBoxContainer" parent="GridContainer/RandoLogContainer" unique_id=1312694458]
+[node name="RandoLog" type="VBoxContainer" parent="VBoxContainer/LogContainer/RandoLogContainer" unique_id=1312694458]
+custom_minimum_size = Vector2(650, 0)
 layout_mode = 2
 
 [node name="ConfirmationDialog" type="ConfirmationDialog" parent="." unique_id=86313054]
@@ -275,9 +282,9 @@ access = 2
 filters = PackedStringArray("JSON files (*.json)", "*.json")
 use_native_dialog = true
 
-[connection signal="pressed" from="GridContainer/RandomizerLoading/PlandoLoading/BrowseFilesButton" to="." method="BrowseLocalFiles"]
-[connection signal="pressed" from="GridContainer/RandomizerLoading/PlandoLoading/LoadFileButton" to="." method="LoadLocalRandoFile"]
-[connection signal="pressed" from="GridContainer/RandomizerLoading/APLoading/ConnectButton" to="." method="ConnectToServerPressed"]
-[connection signal="pressed" from="GridContainer/SetupButtons/HideSetupButton" to="." method="HideSetupPressed"]
-[connection signal="pressed" from="GridContainer/SetupButtons/SwitchPlandoAPButton" to="." method="SwitchPlandoAPPressed"]
+[connection signal="pressed" from="VBoxContainer/GridContainer/RandomizerLoading/PlandoLoading/BrowseFilesButton" to="." method="BrowseLocalFiles"]
+[connection signal="pressed" from="VBoxContainer/GridContainer/RandomizerLoading/PlandoLoading/LoadFileButton" to="." method="LoadLocalRandoFile"]
+[connection signal="pressed" from="VBoxContainer/GridContainer/RandomizerLoading/APLoading/ConnectButton" to="." method="ConnectToServerPressed"]
+[connection signal="pressed" from="VBoxContainer/GridContainer/SetupButtons/HideSetupButton" to="." method="HideSetupPressed"]
+[connection signal="pressed" from="VBoxContainer/GridContainer/SetupButtons/SwitchPlandoAPButton" to="." method="SwitchPlandoAPPressed"]
 [connection signal="file_selected" from="FileDialog" to="." method="LocalFileSelected"]

@@ -189,7 +189,8 @@ namespace NAPClient
 
 		public async void AddToRandoLog(string message)
 		{
-            var newLabel = new Label() { Text = message };
+            var newLabel = (LogEntry)LogEntryScene.Instantiate();
+            newLabel.SetData(message);
             RandoLog.CallDeferred(Node.MethodName.AddChild, newLabel);
 			await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
             CallDeferred(nameof(ScrollToBottom));
