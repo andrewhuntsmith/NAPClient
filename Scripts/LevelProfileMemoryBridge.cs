@@ -135,6 +135,7 @@ namespace NAPClient
         {
             Challenges.Clear();
             Challenges.AddRange(challenges);
+            CompletedChallenges.Clear();
         }
 
         public void GetChallengeCompleted()
