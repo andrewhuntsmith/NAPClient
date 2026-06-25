@@ -90,6 +90,10 @@ namespace NAPClient
 
         private static void Reset()
         {
+            if (ApSession == null)
+                return;
+
+            ApSession.Socket.DisconnectAsync();
             ApSession = null;
         }
 
@@ -149,7 +153,7 @@ namespace NAPClient
 
         void OnMessageReceived(LogMessage message)
         {
-            if (message.ToString().Contains(ApSession.Players.ActivePlayer.Name))
+            if (ApSession.Players.ActivePlayer != null && message.ToString().Contains(ApSession.Players.ActivePlayer.Name))
                 MainWindow.Instance.AddToRandoLog(message.ToString());
         }
 

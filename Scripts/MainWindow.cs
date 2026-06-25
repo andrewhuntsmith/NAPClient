@@ -1,7 +1,7 @@
 using Godot;
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using System.Threading;
 
 namespace NAPClient
 {
@@ -16,6 +16,7 @@ namespace NAPClient
 		[Export] LineEdit SlotNameEntry;
 		[Export] LineEdit PasswordEntry;
         [Export] Button LoadFileButton;
+		[Export] Button ConnectToApButton;
 		[Export] Button HideSetupButton;
 		[Export] Button SwitchPlandoAPButton;
 		[Export] Control PlandoLoading;
@@ -49,6 +50,7 @@ namespace NAPClient
 
 		bool SetupHidden = false;
 		bool LoadWithPlando = true;
+		bool ServerConnection = false;
 
 		MainLogic Main;
 
@@ -285,13 +287,57 @@ namespace NAPClient
 
 		private void ConnectToServerPressed()
 		{
-			if (UrlEntry.Text.Length == 0 || SlotNameEntry.Text.Length == 0)
+			if (UrlEntry.Text.Length == 0 || SlotNameEntry.Text.Length == 0 || ServerConnection)
 				return;
-			Main.ConnectToServer(UrlEntry.Text, SlotNameEntry.Text, PasswordEntry.Text);
-			//change button from connect to disconnect
+			ServerConnection = true;
+			ConnectToApButton.Disabled = true;
+			new Thread(TryConnect).Start();
 		}
 
-		private void BrowseLocalFiles()
+		void TryConnect()
+		{
+			Main.ConnectToServer(UrlEntry.Text, SlotNameEntry.Text, PasswordEntry.Text);
+        }
+
+		public void OnApConnectionEstablished()
+		{
+			CallDeferred(nameof(SetApButtonAfterConnect));
+		}
+
+		void SetApButtonAfterConnect()
+		{
+            ConnectToApButton.Text = "Disconnect";
+            ConnectToApButton.Disabled = false;
+            ConnectToApButton.Pressed -= ConnectToServerPressed;
+            ConnectToApButton.Pressed += DisconnectFromServerPressed;
+        }
+
+		public void OnApConnectionFailed()
+		{
+			CallDeferred(nameof(SetApButtonAfterFailedConnect));
+        }
+        void SetApButtonAfterFailedConnect()
+        {
+            ServerConnection = false;
+            ConnectToApButton.Disabled = false;
+            AddToRandoLog("Connection failed");
+        }
+
+        void DisconnectFromServerPressed()
+		{
+            CallDeferred(nameof(SetApButtonAfterDisconnect));
+        }
+
+        void SetApButtonAfterDisconnect()
+        {
+            ServerConnection = false;
+            ConnectToApButton.Text = "Connect";
+            Main.DisconnectFromServer();
+            ConnectToApButton.Pressed += ConnectToServerPressed;
+            ConnectToApButton.Pressed -= DisconnectFromServerPressed;
+        }
+
+        private void BrowseLocalFiles()
 		{
             LoadFileDialog.PopupCentered();
 		}

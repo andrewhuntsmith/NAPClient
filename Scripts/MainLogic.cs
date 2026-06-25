@@ -386,7 +386,17 @@ public class MainLogic
     public void ConnectToServer(string url, string slot, string password)
     {
         if (!ApManager.TryConnect(url, slot, password))
+        {
+            GodotTreeNode.OnApConnectionFailed();
             return;
+        }
+
+        GodotTreeNode.OnApConnectionEstablished();
+    }
+
+    public void DisconnectFromServer()
+    {
+        ApManager.Disconnect();
     }
 
     void CycleLevelStatus()

@@ -5,7 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://bhfysgvqbecg0" path="res://Scenes/log_entry.tscn" id="3_bet41"]
 [ext_resource type="PackedScene" uid="uid://c1hly5dgirq51" path="res://Scenes/color_key.tscn" id="3_w45st"]
 
-[node name="MainWindow" type="Control" unique_id=1707276420 node_paths=PackedStringArray("LevelGrid", "FilePath", "UrlEntry", "SlotNameEntry", "PasswordEntry", "LoadFileButton", "HideSetupButton", "SwitchPlandoAPButton", "PlandoLoading", "APLoading", "StartTimeDisplay", "GoldValueDisplay", "MaxTimeDisplay", "RandoLog", "RandoLogContainer", "LevelIDLabel", "LevelNameLabel", "AvailableLabel", "AllGoldLabel", "CurrentItemLabel", "ConfirmationDialog", "LoadFileDialog", "ColorKey")]
+[node name="MainWindow" type="Control" unique_id=1707276420 node_paths=PackedStringArray("LevelGrid", "FilePath", "UrlEntry", "SlotNameEntry", "PasswordEntry", "LoadFileButton", "ConnectToApButton", "HideSetupButton", "SwitchPlandoAPButton", "PlandoLoading", "APLoading", "StartTimeDisplay", "GoldValueDisplay", "MaxTimeDisplay", "RandoLog", "RandoLogContainer", "LevelIDLabel", "LevelNameLabel", "AvailableLabel", "AllGoldLabel", "CurrentItemLabel", "ConfirmationDialog", "LoadFileDialog", "ColorKey")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -21,6 +21,7 @@ UrlEntry = NodePath("VBoxContainer/GridContainer/RandomizerLoading/APLoading/Ser
 SlotNameEntry = NodePath("VBoxContainer/GridContainer/RandomizerLoading/APLoading/SlotField")
 PasswordEntry = NodePath("VBoxContainer/GridContainer/RandomizerLoading/APLoading/PasswordField")
 LoadFileButton = NodePath("VBoxContainer/GridContainer/RandomizerLoading/PlandoLoading/LoadFileButton")
+ConnectToApButton = NodePath("VBoxContainer/GridContainer/RandomizerLoading/APLoading/ConnectButton")
 HideSetupButton = NodePath("VBoxContainer/GridContainer/SetupButtons/HideSetupButton")
 SwitchPlandoAPButton = NodePath("VBoxContainer/GridContainer/SetupButtons/SwitchPlandoAPButton")
 PlandoLoading = NodePath("VBoxContainer/GridContainer/RandomizerLoading/PlandoLoading")
