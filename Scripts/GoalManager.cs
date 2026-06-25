@@ -19,6 +19,7 @@ namespace NAPClient
         public void Reset()
         {
             GoalMet = false;
+            Initializing = true;
         }
 
         public void SetGoal(GoalType goal)

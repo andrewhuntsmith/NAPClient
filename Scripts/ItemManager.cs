@@ -28,6 +28,7 @@ namespace NAPClient
         {
             LevelUnlockManager = new LevelUnlockManager();
             PreviouslyReceivedItems = new List<ItemData>();
+            Initializing = true;
         }
 
         public void HandleCondition(ItemData item)

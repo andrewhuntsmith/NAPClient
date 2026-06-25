@@ -115,8 +115,6 @@ public class MainLogic
     void OnAPConnectionEstablished(LoginSuccessful loginSuccess)
     {
         CurrentRando = new RandomizationData();
-        ItemManager.Reset();
-        GoalManager.Reset();
 
         var levelOrder = JsonConvert.DeserializeObject<List<int>>(loginSuccess.SlotData["level_data"].ToString());
         CurrentRando.LevelOrder = levelOrder;
@@ -177,11 +175,11 @@ public class MainLogic
 
         GodotTreeNode.OnUIRefresh();
         GodotTreeNode.AddToRandoLog("Randomizer began!");
-
+        ItemManager.ApplyPreviouslyReceivedItemsToRando();
+        
         ItemManager.Initializing = false;
         GoalManager.Initializing = false;
 
-        ItemManager.ApplyPreviouslyReceivedItemsToRando();
         AssignChallengeData();
     }
 
@@ -392,6 +390,9 @@ public class MainLogic
 
     public void ConnectToServer(string url, string slot, string password)
     {
+        ItemManager.Reset();
+        GoalManager.Reset();
+
         if (!ApManager.TryConnect(url, slot, password))
         {
             GodotTreeNode.OnApConnectionFailed();
