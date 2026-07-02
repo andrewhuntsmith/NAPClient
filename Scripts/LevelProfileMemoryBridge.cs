@@ -99,10 +99,23 @@ namespace NAPClient
 
         public LevelCompleteState GetLevelCompleteState()
         {
+            return MainLogic.Instance.ApManager.IsConnected() ? GetApLevelCompleteState() : GetPlandoLevelCompleteState();
+        }
+
+        LevelCompleteState GetApLevelCompleteState()
+        {
             return IsCompleted() ? LevelCompleteState.ALLCHECKS :
                 LevelLockedAddressValue.Value[0] == 0 ? LevelCompleteState.LOCKED :
                 LevelLockedAddressValue.Value[0] == 1 ? LevelCompleteState.AVAILABLE :
-                AllGoldAddressValue.Value[0] == 1 ? LevelCompleteState.ALLGOLD : 
+                AllGoldAddressValue.Value[0] == 1 ? LevelCompleteState.ALLGOLD :
+                LevelCompleteState.COMPLETED;
+        }
+
+        LevelCompleteState GetPlandoLevelCompleteState()
+        {
+            return LevelLockedAddressValue.Value[0] == 0 ? LevelCompleteState.LOCKED :
+                LevelLockedAddressValue.Value[0] == 1 ? LevelCompleteState.AVAILABLE :
+                AllGoldAddressValue.Value[0] == 1 ? LevelCompleteState.ALLCHECKS :
                 LevelCompleteState.COMPLETED;
         }
 

@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace NAPClient
 {
-    internal class ArchipelagoManager
+    public class ArchipelagoManager
     {
         public static MemorySource MS;
         static ArchipelagoSession ApSession;

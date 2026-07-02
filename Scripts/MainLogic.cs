@@ -13,8 +13,8 @@ public class MainLogic
 
     public static MemorySource MS = new MemorySource();
     public ItemManager ItemManager;
+    public ArchipelagoManager ApManager;
     GoalManager GoalManager;
-    ArchipelagoManager ApManager;
     MainWindow GodotTreeNode;
 
     public int CurrentSelectedLevelId = -1;
@@ -286,7 +286,7 @@ public class MainLogic
         }
 
         // check for all gold
-        if (updatedLevel.GetLevelCompleteState() == LevelCompleteState.ALLGOLD)
+        if (updatedLevel.GetLevelCompleteState() >= LevelCompleteState.ALLGOLD)
         {
             var completionCondition = new RandomizationData.CompletionCondition()
             {
@@ -457,8 +457,17 @@ public class MainLogic
             displayText += LogEntry.GenerateLevelName(currentId) + "\n";
             displayText += "Available? " + availableText;
             displayText += "Beaten? " + beatenText;
-            displayText += "Challenges?\n";
-            displayText += MS.LevelProfile[currentId].GetLevelChallengesString();
+
+            if (ApManager.IsConnected())
+            {
+                displayText += "Challenges?\n";
+                displayText += MS.LevelProfile[currentId].GetLevelChallengesString();
+            }
+            else
+            {
+                var allGoldText = MS.LevelProfile[currentId].GetLevelCompleteState() > LevelCompleteState.COMPLETED ? "✅\n" : "❌\n";
+                displayText += "All gold?" + allGoldText;
+            }
         }
         else       // episode view
         {
