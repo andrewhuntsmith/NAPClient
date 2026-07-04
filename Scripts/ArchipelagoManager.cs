@@ -61,7 +61,7 @@ namespace NAPClient
 
             try
             {
-                result = ApSession.TryConnectAndLogin("N++", slotName, ItemsHandlingFlags.AllItems, null, null, null, password);
+                result = ApSession.TryConnectAndLogin("Nplusplus", slotName, ItemsHandlingFlags.AllItems, null, null, null, password);
             }
             catch (Exception e)
             {
@@ -187,7 +187,7 @@ namespace NAPClient
                     locationString = LogEntry.GenerateLevelName(condition.Id) + " Challenge 3 Completion";
                     break;
             }
-            id = ApSession.Locations.GetLocationIdFromName("N++", locationString);
+            id = ApSession.Locations.GetLocationIdFromName("Nplusplus", locationString);
             ApSession.Locations.CompleteLocationChecksAsync(id);
         }
 
