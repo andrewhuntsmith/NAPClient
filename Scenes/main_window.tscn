@@ -260,14 +260,14 @@ text = "--"
 layout_mode = 2
 
 [node name="RandoLogContainer" type="ScrollContainer" parent="VBoxContainer/LogContainer" unique_id=1616769527]
-custom_minimum_size = Vector2(650, 100)
+custom_minimum_size = Vector2(640, 100)
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 3
 horizontal_scroll_mode = 0
 
 [node name="RandoLog" type="VBoxContainer" parent="VBoxContainer/LogContainer/RandoLogContainer" unique_id=1312694458]
-custom_minimum_size = Vector2(650, 0)
+custom_minimum_size = Vector2(640, 0)
 layout_mode = 2
 
 [node name="ConfirmationDialog" type="ConfirmationDialog" parent="." unique_id=86313054]
