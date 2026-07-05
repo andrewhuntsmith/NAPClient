@@ -30,7 +30,7 @@ Level unlocks are done as "progressive episode unlocks", meaning, rather than un
 The goal of plando0 is to beat a single episode in episode view. After beating an episode, the client should display the text "Goal met!!!" Please report if it does not do this.
 
 
-2) Archipelago: The client can also connect to an archipelago server. Learn more about archipelago randomizers in general at archipelago.gg.
+2) Archipelago: The client can also connect to an archipelago server. Learn more about archipelago randomizers at archipelago.gg.
 
 Archipelago (often abbreviated as "AP") checks are currently slightly different from plando checks. AP randomizers will still be kept to the intro tab. Beating a level will always be a check. Beating an episode will always be a check.
 
@@ -75,7 +75,7 @@ The grid that takes up the bulk of the space in the client represents the levels
 
 A red square means that level is not available to be played.
 A green square means that level is available to be played, and has not been beaten.
-A blue square means that level has been beaten, but you have not gotten all the gold.
+A blue square means that level has been beaten, but you have not done everything there.
 A gold square means that you have gotten all the gold on the level (or all the checks in an archipelago randomizer), and there is nothing left to do there.
 
 
