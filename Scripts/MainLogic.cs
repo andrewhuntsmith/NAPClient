@@ -171,6 +171,7 @@ public class MainLogic
         foreach (var episodeProfile in MS.EpisodeProfile)
         {
             episodeProfile.LockEpisode();
+            episodeProfile.UpdateValue();
         }
 
         GodotTreeNode.OnUIRefresh();
