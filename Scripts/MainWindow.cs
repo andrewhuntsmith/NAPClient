@@ -2,7 +2,6 @@ using Godot;
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace NAPClient
 {
@@ -25,6 +24,7 @@ namespace NAPClient
 		[Export] Label StartTimeDisplay;
 		[Export] Label GoldValueDisplay;
 		[Export] Label MaxTimeDisplay;
+		[Export] Label CurrentGoalDisplay;
 		[Export] VBoxContainer RandoLog;
 		[Export] ScrollContainer RandoLogContainer;
 		[Export] Label LevelIDLabel;
@@ -181,6 +181,7 @@ namespace NAPClient
 			StartTimeDisplay.Text = MainLogic.MS.LevelStartTime.Value.ToString();
 			GoldValueDisplay.Text = MainLogic.MS.TimeGrantedByGold.Value.ToString();
 			MaxTimeDisplay.Text = Main.ItemManager.MaxTime.ToString();
+			CurrentGoalDisplay.Text = MainLogic.Instance.GetCurrentGoalString();
 		}
 
 		public async void AddToRandoLog(ItemData itemData)

@@ -493,4 +493,21 @@ public class MainLogic
 
         GodotTreeNode.UpdateCurrentLevelText(displayText);
     }
+
+    public string GetCurrentGoalString()
+    {
+        switch (CurrentRando.Goal)
+        {
+            case GoalType.SingleBingo:
+                return "Single Bingo";
+            case GoalType.TripleBingo:
+                return "Triple Bingo";
+            case GoalType.BeatOneEpisode:
+                return "One Episode";
+            case GoalType.BeatAllEpisodes:
+                return "All Episodes";
+            default:
+                return "Invalid Goal ❌";
+        }
+    }
 }
