@@ -208,9 +208,13 @@ public class MainLogic
             switch (condition.State)
             {
                 case ProgressState.EpisodeComplete:
-                    ItemManager.LevelUnlockManager.AddEpisodeToUnlocks(condition.Id);
-                    MS.EpisodeProfile[condition.Id].SetEpisodeBeaten();
-                    MS.EpisodeProfile[condition.Id].UpdateValue();
+                    // we don't want to set episodes to be automatically completed
+                    // because we don't want the rando to instantly end when
+                    // someone else finishes their game
+                    // leaving this code in while we figure out how we want to deal with this
+                    //ItemManager.LevelUnlockManager.AddEpisodeToUnlocks(condition.Id);
+                    //MS.EpisodeProfile[condition.Id].SetEpisodeBeaten();
+                    //MS.EpisodeProfile[condition.Id].UpdateValue();
                     break;
                 case ProgressState.LevelComplete:
                     ItemManager.LevelUnlockManager.AddLevelToUnlocks(condition.Id); 
