@@ -33,11 +33,26 @@ namespace NAPClient
 		public const int LevelDataOffset2 = 0x0;
 		public const int LevelDataOffset3 = 0x330;
 		public const int LevelDataOffset4 = -0xACC;
-		public const int LevelDataOffset5 = 0x8;
 		public List<LevelDataMemoryBridge> LevelData;
 
-		// we need to track the original level order after we've shuffled the IDs
-		public Dictionary<int, string> OriginalLevelMapping = new Dictionary<int, string>();
+		public const int NppLevelDataOffset5 = 0x4 * 0xBF880;
+		public const int LegacyLevelDataOffset5 = 0x8 * 0xBF880;
+		public const int QLevelDataOffset5 = 0xC * 0xBF880;
+		public const int UltimateLevelDataOffset5 = 0x10 * 0xBF880;
+		public const int ELevelDataOffset5 = 0x14 * 0xBF880;
+		public const int QELevelDataOffset5 = 0x98 * 0xBF880;
+		public const int EQLevelDataOffset5 = 0x9C * 0xBF880;
+		public const int CoopIntroLevelDataOffset5 = 0x1 * 0xBF880;
+		public const int CoopNppLevelDataOffset5 = 0x5 * 0xBF880;
+		public const int CoopLegacyLevelDataOffset5 = 0x9 * 0xBF880;
+		public const int CoopTenppLevelDataOffset5 = 0x95 * 0xBF880;
+		public const int RaceIntroLevelDataOffset5 = 0x2 * 0xBF880;
+		public const int RaceNppLevelDataOffset5 = 0x6 * 0xBF880;
+		public const int RaceLegacyLevelDataOffset5 = 0xA * 0xBF880;
+		public const int RaceTenppLevelDataOffset5 = 0x96 * 0xBF880;
+
+        // we need to track the original level order after we've shuffled the IDs
+        public Dictionary<int, string> OriginalLevelMapping = new Dictionary<int, string>();
 		// after levels have been shuffled, we'll want to easily get their new ID from their name
 		public Dictionary<string, int> NewLevelMapping = new Dictionary<string, int>();
 
@@ -90,8 +105,23 @@ namespace NAPClient
 		const int PROCESS_VM_ALL = 0x001F0FFF;
 		const int PAGE_READWRITE = 0x04;
 
-		public IntPtrAddressValue FirstLevelDataAddress;
-		public IntPtrAddressValue FirstLevelProfileAddress;
+		public IntPtrAddressValue FirstIntroLevelDataAddress;
+		public IntPtrAddressValue FirstNppLevelDataAddress;
+		public IntPtrAddressValue FirstLegacyLevelDataAddress;
+		public IntPtrAddressValue FirstQLevelDataAddress;
+		public IntPtrAddressValue FirstUltimateLevelDataAddress;
+		public IntPtrAddressValue FirstELevelDataAddress;
+		public IntPtrAddressValue FirstQELevelDataAddress;
+		public IntPtrAddressValue FirstEQLevelDataAddress;
+		public IntPtrAddressValue FirstCoopIntroLevelDataAddress;
+		public IntPtrAddressValue FirstCoopNppLevelDataAddress;
+		public IntPtrAddressValue FirstCoopLegacyLevelDataAddress;
+		public IntPtrAddressValue FirstCoopTenppLevelDataAddress;
+		public IntPtrAddressValue FirstRaceIntroLevelDataAddress;
+		public IntPtrAddressValue FirstRaceNppLevelDataAddress;
+		public IntPtrAddressValue FirstRaceLegacyLevelDataAddress;
+		public IntPtrAddressValue FirstRaceTenppLevelDataAddress;
+        public IntPtrAddressValue FirstLevelProfileAddress;
 
 		public DoubleAddressValue CurrentTimeRemaining;
 		public IntAddressValue GoldCollectedInCurrentLevel;
@@ -246,7 +276,24 @@ namespace NAPClient
 			GoldCollectedInCurrentLevel = new IntAddressValue() { Offsets = new List<int> { NppdllBaseAddress.ToInt32() + CommonPointerOffset, GoldCollectedInCurrentLevelOffset } };
 			LevelStartTime = new FloatAddressValue() { Offsets = new List<int> { TimerBlockOffset + StartTimeOffset1, StartTimeOffset2 } };
 			TimeGrantedByGold = new FloatAddressValue() { Offsets = new List<int> { TimerBlockOffset + TimeGrantedByGoldOffset1, TimeGrantedByGoldOffset2 } };
-			FirstLevelDataAddress = new IntPtrAddressValue() { Offsets = new List<int> { NppdllBaseAddress.ToInt32() + LevelDataOffset1, LevelDataOffset2, LevelDataOffset3, LevelDataOffset4 } };
+			
+			FirstIntroLevelDataAddress = new IntPtrAddressValue() { Offsets = new List<int> { NppdllBaseAddress.ToInt32() + LevelDataOffset1, LevelDataOffset2, LevelDataOffset3, LevelDataOffset4 } };
+            FirstNppLevelDataAddress = new IntPtrAddressValue() { Offsets = new List<int> { NppdllBaseAddress.ToInt32() + LevelDataOffset1, LevelDataOffset2, LevelDataOffset3, LevelDataOffset4 + NppLevelDataOffset5 } };
+            FirstLegacyLevelDataAddress = new IntPtrAddressValue() { Offsets = new List<int> { NppdllBaseAddress.ToInt32() + LevelDataOffset1, LevelDataOffset2, LevelDataOffset3, LevelDataOffset4 + LegacyLevelDataOffset5 } };
+            FirstQLevelDataAddress = new IntPtrAddressValue() { Offsets = new List<int> { NppdllBaseAddress.ToInt32() + LevelDataOffset1, LevelDataOffset2, LevelDataOffset3, LevelDataOffset4 + QLevelDataOffset5 } };
+            FirstUltimateLevelDataAddress = new IntPtrAddressValue() { Offsets = new List<int> { NppdllBaseAddress.ToInt32() + LevelDataOffset1, LevelDataOffset2, LevelDataOffset3, LevelDataOffset4 + UltimateLevelDataOffset5 } };
+            FirstELevelDataAddress = new IntPtrAddressValue() { Offsets = new List<int> { NppdllBaseAddress.ToInt32() + LevelDataOffset1, LevelDataOffset2, LevelDataOffset3, LevelDataOffset4 + ELevelDataOffset5 } };
+            FirstQELevelDataAddress = new IntPtrAddressValue() { Offsets = new List<int> { NppdllBaseAddress.ToInt32() + LevelDataOffset1, LevelDataOffset2, LevelDataOffset3, LevelDataOffset4 + QELevelDataOffset5 } };
+            FirstEQLevelDataAddress = new IntPtrAddressValue() { Offsets = new List<int> { NppdllBaseAddress.ToInt32() + LevelDataOffset1, LevelDataOffset2, LevelDataOffset3, LevelDataOffset4 + EQLevelDataOffset5 } };
+            FirstCoopIntroLevelDataAddress = new IntPtrAddressValue() { Offsets = new List<int> { NppdllBaseAddress.ToInt32() + LevelDataOffset1, LevelDataOffset2, LevelDataOffset3, LevelDataOffset4 + CoopIntroLevelDataOffset5 } };
+            FirstCoopNppLevelDataAddress = new IntPtrAddressValue() { Offsets = new List<int> { NppdllBaseAddress.ToInt32() + LevelDataOffset1, LevelDataOffset2, LevelDataOffset3, LevelDataOffset4 + CoopNppLevelDataOffset5 } };
+            FirstCoopLegacyLevelDataAddress = new IntPtrAddressValue() { Offsets = new List<int> { NppdllBaseAddress.ToInt32() + LevelDataOffset1, LevelDataOffset2, LevelDataOffset3, LevelDataOffset4 + CoopLegacyLevelDataOffset5 } };
+            FirstCoopTenppLevelDataAddress = new IntPtrAddressValue() { Offsets = new List<int> { NppdllBaseAddress.ToInt32() + LevelDataOffset1, LevelDataOffset2, LevelDataOffset3, LevelDataOffset4 + CoopTenppLevelDataOffset5 } };
+            FirstRaceIntroLevelDataAddress = new IntPtrAddressValue() { Offsets = new List<int> { NppdllBaseAddress.ToInt32() + LevelDataOffset1, LevelDataOffset2, LevelDataOffset3, LevelDataOffset4 + RaceIntroLevelDataOffset5 } };
+            FirstRaceNppLevelDataAddress = new IntPtrAddressValue() { Offsets = new List<int> { NppdllBaseAddress.ToInt32() + LevelDataOffset1, LevelDataOffset2, LevelDataOffset3, LevelDataOffset4 + RaceNppLevelDataOffset5 } };
+            FirstRaceLegacyLevelDataAddress = new IntPtrAddressValue() { Offsets = new List<int> { NppdllBaseAddress.ToInt32() + LevelDataOffset1, LevelDataOffset2, LevelDataOffset3, LevelDataOffset4 + RaceLegacyLevelDataOffset5 } };
+            FirstRaceTenppLevelDataAddress = new IntPtrAddressValue() { Offsets = new List<int> { NppdllBaseAddress.ToInt32() + LevelDataOffset1, LevelDataOffset2, LevelDataOffset3, LevelDataOffset4 + RaceTenppLevelDataOffset5 } };
+			
 			FirstLevelProfileAddress = new IntPtrAddressValue() { Offsets = new List<int> { NppdllBaseAddress.ToInt32() + LevelProfileOffset1, LevelProfileOffset2 } };
 			LevelVictories = new IntAddressValue() { Offsets = new List<int> { NppdllBaseAddress.ToInt32() + VictoriesOffset1, VictoriesOffset2, LevelVictoriesOffset3 } };
 			EpisodeVictories = new IntAddressValue() { Offsets = new List<int> { NppdllBaseAddress.ToInt32() + VictoriesOffset1, VictoriesOffset2, EpisodeVictoriesOffset3 } };
@@ -264,15 +311,142 @@ namespace NAPClient
 		void ReadLevelData()
 		{
 			LevelData = new List<LevelDataMemoryBridge>();
-			FirstLevelDataAddress.UpdateValue();
-			for (int i = 0; i < 125; i++)
+			FirstIntroLevelDataAddress.UpdateValue();
+			FirstNppLevelDataAddress.UpdateValue();
+            FirstLegacyLevelDataAddress.UpdateValue();
+            FirstQLevelDataAddress.UpdateValue();
+            FirstUltimateLevelDataAddress.UpdateValue();
+            FirstELevelDataAddress.UpdateValue();
+            FirstQELevelDataAddress.UpdateValue();
+            FirstEQLevelDataAddress.UpdateValue();
+            FirstCoopIntroLevelDataAddress.UpdateValue();
+            FirstCoopNppLevelDataAddress.UpdateValue();
+            FirstCoopLegacyLevelDataAddress.UpdateValue();
+            FirstCoopTenppLevelDataAddress.UpdateValue();
+            FirstRaceIntroLevelDataAddress.UpdateValue();
+            FirstRaceNppLevelDataAddress.UpdateValue();
+            FirstRaceLegacyLevelDataAddress.UpdateValue();
+            FirstRaceTenppLevelDataAddress.UpdateValue();
+
+            for (int i = 0; i < 12150; i++)
 			{
-				var level = new LevelDataMemoryBridge(FirstLevelDataAddress.AsInt() + i * LevelDataSize);
-				LevelData.Add(level);
-				level.UpdateValue();
-				OriginalLevelMapping[level.GetLevelId()] = level.GetLevelName();
-				NewLevelMapping[level.GetLevelName()] = level.GetLevelId();
-			}
+				var address = 0x00;
+				if (i < 125)
+				{
+                    address = FirstIntroLevelDataAddress.AsInt() + i * LevelDataSize;
+				}
+                else if (i < 600)
+				{
+					LevelData.Add(null);
+					continue;
+				}
+				else if (i < 1200)
+				{
+                    address = FirstNppLevelDataAddress.AsInt() + (i - 600) * LevelDataSize;
+                }
+                else if (i < 1800)
+                {
+                    address = FirstLegacyLevelDataAddress.AsInt() + (i - 1200) * LevelDataSize;
+                }
+                else if (i < 1920)
+                {
+                    address = FirstQLevelDataAddress.AsInt() + (i - 1800) * LevelDataSize;
+                }
+                else if (i < 2400)
+                {
+                    LevelData.Add(null);
+                    continue;
+                }
+                else if (i < 3000)
+                {
+                    address = FirstUltimateLevelDataAddress.AsInt() + (i - 2400) * LevelDataSize;
+                }
+                else if (i < 3120)
+                {
+                    address = FirstELevelDataAddress.AsInt() + (i - 3000) * LevelDataSize;
+                }
+                else if (i < 3600)
+                {
+                    LevelData.Add(null);
+                    continue;
+                }
+                else if (i < 3625)
+                {
+                    address = FirstQELevelDataAddress.AsInt() + (i - 3600) * LevelDataSize;
+                }
+                else if (i < 3650)
+                {
+                    address = FirstEQLevelDataAddress.AsInt() + (i - 3625) * LevelDataSize;
+                }
+                else if (i < 4200)
+                {
+                    LevelData.Add(null);
+                    continue;
+                }
+                else if (i < 4250)
+                {
+                    address = FirstCoopIntroLevelDataAddress.AsInt() + (i - 4200) * LevelDataSize;
+                }
+                else if (i < 4800)
+                {
+                    LevelData.Add(null);
+                    continue;
+                }
+                else if (i < 5400)
+                {
+                    address = FirstCoopNppLevelDataAddress.AsInt() + (i - 4800) * LevelDataSize;
+                }
+                else if (i < 5730)
+                {
+                    address = FirstCoopLegacyLevelDataAddress.AsInt() + (i - 5400) * LevelDataSize;
+                }
+                else if (i < 7800)
+                {
+                    LevelData.Add(null);
+                    continue;
+                }
+                else if (i < 7950)
+                {
+                    address = FirstCoopTenppLevelDataAddress.AsInt() + (i - 7800) * LevelDataSize;
+                }
+                else if (i < 8400)
+                {
+                    LevelData.Add(null);
+                    continue;
+                }
+                else if (i < 8425)
+                {
+                    address = FirstRaceIntroLevelDataAddress.AsInt() + (i - 8400) * LevelDataSize;
+                }
+                else if (i < 9000)
+                {
+                    LevelData.Add(null);
+                    continue;
+                }
+                else if (i < 9600)
+                {
+                    address = FirstRaceNppLevelDataAddress.AsInt() + (i - 9000) * LevelDataSize;
+                }
+                else if (i < 10170)
+                {
+                    address = FirstRaceLegacyLevelDataAddress.AsInt() + (i - 9600) * LevelDataSize;
+                }
+                else if (i < 12000)
+                {
+                    LevelData.Add(null);
+                    continue;
+                }
+                else if (i < 12150)
+                {
+                    address = FirstRaceTenppLevelDataAddress.AsInt() + (i - 12000) * LevelDataSize;
+                }
+
+                var level = new LevelDataMemoryBridge(address);
+                LevelData.Add(level);
+                level.UpdateValue();
+                OriginalLevelMapping[level.GetLevelId()] = level.GetLevelName();
+                NewLevelMapping[level.GetLevelName()] = level.GetLevelId();
+            }
 		}
 
 		void ReadLevelProfile()
