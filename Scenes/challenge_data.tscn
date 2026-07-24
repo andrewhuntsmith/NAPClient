@@ -1,0 +1,43 @@
+[gd_scene format=3 uid="uid://bl4fi0yiqookw"]
+
+[node name="ChallengeData" type="GridContainer" unique_id=1315025766]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -450.0
+offset_bottom = -546.0
+grow_horizontal = 2
+grow_vertical = 2
+columns = 2
+
+[node name="ChallengeLabel" type="Label" parent="." unique_id=2132165271]
+layout_mode = 2
+text = "Challenge:"
+
+[node name="ChallengeText" type="LineEdit" parent="." unique_id=923998340]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+placeholder_text = "G++T++O++C++E++"
+
+[node name="ItemType" type="OptionButton" parent="." unique_id=245571564]
+layout_mode = 2
+item_count = 7
+popup/item_0/text = "Prog. Ep. Unlock"
+popup/item_0/id = 0
+popup/item_1/text = "Lev. Unlock"
+popup/item_1/id = 1
+popup/item_2/text = "Ep. Unlock"
+popup/item_2/id = 2
+popup/item_3/text = "⬆️ Start Time"
+popup/item_3/id = 3
+popup/item_4/text = "⬆️ Gold Value"
+popup/item_4/id = 4
+popup/item_5/text = "⬆️ Max Time"
+popup/item_5/id = 5
+popup/item_6/text = "Palette Trap"
+popup/item_6/id = 6
+
+[node name="ItemValue" type="LineEdit" parent="." unique_id=858792078]
+layout_mode = 2
+placeholder_text = "888"
+max_length = 3

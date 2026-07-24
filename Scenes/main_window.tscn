@@ -4,6 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://4fpsmubnx1u1" path="res://Scenes/episode_grid.tscn" id="1_23hoq"]
 [ext_resource type="PackedScene" uid="uid://bhfysgvqbecg0" path="res://Scenes/log_entry.tscn" id="3_bet41"]
 [ext_resource type="PackedScene" uid="uid://c1hly5dgirq51" path="res://Scenes/color_key.tscn" id="3_w45st"]
+[ext_resource type="PackedScene" uid="uid://bl4fi0yiqookw" path="res://Scenes/challenge_data.tscn" id="5_qdbfq"]
 
 [node name="MainWindow" type="Control" unique_id=1707276420 node_paths=PackedStringArray("LevelGrid", "FilePath", "UrlEntry", "SlotNameEntry", "PasswordEntry", "LoadFileButton", "ConnectToApButton", "HideSetupButton", "SwitchPlandoAPButton", "PlandoLoading", "APLoading", "StartTimeDisplay", "GoldValueDisplay", "MaxTimeDisplay", "CurrentGoalDisplay", "RandoLog", "RandoLogContainer", "LevelIDLabel", "LevelNameLabel", "AvailableLabel", "AllGoldLabel", "CurrentItemLabel", "ConfirmationDialog", "LoadFileDialog", "ColorKey")]
 layout_mode = 3
@@ -22,8 +23,8 @@ SlotNameEntry = NodePath("VBoxContainer/GridContainer/RandomizerLoading/APLoadin
 PasswordEntry = NodePath("VBoxContainer/GridContainer/RandomizerLoading/APLoading/PasswordField")
 LoadFileButton = NodePath("VBoxContainer/GridContainer/RandomizerLoading/PlandoLoading/LoadFileButton")
 ConnectToApButton = NodePath("VBoxContainer/GridContainer/RandomizerLoading/APLoading/ConnectButton")
-HideSetupButton = NodePath("VBoxContainer/GridContainer/SetupButtons/HideSetupButton")
-SwitchPlandoAPButton = NodePath("VBoxContainer/GridContainer/SetupButtons/SwitchPlandoAPButton")
+HideSetupButton = NodePath("VBoxContainer/GridContainer/SetupButtons/SetupButtons/HideSetupButton")
+SwitchPlandoAPButton = NodePath("VBoxContainer/GridContainer/SetupButtons/SetupButtons/SwitchPlandoAPButton")
 PlandoLoading = NodePath("VBoxContainer/GridContainer/RandomizerLoading/PlandoLoading")
 APLoading = NodePath("VBoxContainer/GridContainer/RandomizerLoading/APLoading")
 StartTimeDisplay = NodePath("VBoxContainer/GridContainer/RandomizerDataContainer/RandomizerData/StartTimeValue")
@@ -136,17 +137,56 @@ secret_character = "🐑"
 layout_mode = 2
 text = "Connect"
 
-[node name="SetupButtons" type="HBoxContainer" parent="VBoxContainer/GridContainer" unique_id=1031274791]
+[node name="PlandoMaker" type="HBoxContainer" parent="VBoxContainer/GridContainer/RandomizerLoading" unique_id=1954818778]
+visible = false
+layout_mode = 2
+
+[node name="FilePathLabel" type="Label" parent="VBoxContainer/GridContainer/RandomizerLoading/PlandoMaker" unique_id=963579611]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+text = "File Path:"
+
+[node name="BrowseFilesButton" type="Button" parent="VBoxContainer/GridContainer/RandomizerLoading/PlandoMaker" unique_id=1119902553]
+layout_mode = 2
+text = "Browse"
+
+[node name="FilePathField" type="TextEdit" parent="VBoxContainer/GridContainer/RandomizerLoading/PlandoMaker" unique_id=1571590231]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+placeholder_text = "THISISAFILEPATH"
+
+[node name="LoadFileButton" type="Button" parent="VBoxContainer/GridContainer/RandomizerLoading/PlandoMaker" unique_id=433333225]
+layout_mode = 2
+disabled = true
+text = "Load File"
+
+[node name="SetupButtons" type="BoxContainer" parent="VBoxContainer/GridContainer" unique_id=1372183315]
+layout_mode = 2
+
+[node name="SetupButtons" type="HBoxContainer" parent="VBoxContainer/GridContainer/SetupButtons" unique_id=1031274791]
 custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
 
-[node name="HideSetupButton" type="Button" parent="VBoxContainer/GridContainer/SetupButtons" unique_id=14172859]
+[node name="HideSetupButton" type="Button" parent="VBoxContainer/GridContainer/SetupButtons/SetupButtons" unique_id=14172859]
 layout_mode = 2
 text = "Hide Setup"
 
-[node name="SwitchPlandoAPButton" type="Button" parent="VBoxContainer/GridContainer/SetupButtons" unique_id=1246770855]
+[node name="SwitchPlandoAPButton" type="Button" parent="VBoxContainer/GridContainer/SetupButtons/SetupButtons" unique_id=1246770855]
 layout_mode = 2
 text = "Archipelago Menu"
+
+[node name="PlandoMakerButtons" type="HBoxContainer" parent="VBoxContainer/GridContainer/SetupButtons" unique_id=255296731]
+visible = false
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+
+[node name="SavePlandoButton" type="Button" parent="VBoxContainer/GridContainer/SetupButtons/PlandoMakerButtons" unique_id=2047542433]
+layout_mode = 2
+text = "Save Plando"
+
+[node name="EditInitialValuesButton" type="Button" parent="VBoxContainer/GridContainer/SetupButtons/PlandoMakerButtons" unique_id=2010656324]
+layout_mode = 2
+text = "Hide Initial Values"
 
 [node name="LevelGridContainer" type="VBoxContainer" parent="VBoxContainer/GridContainer" unique_id=479175184]
 custom_minimum_size = Vector2(400, 0)
@@ -166,6 +206,47 @@ layout_mode = 2
 
 [node name="RandomizerDataContainer" type="VBoxContainer" parent="VBoxContainer/GridContainer" unique_id=1190438048]
 custom_minimum_size = Vector2(240, 0)
+layout_mode = 2
+
+[node name="InitialData" type="GridContainer" parent="VBoxContainer/GridContainer/RandomizerDataContainer" unique_id=1272533042]
+visible = false
+layout_mode = 2
+columns = 2
+
+[node name="StartTimeLabel" type="Label" parent="VBoxContainer/GridContainer/RandomizerDataContainer/InitialData" unique_id=2097069635]
+layout_mode = 2
+text = "Start Time: "
+
+[node name="StartTimeValue" type="LineEdit" parent="VBoxContainer/GridContainer/RandomizerDataContainer/InitialData" unique_id=2036951809]
+layout_mode = 2
+text = "----"
+
+[node name="GoldValueLabel" type="Label" parent="VBoxContainer/GridContainer/RandomizerDataContainer/InitialData" unique_id=123987675]
+layout_mode = 2
+text = "Gold Value:"
+
+[node name="GoldValueValue" type="LineEdit" parent="VBoxContainer/GridContainer/RandomizerDataContainer/InitialData" unique_id=972950431]
+layout_mode = 2
+text = "----"
+
+[node name="MaxTimeLabel" type="Label" parent="VBoxContainer/GridContainer/RandomizerDataContainer/InitialData" unique_id=490621262]
+layout_mode = 2
+text = "Max Time:"
+
+[node name="MaxTimeValue" type="LineEdit" parent="VBoxContainer/GridContainer/RandomizerDataContainer/InitialData" unique_id=1147243568]
+layout_mode = 2
+text = "----"
+
+[node name="GoalLabel" type="Label" parent="VBoxContainer/GridContainer/RandomizerDataContainer/InitialData" unique_id=1567775528]
+layout_mode = 2
+text = "Current Goal:"
+
+[node name="GoalValue" type="LineEdit" parent="VBoxContainer/GridContainer/RandomizerDataContainer/InitialData" unique_id=1745162337]
+layout_mode = 2
+text = "----"
+
+[node name="Empty" type="Control" parent="VBoxContainer/GridContainer/RandomizerDataContainer/InitialData" unique_id=745131291]
+custom_minimum_size = Vector2(0, 10)
 layout_mode = 2
 
 [node name="RandomizerData" type="GridContainer" parent="VBoxContainer/GridContainer/RandomizerDataContainer" unique_id=376384017]
@@ -204,7 +285,7 @@ text = "Current Goal:"
 layout_mode = 2
 text = "----"
 
-[node name="Empty" type="Control" parent="VBoxContainer/GridContainer/RandomizerDataContainer" unique_id=745131291]
+[node name="Empty" type="Control" parent="VBoxContainer/GridContainer/RandomizerDataContainer/RandomizerData" unique_id=820541639]
 custom_minimum_size = Vector2(0, 10)
 layout_mode = 2
 
@@ -253,17 +334,98 @@ text = "G++?"
 layout_mode = 2
 text = "--"
 
-[node name="Empty2" type="Control" parent="VBoxContainer/GridContainer/RandomizerDataContainer" unique_id=820541639]
+[node name="Empty2" type="Control" parent="VBoxContainer/GridContainer/RandomizerDataContainer/SelectedItemData" unique_id=1211089283]
 custom_minimum_size = Vector2(0, 10)
 layout_mode = 2
 
 [node name="CurrentItemData" type="GridContainer" parent="VBoxContainer/GridContainer/RandomizerDataContainer" unique_id=2017788452]
 layout_mode = 2
-columns = 2
 
 [node name="CurrentItemData" type="Label" parent="VBoxContainer/GridContainer/RandomizerDataContainer/CurrentItemData" unique_id=1056811748]
 layout_mode = 2
 text = "--"
+
+[node name="Empty" type="Control" parent="VBoxContainer/GridContainer/RandomizerDataContainer/CurrentItemData" unique_id=859821849]
+custom_minimum_size = Vector2(0, 10)
+layout_mode = 2
+
+[node name="CurrentUnlockData" type="VBoxContainer" parent="VBoxContainer/GridContainer/RandomizerDataContainer" unique_id=1713858500]
+visible = false
+layout_mode = 2
+
+[node name="Completion" type="HBoxContainer" parent="VBoxContainer/GridContainer/RandomizerDataContainer/CurrentUnlockData" unique_id=1424783292]
+layout_mode = 2
+
+[node name="CompletionLabel" type="Label" parent="VBoxContainer/GridContainer/RandomizerDataContainer/CurrentUnlockData/Completion" unique_id=971587931]
+layout_mode = 2
+text = "Completion:"
+
+[node name="OptionButton" type="OptionButton" parent="VBoxContainer/GridContainer/RandomizerDataContainer/CurrentUnlockData/Completion" unique_id=1499415519]
+layout_mode = 2
+item_count = 7
+popup/item_0/text = "Prog. Ep. Unlock"
+popup/item_0/id = 0
+popup/item_1/text = "Lev. Unlock"
+popup/item_1/id = 1
+popup/item_2/text = "Ep. Unlock"
+popup/item_2/id = 2
+popup/item_3/text = "⬆️ Start Time"
+popup/item_3/id = 3
+popup/item_4/text = "⬆️ Gold Value"
+popup/item_4/id = 4
+popup/item_5/text = "⬆️ Max Time"
+popup/item_5/id = 5
+popup/item_6/text = "Palette Trap"
+popup/item_6/id = 6
+
+[node name="LineEdit" type="LineEdit" parent="VBoxContainer/GridContainer/RandomizerDataContainer/CurrentUnlockData/Completion" unique_id=1501072454]
+layout_mode = 2
+placeholder_text = "888"
+max_length = 3
+
+[node name="AllGold" type="HBoxContainer" parent="VBoxContainer/GridContainer/RandomizerDataContainer/CurrentUnlockData" unique_id=1750658039]
+layout_mode = 2
+
+[node name="AllGoldLabel" type="Label" parent="VBoxContainer/GridContainer/RandomizerDataContainer/CurrentUnlockData/AllGold" unique_id=282911373]
+layout_mode = 2
+text = "All Gold:       "
+
+[node name="OptionButton" type="OptionButton" parent="VBoxContainer/GridContainer/RandomizerDataContainer/CurrentUnlockData/AllGold" unique_id=692727146]
+layout_mode = 2
+item_count = 7
+popup/item_0/text = "Prog. Ep. Unlock"
+popup/item_0/id = 0
+popup/item_1/text = "Lev. Unlock"
+popup/item_1/id = 1
+popup/item_2/text = "Ep. Unlock"
+popup/item_2/id = 2
+popup/item_3/text = "⬆️ Start Time"
+popup/item_3/id = 3
+popup/item_4/text = "⬆️ Gold Value"
+popup/item_4/id = 4
+popup/item_5/text = "⬆️ Max Time"
+popup/item_5/id = 5
+popup/item_6/text = "Palette Trap"
+popup/item_6/id = 6
+
+[node name="LineEdit" type="LineEdit" parent="VBoxContainer/GridContainer/RandomizerDataContainer/CurrentUnlockData/AllGold" unique_id=457597843]
+layout_mode = 2
+placeholder_text = "888"
+max_length = 3
+
+[node name="ChallengeData" parent="VBoxContainer/GridContainer/RandomizerDataContainer/CurrentUnlockData" unique_id=1315025766 instance=ExtResource("5_qdbfq")]
+layout_mode = 2
+
+[node name="ChallengeData2" parent="VBoxContainer/GridContainer/RandomizerDataContainer/CurrentUnlockData" unique_id=1163754005 instance=ExtResource("5_qdbfq")]
+layout_mode = 2
+
+[node name="ChallengeData3" parent="VBoxContainer/GridContainer/RandomizerDataContainer/CurrentUnlockData" unique_id=584259456 instance=ExtResource("5_qdbfq")]
+layout_mode = 2
+
+[node name="AddChallengeButton" type="Button" parent="VBoxContainer/GridContainer/RandomizerDataContainer/CurrentUnlockData" unique_id=1254334087]
+layout_mode = 2
+disabled = true
+text = "Add Challenge"
 
 [node name="LogContainer" type="VBoxContainer" parent="VBoxContainer" unique_id=794709117]
 layout_mode = 2
@@ -296,6 +458,6 @@ use_native_dialog = true
 
 [connection signal="pressed" from="VBoxContainer/GridContainer/RandomizerLoading/PlandoLoading/BrowseFilesButton" to="." method="BrowseLocalFiles"]
 [connection signal="pressed" from="VBoxContainer/GridContainer/RandomizerLoading/PlandoLoading/LoadFileButton" to="." method="LoadLocalRandoFile"]
-[connection signal="pressed" from="VBoxContainer/GridContainer/SetupButtons/HideSetupButton" to="." method="HideSetupPressed"]
-[connection signal="pressed" from="VBoxContainer/GridContainer/SetupButtons/SwitchPlandoAPButton" to="." method="SwitchPlandoAPPressed"]
+[connection signal="pressed" from="VBoxContainer/GridContainer/SetupButtons/SetupButtons/HideSetupButton" to="." method="HideSetupPressed"]
+[connection signal="pressed" from="VBoxContainer/GridContainer/SetupButtons/SetupButtons/SwitchPlandoAPButton" to="." method="SwitchPlandoAPPressed"]
 [connection signal="file_selected" from="FileDialog" to="." method="LocalFileSelected"]

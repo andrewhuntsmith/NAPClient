@@ -22,7 +22,7 @@ config/windows_native_icon="res://Images/npp2.ico"
 
 [display]
 
-window/size/viewport_width=650
+window/size/viewport_width=700
 window/size/viewport_height=600
 window/size/initial_position_type=4
 window/stretch/mode="viewport"
