@@ -85,9 +85,9 @@ public class MainLogic
             return;
 
         // TODO force quit the game, that should fix everything that needs to be fixed
-        foreach (var level in MS.OriginalLevelMapping)
+        foreach (var level in MS.NewLevelIds)
         {
-            MS.SwapLevels(level.Key, MS.NewLevelMapping[MS.OriginalLevelMapping[level.Key]]);
+            MS.SwapLevels(level.Key, level.Value);
         }
 
         MS.LevelStartTime.SetValue(90f);
@@ -149,7 +149,7 @@ public class MainLogic
 
         for (var id = 0; id < CurrentRando.LevelOrder.Count; id++)
         {
-            MS.SwapLevels(id, MS.NewLevelMapping[MS.OriginalLevelMapping[CurrentRando.LevelOrder[id]]]);
+            MS.SwapLevels(id, MS.NewLevelIds[CurrentRando.LevelOrder[id]]);
         }
 
         foreach (var levelProfile in MS.LevelProfile)

@@ -51,13 +51,17 @@ namespace NAPClient
 		public const int RaceLegacyLevelDataOffset5 = 0xA * 0xBF880;
 		public const int RaceTenppLevelDataOffset5 = 0x96 * 0xBF880;
 
-        // we need to track the original level order after we've shuffled the IDs
-        public Dictionary<int, string> OriginalLevelMapping = new Dictionary<int, string>();
-		// after levels have been shuffled, we'll want to easily get their new ID from their name
-		public Dictionary<string, int> NewLevelMapping = new Dictionary<string, int>();
+		// we need to track the original level order after we've shuffled the levels
+		// key : current level location (0 = SI-A-00-00, 124 = SI-E-04-04, etc)
+		// value : original level ID
+		public Dictionary<int, int> OriginalLevelIds = new Dictionary<int, int>();
 
-		// level profile data variables
-		public const int LevelProfileSize = 0x30; // level profile data is always 48 bytes
+        // key : original level ID
+        // value : current level location (0 = SI-A-00-00, 124 = SI-E-04-04, etc)
+        public Dictionary<int, int> NewLevelIds = new Dictionary<int, int>();
+
+        // level profile data variables
+        public const int LevelProfileSize = 0x30; // level profile data is always 48 bytes
 		public const int LevelProfileOffset1 = CommonPointerOffset;
 		public const int LevelProfileOffset2 = 0x810;
 		public const int LevelProfileOffset3 = 0x80C11C;
@@ -444,8 +448,8 @@ namespace NAPClient
                 var level = new LevelDataMemoryBridge(address);
                 LevelData.Add(level);
                 level.UpdateValue();
-                OriginalLevelMapping[level.GetLevelId()] = level.GetLevelName();
-                NewLevelMapping[level.GetLevelName()] = level.GetLevelId();
+				OriginalLevelIds[i] = i;
+				NewLevelIds[i] = i;
             }
 		}
 
@@ -487,23 +491,27 @@ namespace NAPClient
 			var secondLevelData = new byte[LevelDataSize];
 			LevelData[second].TotalLevelData.Value.CopyTo(secondLevelData, 0);
 
-			MemorySource.WriteProcessMemory((int)MemorySource.NppProcessHandle, LevelData[second].BaseLevelPointer, firstLevelData, LevelDataSize, out var bytesWritten);
+            var firstOriginalId = OriginalLevelIds[LevelData[first].GetLevelId()];
+            var secondOriginalId = OriginalLevelIds[LevelData[second].GetLevelId()];
+
+            MemorySource.WriteProcessMemory((int)MemorySource.NppProcessHandle, LevelData[second].BaseLevelPointer, firstLevelData, LevelDataSize, out var bytesWritten);
 			MemorySource.WriteProcessMemory((int)MemorySource.NppProcessHandle, LevelData[first].BaseLevelPointer, secondLevelData, LevelDataSize, out bytesWritten);
 
-			LevelData[first].UpdateValue();
+            LevelData[first].UpdateValue();
 			LevelData[second].UpdateValue();
+            var firstId = LevelData[first].GetLevelId();
+            var secondId = LevelData[second].GetLevelId();
+            LevelData[first].SetLevelId(secondId);
+            LevelData[second].SetLevelId(firstId);
+            LevelData[first].UpdateValue();
+            LevelData[second].UpdateValue();
 
-			var firstId = LevelData[first].GetLevelId();
-			var secondId = LevelData[second].GetLevelId();
-			LevelData[first].SetLevelId(secondId);
-			LevelData[second].SetLevelId(firstId);
+            OriginalLevelIds[first] = secondOriginalId;
+            OriginalLevelIds[second] = firstOriginalId;
 
-			LevelData[first].UpdateValue();
-			LevelData[second].UpdateValue();
-
-			NewLevelMapping[LevelData[first].GetLevelName()] = LevelData[first].GetLevelId();
-			NewLevelMapping[LevelData[second].GetLevelName()] = LevelData[second].GetLevelId();
-		}
+			NewLevelIds[firstOriginalId] = second;
+			NewLevelIds[secondOriginalId] = first;
+        }
 
 		public void UpdateLevelProfileValue(int levelIndex, int byteIndex, int value)
 		{
