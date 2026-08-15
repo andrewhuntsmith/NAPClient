@@ -9,12 +9,19 @@ The client *shouldn't* hurt your main profile. As of writing this, more than 5 p
 
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+I tried to load a randomizer, but all of the episodes are locked!
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+That is correct. At the start of the randomizer, all intro episodes will be locked. You have to play levels individually in "level view" to unlock anything. Eventually episodes will unlock. All current goals involved unlocking and beating some number of episodes.
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 What can the client currently do?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The client currently has two functions. (1) It can run a local plando file. (2) It can connect to an archipelago server.
 
-1) Plandos: In its current state, the client does not randomize anything on its own. It can take in a provided "plando"* file, and shuffle the game based on that file. These files are simple text files that are easy to edit, so if you find the plando too difficult, you can easily change the starting values to make it easier. plando0.json was deliberately made to be difficult. XandoToaster plans to make subsequent plandos easier.
+1) Plandos: In its current state, the client does not randomize anything on its own. It can take in a provided "plando"* file, and shuffle the game based on that file. These files are simple text files that are easy to edit, so if you find the plando too difficult, you can easily change the starting values to make it easier. plando0.json was deliberately made to be difficult. plando0 (Easy).json is identical to plando0, but with easier starting values for time and gold value.
 
 *"plando" is short for "planned randomizer," basically a randomizer experience built by hand
 
